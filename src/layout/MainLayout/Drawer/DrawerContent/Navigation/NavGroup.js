@@ -5,9 +5,9 @@ import { useSelector } from 'react-redux';
 import { Box, List, Typography } from '@mui/material';
 
 // project import
-import NavItem from './NavItem';
-import { returnCategorie } from 'static/Lien';
 import React from 'react';
+import { returnCategorie } from 'static/Lien';
+import NavItem from './NavItem';
 
 // ==============================|| NAVIGATION - LIST GROUP ||============================== //
 
@@ -18,11 +18,7 @@ const NavGroup = ({ item }) => {
 
   const user = useSelector((state) => state.user?.user);
   const returnItems = () => {
-    if (
-      returnCategorie(user?.role) === 'managment' ||
-      returnCategorie(user?.role) === 'field' ||
-      returnCategorie(user?.role) === 'ZBM'
-    ) {
+    if (returnCategorie(user?.role) === 'managment' || returnCategorie(user?.role) === 'field' || returnCategorie(user?.role) === 'ZBM') {
       setOption(item.children.filter((x) => x.user === 'managment' || x.user === 'all'));
     }
     if (returnCategorie(user?.role) === 'team') {
@@ -32,7 +28,6 @@ const NavGroup = ({ item }) => {
   React.useEffect(() => {
     returnItems();
   }, [user]);
-  console.log(user);
 
   const navCollapse = option?.map((menuItem) => {
     switch (menuItem.type) {

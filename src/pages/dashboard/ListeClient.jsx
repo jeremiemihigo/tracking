@@ -1,15 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Paper } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useLocation } from 'react-router-dom';
-import { Paper, Tooltip } from '@mui/material';
 import MainCard from 'components/MainCard';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 function ListeClient() {
   const location = useLocation();
   const { state } = location;
-  console.log(state);
 
   const columns = [
     {
@@ -60,21 +58,27 @@ function ListeClient() {
       width: 80,
       editable: false,
       renderCell: (params) => {
-        return params.row.client.length > 0 ? (
-          params.row.client[0]?.person_in_charge
-        ) : (
-          <p style={{ color: 'red' }}>does not exist in data to track</p>
-        );
+        return params.row.client.length > 0 ? params.row.client[0]?.person_in_charge : 'is not in the data to track';
       }
     }
   ];
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (Notification.permission !== 'denied') {
+        // We need to ask the user for permission
+        Notification.requestPermission().then((permission) => {
+          // If the user accepts, let's create a notification
+          if (permission === 'granted') {
+            new Notification('Je suis un nouveau message');
+          }
+        });
+      }
+    }, 3000);
+  }, []);
   return (
     <div>
       <Paper sx={{ marginBottom: '10px', padding: '10px', display: 'flex', justifyContent: 'space-between', fontWeight: 'bolder' }}>
         <p style={{ margin: 0, padding: 0 }}>list of clients with status {'<< ' + state.action + ' >>'}</p>
-        <Tooltip title="Export to Excel">
-          <FileCopyIcon sx={{ cursor: 'pointer' }} color="success" fontSize="small" />
-        </Tooltip>
       </Paper>
       <MainCard>
         <div style={{ width: '70vw' }}>

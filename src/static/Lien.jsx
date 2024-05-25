@@ -6,11 +6,9 @@
 // export const lien_post = 'http://localhost:8000/tracker/post';
 // export const lien_read = 'http://localhost:8000/tracker/read';
 // export const lien_update = 'http://localhost:8000/tracker/update';
-// export const lien_delete = 'http://localhost:8000/tracker/delete';
 export const lien_post = 'https://tracker-0139.onrender.com/tracker/post';
 export const lien_read = 'https://tracker-0139.onrender.com/tracker/read';
 export const lien_update = 'https://tracker-0139.onrender.com/tracker/update';
-export const lien_delete = 'https://tracker-0139.onrender.com/tracker/delete';
 export const lienVisiteMenage = 'https://bboxxother.onrender.com/bboxx/support';
 // export const lienVisiteMenage = 'http://localhost:4000/bboxx/support';
 export const config = {

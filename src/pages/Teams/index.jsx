@@ -1,23 +1,25 @@
+import { Add } from '@mui/icons-material';
+import { Fab, Grid } from '@mui/material';
+import { message } from 'antd';
+import warning from 'assets/notification/warning.mp3';
+import axios from 'axios';
+import ConfirmDialog from 'components/ConfirmDialog';
 import MainCard from 'components/MainCard';
 import React from 'react';
-import { Grid, Fab } from '@mui/material';
-import { Add } from '@mui/icons-material';
-import './style.css';
+import { config, lien_post, lien_read } from 'static/Lien';
 import Popup from 'static/Popup';
-import AddTeams from './AddTeams';
-import { config, lien_read } from 'static/Lien';
-import axios from 'axios';
-import AffecterAction from './AffecterAction';
 import { Delete } from '../../../node_modules/@mui/icons-material/index';
 import AddMember from './AddMembre';
-import ConfirmDialog from 'components/ConfirmDialog';
+import AddTeams from './AddTeams';
+import AffecterAction from './AffecterAction';
+import './style.css';
 
 function Index() {
   const [open, setOpen] = React.useState(false);
   const [teams, setTeams] = React.useState([]);
   const [loadingTem, setLoading] = React.useState(false);
   const [openAction, setOpenAction] = React.useState(false);
-  const [openMember, setOpenMember] = React.useState(false);  
+  const [openMember, setOpenMember] = React.useState(false);
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
 
   const loadingTeam = async () => {
@@ -48,11 +50,34 @@ function Index() {
     }
   };
 
-  const deleteItem =()=>{
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = (texte, type) => {
+    messageApi.open({
+      type,
+      content: '' + texte,
+      duration: 3
+    });
+  };
 
-  }
+  const deleteAction = async (item, valeur) => {
+    const result = await axios.post(lien_post + '/deleteaction', { document: valeur, idAction: item }, config);
+    if (result.status === 200) {
+      success('Deletion completed successfully', 'success');
+    } else {
+      success('' + result.data, 'error');
+    }
+  };
+  const deleteAgent = async (item) => {
+    const result = await axios.post(lien_post + '/deletememberteam', { id: item });
+    if (result.status === 200) {
+      success('Deletion completed successfully', 'success');
+    } else {
+      success('' + result.data, 'error');
+    }
+  };
   return (
     <MainCard>
+      {contextHolder}
       <Grid container>
         <Grid item lg={4}>
           <Grid className="gridAdd" sx={{ border: '2px dashed black' }} onClick={() => setOpen(true)}>
@@ -86,7 +111,24 @@ function Index() {
                 {dataTeam[0]?.action.map((index) => {
                   return (
                     <li key={index._id}>
-                      {index.title} <Delete sx={{ cursor: 'pointer', marginLeft: '3px' }} color="error" fontSize="small" />
+                      {index.title}
+                      <Delete
+                        sx={{ cursor: 'pointer', marginLeft: '3px' }}
+                        onClick={() => {
+                          let audio = new Audio(warning);
+                          audio.play();
+                          setConfirmDialog({
+                            isOpen: true,
+                            title: 'Deleting an action',
+                            subTitle: `this operation will delete the action << ${index.title} >> in this team `,
+                            onConfirm: () => {
+                              deleteAction(index.idAction, dataTeam[0]?._id);
+                            }
+                          });
+                        }}
+                        color="error"
+                        fontSize="small"
+                      />
                     </li>
                   );
                 })}
@@ -102,18 +144,23 @@ function Index() {
                   return (
                     <li key={index._id}>
                       {index.nom}
-                      <Delete 
-                      onClick={() => {
-                        setConfirmDialog({
-                          isOpen: true,
-                          title: 'Confirm Deletion',
-                          subTitle: `this operation will delete ${index.nom} in this team`,
-                          onConfirm: () => {
-                            deleteItem(index._id);
-                          }
-                        });
-                      }}
-                      sx={{ cursor: 'pointer', marginLeft: '3px' }} color="error" fontSize="small" />
+                      <Delete
+                        onClick={() => {
+                          let audio = new Audio(warning);
+                          audio.play();
+                          setConfirmDialog({
+                            isOpen: true,
+                            title: 'Deletion of an agent',
+                            subTitle: `this operation will delete << ${index.nom} >> in this team`,
+                            onConfirm: () => {
+                              deleteAgent(index._id);
+                            }
+                          });
+                        }}
+                        sx={{ cursor: 'pointer', marginLeft: '3px' }}
+                        color="error"
+                        fontSize="small"
+                      />
                     </li>
                   );
                 })}
@@ -135,7 +182,7 @@ function Index() {
           <AddMember value={dataTeam[0]} />
         </Popup>
       )}
-       <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
+      <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
     </MainCard>
   );
 }

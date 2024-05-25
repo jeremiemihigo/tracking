@@ -158,10 +158,6 @@ function AllCustomer() {
 
   const action = useSelector((state) => state.action?.action);
 
-  React.useEffect(() => {
-    console.log(action.filter((x) => x.roles[0]?.title === user.role));
-  }, [action, user]);
-
   const retournForTeam = (action) => {
     return data.filter((x) => x.actionEnCours === action);
   };
@@ -185,6 +181,19 @@ function AllCustomer() {
       navigate('/liste', { state: { visites: datas.clients, action: datas.actions } });
     } else {
       success('no customers for this status', 'error');
+    }
+  };
+
+  const returnRole = (item) => {
+    if (action) {
+      let roles = action.filter((x) => x.title === item)[0]?.roles;
+      if (roles.length > 0) {
+        return action.filter((x) => x.title === item)[0]?.roles[0].title;
+      } else {
+        return 'maybe a household visit';
+      }
+    } else {
+      return 'maybe a household visit';
     }
   };
 
@@ -212,26 +221,30 @@ function AllCustomer() {
                     <p>{retournTotal(index).length}</p>
                   </Grid>
                   <Grid container>
-                    {analyseField.action.map((region) => {
+                    {analyseField.action.map((action) => {
                       return (
-                        rechercheNombre(index, region, 'region').length > 0 && (
+                        rechercheNombre(index, action, 'region').length > 0 && (
                           <Grid
                             item
                             lg={12}
-                            key={region}
+                            key={action}
                             sx={{ padding: '2px', cursor: 'pointer' }}
-                            onClick={() => functionListe(index, region, 'region')}
+                            onClick={() => functionListe(index, action, 'region')}
                           >
-                            <Paper elevation={2} sx={{ padding: '5px' }}>
-                              <Tooltip title={region}>
-                                <Typography noWrap style={{ fontSize: '11px' }}>
-                                  {region}
+                            <Tooltip title={action}>
+                              <Paper elevation={2} sx={{ padding: '5px' }}>
+                                <Typography noWrap style={{ fontSize: '11px', textAlign: 'center', fontWeight: 700 }}>
+                                  {action}
                                 </Typography>
-                              </Tooltip>
-                              <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
-                                {rechercheNombre(index, region, 'region').length}
-                              </p>
-                            </Paper>
+
+                                <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>
+                                  {returnRole(action)}
+                                </Typography>
+                                <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
+                                  {rechercheNombre(index, action, 'region').length}
+                                </p>
+                              </Paper>
+                            </Tooltip>
                           </Grid>
                         )
                       );
@@ -247,8 +260,10 @@ function AllCustomer() {
             analyseZbm.shop.map((shop, key) => {
               return (
                 <Grid key={key} lg={3} sx={{ paddingLeft: '1px' }}>
-                  <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff', fontWeight: 'bolder' }}>
-                    {shop}
+                  <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff' }}>
+                    <Typography component="p" noWrap>
+                      {shop}
+                    </Typography>
                   </Grid>
                   <Grid container>
                     {analyseZbm.action.map((action) => {
@@ -264,6 +279,9 @@ function AllCustomer() {
                           >
                             <Paper>
                               <p style={{ fontSize: '11px', textAlign: 'center' }}>{action}</p>
+                              <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>
+                                {returnRole(action)}
+                              </Typography>
                               <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
                                 {rechercheNombre(shop, action, 'shop').length}
                               </p>
