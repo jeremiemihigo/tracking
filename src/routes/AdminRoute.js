@@ -1,0 +1,110 @@
+import { lazy } from 'react';
+
+// project import
+import Loadable from 'components/Loadable';
+import MainLayout from 'layout/MainLayout';
+import ListeClient from 'pages/dashboard/ListeClient';
+
+// render - dashboard
+const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
+const MainProcess = Loadable(lazy(() => import('pages/Parametre/MainProcess')));
+const Details = Loadable(lazy(() => import('pages/Parametre')));
+const Agent = Loadable(lazy(() => import('pages/Parametre/Agent')));
+const Departement = Loadable(lazy(() => import('pages/Parametre/Departement')));
+const Role = Loadable(lazy(() => import('pages/Parametre/Role')));
+const Action = Loadable(lazy(() => import('pages/Parametre/Action')));
+const Etape = Loadable(lazy(() => import('pages/Parametre/Etapes')));
+const Folder = Loadable(lazy(() => import('pages/Parametre/Dossier')));
+const TakeAction = Loadable(lazy(() => import('pages/TakeAction')));
+const Analyse = Loadable(lazy(() => import('pages/Analyse')));
+const Params = Loadable(lazy(() => import('pages/Param')));
+const DataToTrack = Loadable(lazy(() => import('pages/DataToTrack')));
+const Historique = Loadable(lazy(() => import('pages/History')));
+const Teams = Loadable(lazy(() => import('pages/Teams')));
+const Rapport = Loadable(lazy(() => import('pages/Rapport')));
+const NotFound = Loadable(lazy(() => import('pages/NotFound')));
+
+// ==============================|| MAIN ROUTING ||============================== //
+
+const AdminRoute = {
+  path: '/',
+  element: <MainLayout />,
+  children: [
+    {
+      path: '/',
+      element: <DashboardDefault />
+    },
+
+    {
+      path: 'mainProcess',
+      element: <MainProcess />
+    },
+
+    {
+      path: 'details/:id',
+      element: <Details />
+    },
+    {
+      path: 'agent',
+      element: <Agent />
+    },
+    {
+      path: 'departement',
+      element: <Departement />
+    },
+    {
+      path: '/role',
+      element: <Role />
+    },
+    {
+      path: '/:status',
+      element: <Action />
+    },
+    {
+      path: 'etapes',
+      element: <Etape />
+    },
+    {
+      path: 'folder',
+      element: <Folder />
+    },
+    {
+      path: 'event',
+      element: <TakeAction />
+    },
+    {
+      path: 'analyse',
+      element: <Analyse />
+    },
+    {
+      path: 'parametre',
+      element: <Params />
+    },
+    {
+      path: 'data_to_track',
+      element: <DataToTrack />
+    },
+    {
+      path: 'history',
+      element: <Historique />
+    },
+    {
+      path: 'teams',
+      element: <Teams />
+    },
+    {
+      path: 'liste',
+      element: <ListeClient />
+    },
+    {
+      path: 'rapport',
+      element: <Rapport />
+    },
+    {
+      path: '*',
+      element: <NotFound />
+    }
+  ]
+};
+
+export default AdminRoute;

@@ -1,0 +1,33 @@
+.combobox >p{
+  padding: 0px;
+  margin: 0px;
+  margin-left: 10px;
+}
+.combobox{
+  cursor: pointer;
+  background-color: #dedede;
+  margin-bottom: 5px;
+}
+.pstatus, .prole{
+font-size: 11px;
+}
+.paction{
+  font-weight: bolder;
+}
+.gridFirst > p, .gridSecond > p{
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+}
+.gridFirst, .gridSecond{
+  margin-bottom: 5px;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.midlleGrid{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

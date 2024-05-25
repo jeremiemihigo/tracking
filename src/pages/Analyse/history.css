@@ -1,0 +1,53 @@
+p>span{
+  opacity: 0.5;
+
+}
+p{
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+}
+.actionsChild{
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+.papier_no_drawer{
+  padding: 10px;
+  color: rgb(19, 19, 70);
+  display: flex;
+  font-weight: bolder;
+  justify-content: space-between;
+  position: fixed;
+  top:4rem;
+  right: 27px;
+  left: 18rem;
+  z-index: 1000;
+  
+}
+.papier_drawer{
+  padding: 10px;
+  color: rgb(19, 19, 70);
+  display: flex;
+  font-weight: bolder;
+  justify-content: space-between;
+  position: fixed;
+  top:4rem;
+  right: 27px;
+  left: 10px;
+  z-index: 1000;
+  
+}
+.item{
+  margin-left: 10px;
+  cursor: pointer;
+}
+.item:hover{
+  color: blue;
+  text-decoration: underline;
+}
+.actionsChild .result{
+  width: 95%;
+}

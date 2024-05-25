@@ -1,0 +1,31 @@
+.rows {cursor: pointer;}
+.action {
+  color: blue;
+  text-decoration: underline;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.actionListe{
+  background-color: #DEDFF5;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 20px;
+  padding-left: 10px;
+}
+.actionListe >p{
+  padding: 0px;
+  margin: 0px;
+}
+.actionListe .actionTwo{
+  font-size: 10px;
+}
+.actionOne{
+  font-weight: bolder;
+}
+.objectif{
+  font-size: 11px;
+}
+.actionListe >input{
+  background-color: none;
+  border: none;
+}

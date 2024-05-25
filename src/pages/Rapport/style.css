@@ -1,0 +1,86 @@
+.statutAction,
+.title,
+.role,
+.titleStatut,
+.pourcentage,
+.role > p,
+.statutAction > p {
+  padding: 0;
+  margin: 0;
+}
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.container {
+  height: 100%;
+}
+.gridoutsla {
+  background-color: #dedede;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.gridinsla {
+  background-color: #bcbad6;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.title {
+  font-size: 12px;
+  font-weight: bolder;
+  opacity: 0.4;
+}
+.pourcentage {
+  text-align: center;
+  font-weight: bolder;
+  margin-top: 10px;
+}
+.nombre {
+  font-size: 11px;
+  text-align: center;
+}
+.statutAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+}
+.statutAction > p {
+  font-size: 11px;
+  margin-left: 5px;
+}
+.role {
+  display: flex;
+  align-items: center;
+}
+.role > p {
+  font-size: 11px;
+  margin-left: 12px;
+}
+.statutItem {
+  background-color: red;
+}
+.titleStatut > p {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0;
+  margin: 0;
+}
+.allgrid {
+  display: flex;
+}
+.lastTexte {
+  font-size: 10px;
+  opacity: 0.5;
+}
+.lastContent {
+  display: flex;
+  width: 70%;
+  margin-left: 10px;
+  justify-content: space-between;
+}
+.lastContent > p {
+  font-size: 11px;
+}
