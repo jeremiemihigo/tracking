@@ -10,13 +10,12 @@
 .result > p {
   padding: 0;
   margin: 0;
-  font-size: 12px;
+  font-size: 10px;
 }
 .result > p > span {
   font-weight: bolder;
   opacity: 0.3;
 }
-.result{
+.result {
   margin-top: 10px;
 }
-

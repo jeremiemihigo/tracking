@@ -1,34 +1,36 @@
 import { Save } from '@mui/icons-material';
 import { Button, Stack, Typography } from '@mui/material';
-import axios from 'axios';
+import { CreateContexteGlobal } from 'GlobalContext';
 import AutoComplement from 'components/AutoComplete';
 import DirectionSnack from 'components/Direction';
 import MainCard from 'components/MainCard';
 import TextArea from 'components/TextArea';
 import React from 'react';
-import { config, lien_post } from 'static/Lien';
 import { CreateContexte } from './Contexte';
 
-function Detail() {
-  const { clientSelect } = React.useContext(CreateContexte);
+function Detail({ action }) {
+  const { clientSelect, handleClient } = React.useContext(CreateContexte);
   const [value, setValue] = React.useState('');
   const [areaValue, setAreaValue] = React.useState('');
   const [open, setOpen] = React.useState(true);
+  const { socket } = React.useContext(CreateContexteGlobal);
 
   const send = async (e) => {
     e.preventDefault();
-
     let data = {
       feedbackSelect: value,
       commentaire: areaValue,
+      type: 'post',
       customer_id: clientSelect?.unique_account_id,
-      status: clientSelect.status?.title,
-      role: clientSelect?.role[0].title,
+      status: action?.status?.title,
+      role: action?.roles[0].title,
       dateDebut: clientSelect?.updatedAt,
-      action: clientSelect?.action
+      action
     };
-    const response = await axios.post(lien_post + '/clientfeedback', data, config);
-    console.log(response);
+    socket.emit('renseignefeedback', data);
+    setAreaValue('');
+    setValue('');
+    handleClient(undefined);
   };
   return (
     <Stack>

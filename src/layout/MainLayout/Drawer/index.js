@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
 import { Box, Drawer, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // project import
-import DrawerContent from './DrawerContent';
-import MiniDrawerStyled from './MiniDrawerStyled';
 import { drawerWidth } from 'config';
+import DrawerContent from './DrawerContent';
+import DrawerHeader from './DrawerHeader';
+import MiniDrawerStyled from './MiniDrawerStyled';
 
 // ==============================|| MAIN LAYOUT - DRAWER ||============================== //
 
@@ -21,11 +22,13 @@ const MainDrawer = ({ open, handleDrawerToggle, window }) => {
 
   // header content
   const drawerContent = useMemo(() => <DrawerContent />, []);
+  const drawerHeader = useMemo(() => <DrawerHeader open={open} />, [open]);
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1300 }} aria-label="mailbox folders">
       {!matchDownMD ? (
         <MiniDrawerStyled variant="permanent" open={open}>
+          {drawerHeader}
           {drawerContent}
         </MiniDrawerStyled>
       ) : (
@@ -45,7 +48,10 @@ const MainDrawer = ({ open, handleDrawerToggle, window }) => {
               boxShadow: 'inherit'
             }
           }}
-        ></Drawer>
+        >
+          {open && drawerHeader}
+          {open && drawerContent}
+        </Drawer>
       )}
     </Box>
   );

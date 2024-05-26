@@ -1,17 +1,18 @@
 // import { Input } from 'antd';
-import React from 'react';
 import { Paper } from '@mui/material';
+import React from 'react';
 // import { config, lien } from 'static/Lien';
 // import axios from 'axios';
 // import DirectionSnackbar from 'components/Direction';
 
-import './history.css';
 import { useSelector } from 'react-redux';
+import './history.css';
 // import MainCard from 'components/MainCard';
 
-import Deroulant from './Deroulant';
-import Contexte from './Contexte';
+import { CreateContexteGlobal } from 'GlobalContext';
 import Component from './Component';
+import Contexte from './Contexte';
+import Deroulant from './Deroulant';
 
 function Index() {
   // const [data, setData] = React.useState();
@@ -41,7 +42,7 @@ function Index() {
   //   }
   // }, [client]);
 
-  const menu = useSelector(state => state.menu.drawerOpen)
+  const menu = useSelector((state) => state.menu.drawerOpen);
 
   const option = [
     {
@@ -61,23 +62,30 @@ function Index() {
         { id: 21, title: 'Agent' },
         { id: 22, title: 'Customer' },
         { id: 23, title: 'Statut' },
-        { id: 24, title: 'All customer' },
+        { id: 24, title: 'All customer' }
       ]
     }
   ];
 
+  const { socket } = React.useContext(CreateContexteGlobal);
+  React.useEffect(() => {
+    socket.on('renseigne', (data) => {
+      new Notification('Action effectuee');
+    });
+  }, [socket]);
+
   return (
     <Contexte>
-      <Paper elevation={4} className={!menu ? "papier_drawer" : "papier_no_drawer"}>
-        <p id='leftContent'></p>
-        <div style={{display:"flex", marginLeft:"10px"}}>
-        {option.map((index) => {
-          return (
-            <React.Fragment key={index.id}>
-              <Deroulant texte={index.title} table={index.child} />
-            </React.Fragment>
-          );
-        })}
+      <Paper elevation={4} className={!menu ? 'papier_drawer' : 'papier_no_drawer'}>
+        <p id="leftContent"></p>
+        <div style={{ display: 'flex', marginLeft: '10px' }}>
+          {option.map((index) => {
+            return (
+              <React.Fragment key={index.id}>
+                <Deroulant texte={index.title} table={index.child} />
+              </React.Fragment>
+            );
+          })}
         </div>
       </Paper>
       <>

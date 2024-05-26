@@ -1,25 +1,20 @@
 /* eslint-disable react/prop-types */
 import { Save } from '@mui/icons-material';
 import { Button, Grid, Typography } from '@mui/material';
-import axios from 'axios';
+import { CreateContexteGlobal } from 'GlobalContext';
 import TextArea from 'components/TextArea';
 import AutoComplement from 'pages/Parametre/Etapes/Complement';
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 import { useSelector } from 'react-redux';
-import { config, lien_post } from 'static/Lien';
 import './action.css';
 
-function RenseignerFeedback({ donner }) {
-  const { visites } = donner;
-
+function RenseignerFeedback({ visites, changeAction }) {
+  const { socket } = React.useContext(CreateContexteGlobal);
   const action = useSelector((state) => state.action?.action);
-
   const [areaValue, setAreaValue] = React.useState('');
   const [clientSelect, setClientSelect] = React.useState('');
-
   const [actionSelect, setActionSelect] = React.useState('');
-
   const handleClient = (client) => {
     setClientSelect(client);
   };
@@ -27,21 +22,29 @@ function RenseignerFeedback({ donner }) {
     e.preventDefault();
     const data = {
       _idClient: clientSelect._id,
-
       ancienAction: clientSelect.action,
-
       customer_id: clientSelect.unique_account_id,
       commentaire: areaValue,
+      type: 'feedback',
       action: actionSelect,
       role: clientSelect?.role[0]?.title,
       status: clientSelect?.status.title,
       dateDebut: clientSelect?.updatedAt
     };
-    const response = await axios.post(lien_post + '/demandeFeedback', data, config);
-    console.log(response);
+    socket.emit('renseignefeedback', data);
     setClientSelect('');
     setAreaValue('');
+    setActionSelect('');
   };
+
+  React.useEffect(() => {
+    socket.on('renseigne', (data) => {
+      if (data.content) {
+        let difference = visites.filter((x) => x._id !== data.content._id);
+        changeAction(difference);
+      }
+    });
+  }, [socket]);
 
   return (
     <div style={{ width: '40rem' }}>
@@ -51,7 +54,6 @@ function RenseignerFeedback({ donner }) {
             <tbody>
               {visites &&
                 visites.map((index) => {
-                  console.log(visites);
                   return (
                     <tr onClick={() => handleClient(index)} key={index._id}>
                       <td className={clientSelect && clientSelect._id === index._id ? 'select' : 'blacks'}>

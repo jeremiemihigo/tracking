@@ -20,12 +20,12 @@ import user from 'Redux/user';
 
 const reducers = combineReducers({
   menu,
+
   data_to_track,
   today,
   initiale,
   main,
   user,
-
   etape,
   process,
   status,

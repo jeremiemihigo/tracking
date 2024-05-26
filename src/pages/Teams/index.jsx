@@ -68,7 +68,7 @@ function Index() {
     }
   };
   const deleteAgent = async (item) => {
-    const result = await axios.post(lien_post + '/deletememberteam', { id: item });
+    const result = await axios.post(lien_post + '/deletememberteam', { id: item }, config);
     if (result.status === 200) {
       success('Deletion completed successfully', 'success');
     } else {

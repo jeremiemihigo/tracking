@@ -1,5 +1,6 @@
 import { Fab, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
 import MainCard from 'components/MainCard';
@@ -9,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { config, lien_read, returnCategorie } from 'static/Lien';
 import Popup from 'static/Popup';
+import moment from '../../../node_modules/moment/moment';
 import OpenResult from './OpenResult';
 
 function AllCustomer() {
@@ -46,13 +48,13 @@ function AllCustomer() {
 
   const allAnalyse = () => {
     if (returnCategorie(user?.role) === 'field') {
-      const action = Object.keys(_.groupBy(data, 'action.title'));
+      const action = Object.keys(_.groupBy(data, 'action.idAction'));
       const region = Object.keys(_.groupBy(data, 'shop_region'));
       setAnalyseField({ action, region });
     }
     if (user?.role === 'ZBM') {
       const shop = Object.keys(_.groupBy(data, 'shop_name'));
-      const action = Object.keys(_.groupBy(data, 'action.title'));
+      const action = Object.keys(_.groupBy(data, 'action.idAction'));
       setAnalyseZbm({ action, shop });
     }
   };
@@ -140,10 +142,10 @@ function AllCustomer() {
 
   const rechercheNombre = (lieu, action, type) => {
     if (type === 'shop') {
-      return data.filter((x) => x.action.title === action && x.shop_name === lieu);
+      return data.filter((x) => x.actionEnCours === action && x.shop_name === lieu);
     }
     if (type === 'region') {
-      return data.filter((x) => x.action.title === action && x.shop_region === lieu);
+      return data.filter((x) => x.actionEnCours === action && x.shop_region === lieu);
     }
   };
   const retournTotal = (region) => {
@@ -161,8 +163,11 @@ function AllCustomer() {
   const retournForTeam = (action) => {
     return data.filter((x) => x.actionEnCours === action);
   };
-  const retournActionTitle = (actionId) => {
-    return _.filter(action, { idAction: actionId })[0]?.title;
+
+  const returnAction = (id) => {
+    if (action && action.length > 0) {
+      return _.filter(action, { idAction: id })[0]?.title;
+    }
   };
   const [messageApi, contextHolder] = message.useMessage();
   const success = (texte, type) => {
@@ -174,7 +179,7 @@ function AllCustomer() {
   };
   const navigationManagment = (action) => {
     const datas = {
-      actions: retournActionTitle(action),
+      actions: returnAction(action),
       clients: _.filter(data, { actionEnCours: action })
     };
     if (datas.clients.length > 0) {
@@ -186,14 +191,58 @@ function AllCustomer() {
 
   const returnRole = (item) => {
     if (action) {
-      let roles = action.filter((x) => x.title === item)[0]?.roles;
+      let roles = action.filter((x) => x.idAction === item)[0]?.roles;
       if (roles.length > 0) {
-        return action.filter((x) => x.title === item)[0]?.roles[0].title;
+        return action.filter((x) => x.idAction === item)[0]?.roles[0].title;
       } else {
         return 'maybe a household visit';
       }
     } else {
       return 'maybe a household visit';
+    }
+  };
+
+  const [dataChange, setDataChange] = React.useState({ content: null, error: '' });
+  const { content, error } = dataChange;
+  const { socket } = React.useContext(CreateContexteGlobal);
+  React.useEffect(() => {
+    socket.on('renseigne', (donner) => {
+      if (!donner.error) {
+        setDataChange({ content: donner.content[0] });
+      } else {
+        setDataChange({ content: null, error: donner.content });
+      }
+      // new Notification('Action effectuee');
+    });
+  }, [socket]);
+  React.useEffect(() => {
+    function existe() {
+      if (_.filter(data, { _id: content._id }).length > 0) {
+        let nouvel = data.map((x) => (x._id === content._id ? content : x));
+        setData(nouvel);
+      } else {
+        setData({ ...data, content });
+      }
+    }
+    if (content && data) {
+      if (user?.role === 'ZBM' && content.shop_region === user?.region) {
+        existe();
+      }
+      if (user?.role === 'FIELD') {
+        existe();
+      }
+      if (user?.role === 'RS' && content.shop_name === user?.shop) {
+        existe();
+      }
+    }
+  }, [content]);
+  console.log(content);
+  const returnLastupdate = (action) => {
+    if (data && data.length > 0) {
+      let donner = _.filter(data, { actionEnCours: action });
+      return donner[donner.length - 1]['updatedAt'];
+    } else {
+      return '';
     }
   };
 
@@ -231,17 +280,19 @@ function AllCustomer() {
                             sx={{ padding: '2px', cursor: 'pointer' }}
                             onClick={() => functionListe(index, action, 'region')}
                           >
-                            <Tooltip title={action}>
+                            <Tooltip title={returnAction(action)}>
                               <Paper elevation={2} sx={{ padding: '5px' }}>
                                 <Typography noWrap style={{ fontSize: '11px', textAlign: 'center', fontWeight: 700 }}>
-                                  {action}
+                                  {returnAction(action)}
                                 </Typography>
-
                                 <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>
                                   {returnRole(action)}
                                 </Typography>
                                 <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
                                   {rechercheNombre(index, action, 'region').length}
+                                </p>
+                                <p style={{ fontSize: '9px', textAlign: 'right' }}>
+                                  {returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
                                 </p>
                               </Paper>
                             </Tooltip>
@@ -277,13 +328,16 @@ function AllCustomer() {
                             sx={{ padding: '2px', cursor: 'pointer' }}
                             onClick={() => functionListe(shop, action, 'shop')}
                           >
-                            <Paper>
-                              <p style={{ fontSize: '11px', textAlign: 'center' }}>{action}</p>
+                            <Paper elevation={2} sx={{ padding: '5px' }}>
+                              <p style={{ fontSize: '11px', textAlign: 'center' }}>{returnAction(action)}</p>
                               <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>
                                 {returnRole(action)}
                               </Typography>
                               <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
                                 {rechercheNombre(shop, action, 'shop').length}
+                              </p>
+                              <p style={{ fontSize: '9px', textAlign: 'right' }}>
+                                {returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
                               </p>
                             </Paper>
                           </Grid>
@@ -326,7 +380,7 @@ function AllCustomer() {
                   {index.actions.map((action) => {
                     return (
                       <Grid item lg={3} key={action} sx={{ padding: '2px', cursor: 'pointer' }} onClick={() => navigationManagment(action)}>
-                        <MainCard title={retournActionTitle(action)}>
+                        <MainCard title={returnAction(action)}>
                           <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>{retournForTeam(action).length}</p>
                         </MainCard>
                       </Grid>

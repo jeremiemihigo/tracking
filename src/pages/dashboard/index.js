@@ -2,6 +2,7 @@
 // material-ui
 import { Grid, Paper, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import NofificationAudio from 'assets/notification/error.mp3';
 import axios from 'axios';
@@ -28,10 +29,16 @@ const DashboardDefault = () => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState();
   const now = useSelector((state) => state.today?.today);
+  const allaction = useSelector((state) => state?.action.action);
+
+  const returnAction = (id) => {
+    if (allaction && allaction.length > 0) {
+      return _.filter(allaction, { idAction: id })[0]?.title;
+    }
+  };
 
   const [data, setData] = React.useState([]);
   const user = useSelector((state) => state.user?.user);
-  console.log(user.role);
 
   React.useEffect(() => {
     if (user && returnCategorie(user.role) === 'team') {
@@ -183,13 +190,12 @@ const DashboardDefault = () => {
   const [actionSelect, setActionSelect] = React.useState();
   const [analyse, setAnalyse] = React.useState();
   const structuration = () => {
-    let groupe = _.groupBy(data, 'action.title');
+    let groupe = _.groupBy(data, 'action.idAction');
     let key = Object.keys(groupe);
     let table = [];
     for (let i = 0; i < key.length; i++) {
       table.push({
         action: key[i],
-        // visites: _.filter(groupe['' + key[i]], { shop_name: user.idShop })
         visites: groupe['' + key[i]]
       });
     }
@@ -212,11 +218,11 @@ const DashboardDefault = () => {
 
   const openFonction = (index) => {
     if (user?.permission.includes(index.visites[0].actionEnCours)) {
-      setActionSelect(index);
-      if (index.action === 'Renseigner le statut') {
+      setActionSelect(index.visites);
+      if (index.action === 'SA89AF') {
         setOpen(true);
       } else {
-        navigate('/event', { state: index.visites });
+        navigate('/event', { state: index.action });
       }
     } else {
       const audio = new Audio(NofificationAudio);
@@ -228,6 +234,35 @@ const DashboardDefault = () => {
     const { visites, action } = index;
     navigate('/liste', { state: { visites, action } });
   };
+
+  const [dataChange, setDataChange] = React.useState({ content: null, error: '' });
+  const { content, error } = dataChange;
+  const { socket } = React.useContext(CreateContexteGlobal);
+  React.useEffect(() => {
+    socket.on('renseigne', (donner) => {
+      if (!donner.error) {
+        setDataChange({ content: donner.content[0] });
+      } else {
+        setDataChange({ content: null, error: donner.content });
+      }
+      // new Notification('Action effectuee');
+    });
+  }, [socket]);
+  React.useEffect(() => {
+    if (content && data.length > 0) {
+      setData(data.filter((x) => x._id !== content._id));
+      if (open) {
+        setActionSelect(data.filter((x) => x._id !== content._id));
+      }
+    }
+    if (user && user.permission.includes(content?.actionEnCours)) {
+      setData({
+        ...data,
+        content
+      });
+    }
+  }, [content]);
+
   return (
     <Contexte>
       {contextHolder}
@@ -250,7 +285,7 @@ const DashboardDefault = () => {
                 <AnalyticEcommerce
                   functionAction={() => openFonction(index)}
                   functionListe={() => functionListe(index)}
-                  title={index.action}
+                  title={returnAction(index.action)}
                   count={index.visites.length}
                   bg={couleurAll(index)}
                 />
@@ -260,7 +295,7 @@ const DashboardDefault = () => {
 
         {!analyse && <LoaderGif width={200} height={200} />}
 
-        {actionSelect && actionSelect.visites.length > 0 && (
+        {actionSelect && actionSelect.length > 0 && (
           <>
             <Grid item xs={12} md={12} lg={11.99}>
               <Grid container alignItems="center" justifyContent="space-between">
@@ -273,7 +308,7 @@ const DashboardDefault = () => {
                 {/* <OrdersTable /> */}
 
                 <DataGrid
-                  rows={actionSelect.visites}
+                  rows={actionSelect}
                   columns={columns}
                   initialState={{
                     pagination: {
@@ -291,12 +326,12 @@ const DashboardDefault = () => {
         )}
         {actionSelect && (
           <Popup open={open} setOpen={setOpen} title="Take action">
-            <RenseignerFeedback donner={actionSelect} />
+            <RenseignerFeedback visites={actionSelect} changeAction={setActionSelect} />
           </Popup>
         )}
         {actionSelect && (
           <Popup open={openListe} setOpen={setOpenListe} title="Take action">
-            <Liste client={actionSelect?.visites} />
+            <Liste client={actionSelect} />
           </Popup>
         )}
       </Grid>

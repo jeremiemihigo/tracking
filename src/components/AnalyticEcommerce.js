@@ -19,15 +19,19 @@ const AnalyticEcommerce = ({ title, count, bg, functionAction, functionListe }) 
       <Grid container alignItems="center">
         <Grid item lg={12}>
           {count ? (
-            <Typography
-              variant="h4"
-              color="inherit"
-              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-            >
+            <Typography variant="h4" color="inherit" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography component="p">{count}</Typography>
               <Typography sx={{ fontSize: '11px' }} component="p">
-                <Typography component="span" sx={{marginRight:"30px"}} onClick={()=>functionListe()}>Liste</Typography>
-                <Typography component="span" onClick={()=>functionAction()}>Take action</Typography>
+                <Typography
+                  component="span"
+                  sx={{ marginRight: '30px', fontWeight: 'bolder', fontSize: '12px' }}
+                  onClick={() => functionListe()}
+                >
+                  Liste
+                </Typography>
+                <Typography sx={{ fontSize: '12px', fontWeight: 'bolder' }} component="span" onClick={() => functionAction()}>
+                  Take action
+                </Typography>
               </Typography>
             </Typography>
           ) : (
@@ -38,29 +42,35 @@ const AnalyticEcommerce = ({ title, count, bg, functionAction, functionListe }) 
         </Grid>
       </Grid>
       <Grid container alignItems="center">
-        <Grid item lg={4} sx={{ background: '#00a9e0', padding: '5px', borderRadius: '10px' }}>
-          <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '11px', margin: '0px', padding: '0px' }} color="inherit">
-            INSLA
-          </Typography>
-          <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bolder' }} color="inherit">
-            {bg.nombreIn}
-          </Typography>
+        <Grid item lg={4} xs={4} sx={{ padding: '4px' }}>
+          <div style={{ background: '#00a9e0', padding: '5px', borderRadius: '10px' }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '11px', margin: '0px', padding: '0px' }} color="inherit">
+              INSLA
+            </Typography>
+            <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bolder' }} color="inherit">
+              {bg.nombreIn}
+            </Typography>
+          </div>
         </Grid>
-        <Grid item lg={4} sx={{ background: '#E5EFF6', padding: '5px', borderRadius: '10px' }}>
-          <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '11px' }} color="inherit">
-            OUTSLA
-          </Typography>
-          <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bolder' }} color="inherit">
-            {bg.nombreOut}
-          </Typography>
+        <Grid item lg={4} xs={4} sx={{ padding: '4px' }}>
+          <div style={{ background: '#E5EFF6', padding: '5px', borderRadius: '10px' }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '11px' }} color="inherit">
+              OUTSLA
+            </Typography>
+            <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bolder' }} color="inherit">
+              {bg.nombreOut}
+            </Typography>
+          </div>
         </Grid>
-        <Grid item lg={4} sx={{ background: '#FEF6AA', padding: '5px', borderRadius: '10px' }}>
-          <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '11px' }} color="inherit">
-            Today
-          </Typography>
-          <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bolder' }} color="inherit">
-            {bg.today}
-          </Typography>
+        <Grid item lg={4} xs={4} sx={{ padding: '5px' }}>
+          <div style={{ background: '#FEF6AA', padding: '5px', borderRadius: '10px' }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '11px' }} color="inherit">
+              Today
+            </Typography>
+            <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bolder' }} color="inherit">
+              {bg.today}
+            </Typography>
+          </div>
         </Grid>
       </Grid>
     </Stack>
@@ -69,8 +79,8 @@ const AnalyticEcommerce = ({ title, count, bg, functionAction, functionListe }) 
 AnalyticEcommerce.propTypes = {
   title: PropTypes.string,
   bg: PropTypes.object,
-  functionAction : PropTypes.func,
-  functionListe : PropTypes.func
+  functionAction: PropTypes.func,
+  functionListe: PropTypes.func
 };
 
 AnalyticEcommerce.defaultProps = {

@@ -13,8 +13,9 @@ import 'assets/third-party/apex-chart.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // project import
-import App from './App';
+import ContexteGlobal from 'GlobalContext';
 import { store } from 'store';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
@@ -23,9 +24,11 @@ const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
   <ReduxProvider store={store}>
-    <BrowserRouter basename="/">
-      <App />
-    </BrowserRouter>
+    <ContexteGlobal>
+      <BrowserRouter basename="/">
+        <App />
+      </BrowserRouter>
+    </ContexteGlobal>
   </ReduxProvider>
 );
 

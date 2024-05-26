@@ -1,14 +1,14 @@
 // material-ui
 // import { IconButton, Link } from '@mui/material';
-import { Box, useMediaQuery, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 // import { GithubOutlined } from '@ant-design/icons';
 // project import
-import Profile from './Profile';
-import Notification from './Notification';
-import MobileSection from './MobileSection';
 import { useSelector } from 'react-redux';
 import FolderComponent from './Folder';
+import MobileSection from './MobileSection';
+import Notification from './Notification';
 import OnlyOne from './OnlyOne';
+import Profile from './Profile';
 // import { addTeams } from 'static/Lien';
 
 // ==============================|| HEADER - CONTENT ||============================== //
@@ -22,8 +22,8 @@ const HeaderContent = () => {
   return (
     <>
       {!matchesXs && (
-        <Box sx={{ width: '100%',  ml: { xs: 0, md: 1 } }}>
-          <Typography variant="h6" color="default" sx={{fontWeight: 'bolder',}}>
+        <Box sx={{ width: '100%', ml: { xs: 0, md: 1 } }}>
+          <Typography variant="h6" color="default" sx={{ fontWeight: 'bolder' }}>
             {menu.openItem[0]}
           </Typography>
           <Typography variant="body2" color="textSecondary">
@@ -33,10 +33,10 @@ const HeaderContent = () => {
       )}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
       {/* {addTeams(user?.role) && <OnlyOne/> } */}
-       <OnlyOne/>
+      <OnlyOne />
 
-     <FolderComponent /> 
-      {user?.fonction === 'admin' && <Notification />} 
+      <FolderComponent />
+      {user?.fonction === 'admin' && <Notification />}
 
       {!matchesXs && <Profile />}
       {matchesXs && <MobileSection />}

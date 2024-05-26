@@ -27,7 +27,7 @@ function Sla() {
 
   const pourcentage = (chiffre) => {
     if (chiffre && data && data.length > 0) {
-      return (chiffre * 100) / data.length + '%';
+      return ((chiffre * 100) / data.length).toFixed(0) + '%';
     }
   };
   return (

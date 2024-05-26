@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
 import { AppBar, IconButton, Toolbar, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // project import
 import AppBarStyled from './AppBarStyled';
@@ -22,7 +22,7 @@ const Header = ({ open, handleDrawerToggle }) => {
 
   // common header
   const mainHeader = (
-    <Toolbar sx={{background:"#002d72", color:"#fff"}}>
+    <Toolbar sx={{ background: '#002d72', color: '#fff' }}>
       <IconButton
         disableRipple
         aria-label="open drawer"
