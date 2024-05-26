@@ -1,16 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // material-ui
-import { Grid, Paper, Stack, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Grid, Typography } from '@mui/material';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import NofificationAudio from 'assets/notification/error.mp3';
 import axios from 'axios';
-import Dot from 'components/@extended/Dot';
 import AnalyticEcommerce from 'components/AnalyticEcommerce';
 import LoaderGif from 'components/LoaderGif';
-import MainCard from 'components/MainCard';
 import _ from 'lodash';
+import PaperHead from 'pages/Component/PaperHead';
 import Contexte from 'pages/TakeAction/Contexte';
 import Liste from 'pages/TakeAction/Liste';
 import RenseignerFeedback from 'pages/TakeAction/RenseignerFeedback';
@@ -62,21 +60,6 @@ const DashboardDefault = () => {
     loadingClient();
   }, []);
 
-  const couleur = (date1, delai) => {
-    let n = (differenceDays(date1, new Date()) * 100) / delai;
-    if (n > 0 && n < 50) {
-      return 'success';
-    }
-    if (n > 50 && n < 80) {
-      return 'primary';
-    }
-    if (n > 80 && n < 100) {
-      return 'warning';
-    }
-    if (n > 100) {
-      return 'error';
-    }
-  };
   const couleurAll = (allData) => {
     let nombreIn = 0;
     let nombreOut = 0;
@@ -95,98 +78,6 @@ const DashboardDefault = () => {
     let pourcentage = ((nombreIn + today) * 100) / allData.visites.length;
     return { pourcentage, today, nombreIn, nombreOut };
   };
-
-  const columns = [
-    {
-      field: 'unique_account_id',
-      headerName: 'ID',
-      width: 110,
-      editable: false
-    },
-    {
-      field: 'customer_name',
-      headerName: 'customer_name',
-      width: 110,
-      editable: false
-    },
-    {
-      field: 'payment_status',
-      headerName: 'payment_status',
-      width: 80,
-      editable: false
-    },
-
-    {
-      field: 'shop_region',
-      headerName: 'Region',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'shop_name',
-      headerName: 'Shop',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'par_to_date',
-      headerName: 'PAR',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'INSLA',
-      headerName: 'Status',
-      width: 85,
-      editable: false,
-      renderCell: (params) => {
-        return (
-          <Stack direction="row" spacing={1} sx={{ display: 'flex', alignItems: 'center', height: '100%' }} alignItems="center">
-            <Dot color={couleur(params.row.updatedAt, params.row.action?.delai)} />
-            <Typography sx={{ fontSize: '12px' }}>
-              {differenceDays(params.row.updatedAt, new Date()) > params.row.action?.delai ? 'OUTSLA' : 'INSLA'}
-            </Typography>
-          </Stack>
-        );
-      }
-    },
-    {
-      field: 'cumul',
-      headerName: 'Cumul',
-      width: 50,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.action?.delai - differenceDays(params.row.updatedAt, new Date());
-      }
-    },
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 150,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.action?.title;
-      }
-    },
-    {
-      field: 'role',
-      headerName: 'Role',
-      width: 100,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.role[0]?.title;
-      }
-    },
-    {
-      field: 'Delai',
-      headerName: 'Délai',
-      width: 50,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.action?.delai + ' jour(s)';
-      }
-    }
-  ];
   const [actionSelect, setActionSelect] = React.useState();
   const [analyse, setAnalyse] = React.useState();
   const structuration = () => {
@@ -266,15 +157,8 @@ const DashboardDefault = () => {
   return (
     <Contexte>
       {contextHolder}
-      <Paper
-        sx={{
-          marginBottom: '20px',
-          padding: '10px',
-          fontWeight: 'bolder'
-        }}
-      >
-        {analyse && analyse.length === 0 ? <p style={{ textAlign: 'center', color: 'red' }}>No action pending</p> : 'pending actions'}
-      </Paper>
+      {analyse && analyse.length === 0 ? <PaperHead texte="No action pending" /> : <PaperHead texte="Pending actions" />}
+
       <Grid container rowSpacing={4.5} columnSpacing={2.75}>
         {/* row 1 */}
         {analyse &&
@@ -304,23 +188,6 @@ const DashboardDefault = () => {
                 </Grid>
                 <Grid />
               </Grid>
-              <MainCard sx={{ mt: 2 }}>
-                {/* <OrdersTable /> */}
-
-                <DataGrid
-                  rows={actionSelect}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 20
-                      }
-                    }
-                  }}
-                  pageSizeOptions={[20]}
-                  disableRowSelectionOnClick
-                />
-              </MainCard>
             </Grid>
           </>
         )}

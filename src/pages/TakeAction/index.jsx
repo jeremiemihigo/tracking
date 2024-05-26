@@ -1,11 +1,13 @@
 // material-ui
-import { Grid, Paper } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // project import
 // import MainCard from 'components/MainCard';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
+import LoaderGif from 'components/LoaderGif';
 import _ from 'lodash';
+import PaperHead from 'pages/Component/PaperHead';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { config, lien_read } from 'static/Lien';
@@ -69,27 +71,22 @@ const ComponentTypography = () => {
 
   return (
     <Contexte>
-      <Paper
-        sx={{
-          marginBottom: '20px',
-          padding: '5px',
-          fontWeight: 'bolder'
-        }}
-      >
-        <p style={{ margin: '0px', padding: '0px' }}>{actionFilter && actionFilter.title}</p>
-      </Paper>
-      <Grid container spacing={3} sx={{ paddingLeft: '10px' }}>
-        {contextHolder}
-        <Grid item xs={12} sm={6} md={3} lg={3}>
-          {data && actionFilter && <Liste client={data} action={actionFilter} />}
+      {contextHolder}
+      {actionFilter && <PaperHead texte={actionFilter.title} />}
+      {!data && <LoaderGif width={120} height={120} />}
+      {data && (
+        <Grid container spacing={3} sx={{ paddingLeft: '10px' }}>
+          <Grid item xs={12} sm={6} md={3} lg={3}>
+            {actionFilter && <Liste client={data} action={actionFilter} />}
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4}>
+            {actionFilter && <Detail action={actionFilter} />}
+          </Grid>
+          <Grid item xs={12} sm={12} md={5} lg={5} sx={{ height: '20px' }}>
+            <DetailListe />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={4}>
-          {actionFilter && <Detail action={actionFilter} />}
-        </Grid>
-        <Grid item xs={12} sm={12} md={5} lg={5} sx={{ height: '20px' }}>
-          <DetailListe />
-        </Grid>
-      </Grid>
+      )}
     </Contexte>
   );
 };

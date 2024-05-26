@@ -6,6 +6,7 @@ import DirectionSnack from 'components/Direction';
 import MainCard from 'components/MainCard';
 import TextArea from 'components/TextArea';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { CreateContexte } from './Contexte';
 
 function Detail({ action }) {
@@ -14,6 +15,7 @@ function Detail({ action }) {
   const [areaValue, setAreaValue] = React.useState('');
   const [open, setOpen] = React.useState(true);
   const { socket } = React.useContext(CreateContexteGlobal);
+  const user = useSelector((state) => state.user?.user);
 
   const send = async (e) => {
     e.preventDefault();
@@ -25,7 +27,8 @@ function Detail({ action }) {
       status: action?.status?.title,
       role: action?.roles[0].title,
       dateDebut: clientSelect?.updatedAt,
-      action
+      action,
+      codeAgent: user?.codeAgent
     };
     socket.emit('renseignefeedback', data);
     setAreaValue('');

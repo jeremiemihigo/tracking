@@ -236,10 +236,10 @@ function AllCustomer() {
       }
     }
   }, [content]);
-  console.log(content);
   const returnLastupdate = (action) => {
     if (data && data.length > 0) {
       let donner = _.filter(data, { actionEnCours: action });
+
       return donner[donner.length - 1]['updatedAt'];
     } else {
       return '';
@@ -255,7 +255,7 @@ function AllCustomer() {
             returnCategorie(user?.role) === 'field' &&
             analyseField.region.map((index, key) => {
               return (
-                <Grid key={key} lg={2} xs={12}>
+                <Grid key={key} lg={2} xs={12} sm={12} md={6}>
                   <Grid
                     sx={{
                       padding: '5px',
@@ -276,6 +276,9 @@ function AllCustomer() {
                           <Grid
                             item
                             lg={12}
+                            md={6}
+                            xs={6}
+                            sm={4}
                             key={action}
                             sx={{ padding: '2px', cursor: 'pointer' }}
                             onClick={() => functionListe(index, action, 'region')}
@@ -310,7 +313,7 @@ function AllCustomer() {
             user?.role === 'ZBM' &&
             analyseZbm.shop.map((shop, key) => {
               return (
-                <Grid key={key} lg={3} sx={{ paddingLeft: '1px' }}>
+                <Grid key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
                   <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff' }}>
                     <Typography component="p" noWrap>
                       {shop}
@@ -324,6 +327,8 @@ function AllCustomer() {
                             item
                             lg={12}
                             md={6}
+                            xs={6}
+                            sm={12}
                             key={action}
                             sx={{ padding: '2px', cursor: 'pointer' }}
                             onClick={() => functionListe(shop, action, 'shop')}

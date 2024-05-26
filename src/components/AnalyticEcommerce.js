@@ -17,28 +17,18 @@ const AnalyticEcommerce = ({ title, count, bg, functionAction, functionListe }) 
         {title}
       </Typography>
       <Grid container alignItems="center">
-        <Grid item lg={12}>
-          {count ? (
-            <Typography variant="h4" color="inherit" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography component="p">{count}</Typography>
-              <Typography sx={{ fontSize: '11px' }} component="p">
-                <Typography
-                  component="span"
-                  sx={{ marginRight: '30px', fontWeight: 'bolder', fontSize: '12px' }}
-                  onClick={() => functionListe()}
-                >
-                  Liste
-                </Typography>
-                <Typography sx={{ fontSize: '12px', fontWeight: 'bolder' }} component="span" onClick={() => functionAction()}>
-                  Take action
-                </Typography>
-              </Typography>
-            </Typography>
-          ) : (
-            <Typography variant="h6" sx={{ textAlign: 'center' }} color="inherit">
-              Loading
-            </Typography>
-          )}
+        <Grid item lg={4} sm={4} xs={4} md={4}>
+          <Typography component="p">{count}</Typography>
+        </Grid>
+        <Grid item lg={4} sm={4} xs={4} md={4}>
+          <Typography component="span" sx={{ marginRight: '30px', fontWeight: 'bolder', fontSize: '12px' }} onClick={() => functionListe()}>
+            Liste
+          </Typography>
+        </Grid>
+        <Grid item lg={4} sm={4} xs={4} md={4}>
+          <Typography sx={{ fontSize: '12px', fontWeight: 'bolder' }} component="span" onClick={() => functionAction()}>
+            Take action
+          </Typography>
         </Grid>
       </Grid>
       <Grid container alignItems="center">

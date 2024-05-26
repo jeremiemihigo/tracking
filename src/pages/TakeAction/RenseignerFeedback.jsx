@@ -15,6 +15,7 @@ function RenseignerFeedback({ visites, changeAction }) {
   const [areaValue, setAreaValue] = React.useState('');
   const [clientSelect, setClientSelect] = React.useState('');
   const [actionSelect, setActionSelect] = React.useState('');
+  const user = useSelector((state) => state.user?.user);
   const handleClient = (client) => {
     setClientSelect(client);
   };
@@ -26,6 +27,7 @@ function RenseignerFeedback({ visites, changeAction }) {
       customer_id: clientSelect.unique_account_id,
       commentaire: areaValue,
       type: 'feedback',
+      codeAgent: user?.codeAgent,
       action: actionSelect,
       role: clientSelect?.role[0]?.title,
       status: clientSelect?.status.title,

@@ -1,11 +1,11 @@
-import { Paper } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
+import PaperHead from 'pages/Component/PaperHead';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from '../../../node_modules/react-redux/es/exports';
 
 function ListeClient() {
   const location = useLocation();
@@ -87,9 +87,7 @@ function ListeClient() {
 
   return (
     <div>
-      <Paper sx={{ marginBottom: '10px', padding: '10px', display: 'flex', justifyContent: 'space-between', fontWeight: 'bolder' }}>
-        <p style={{ margin: 0, padding: 0 }}>list of clients with status {'<< ' + returnAction(state.action) + ' >>'}</p>
-      </Paper>
+      <PaperHead texte={`list of clients with status ${'<< ' + returnAction(state.action) + ' >>'}`} />
       <MainCard>
         <div style={{ width: '70vw' }}>
           {state && (

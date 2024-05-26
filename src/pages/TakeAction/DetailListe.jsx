@@ -5,6 +5,7 @@ import Result from './Result';
 
 function DetailListe() {
   const { clientSelect } = React.useContext(CreateContexte);
+
   return (
     <div style={{ height: '10rem' }}>
       {clientSelect && clientSelect.result.length > 0 ? (

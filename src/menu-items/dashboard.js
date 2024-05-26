@@ -1,12 +1,13 @@
 // assets
-import { BarChartOutlined, DatabaseOutlined, FileOutlined, HistoryOutlined } from '@ant-design/icons';
+import { BarChartOutlined, DatabaseOutlined, FileOutlined, HistoryOutlined, UserOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
   DatabaseOutlined,
   HistoryOutlined,
   BarChartOutlined,
-  FileOutlined
+  FileOutlined,
+  UserOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -49,7 +50,7 @@ const dashboard = {
       type: 'item',
       user: 'all',
       url: '/data_to_track',
-      icon: icons.HistoryOutlined,
+      icon: icons.UserOutlined,
       breadcrumbs: false
     },
     {
