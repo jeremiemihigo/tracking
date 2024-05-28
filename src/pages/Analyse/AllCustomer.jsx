@@ -4,6 +4,7 @@ import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
 import Dot from 'components/@extended/Dot';
+import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
 import React from 'react';
@@ -19,6 +20,7 @@ function AllCustomer() {
   const [data, setData] = React.useState();
   const user = useSelector((state) => state.user?.user);
   const [dataOpen, setDataOpen] = React.useState();
+  const [chargement, setChargement] = React.useState(true);
 
   function openResu(index) {
     setDataOpen(index);
@@ -28,18 +30,23 @@ function AllCustomer() {
   const loading = async () => {
     try {
       if (returnCategorie(user?.role) === 'managment') {
+        setChargement(true);
         const response = await axios.get(lien_read + '/readManagment', config);
         const team = await axios.get(`${lien_read}/teamrole/${user?.role}`, config);
+        setChargement(false);
         document.getElementById('leftContent').textContent = `${response.data.length} customers are waiting`;
         setData(response.data);
         setTeam(team.data);
       }
       if (returnCategorie(user?.role) !== 'managment') {
+        setChargement(true);
         const response = await axios.get(lien_read + '/clientField', config);
+        setChargement(false);
         setData(response.data);
         document.getElementById('leftContent').textContent = `${response.data.length} customers are waiting`;
       }
     } catch (error) {
+      setChargement(false);
       console.log(error);
     }
   };
@@ -270,6 +277,7 @@ function AllCustomer() {
     <div>
       {contextHolder}
       <MainCard title="">
+        {chargement && !data && <LoaderGif width={150} height={150} />}
         <Grid container>
           {analyseField &&
             returnCategorie(user?.role) === 'field' &&
