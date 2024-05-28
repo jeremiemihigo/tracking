@@ -17,9 +17,7 @@ const ContexteClient = (props) => {
         clientSelect
       }}
     >
-      <div style={{background:"#fff", height:"100vh"}}>
       {props.children}
-      </div>
     </CreateContexte.Provider>
   );
 };

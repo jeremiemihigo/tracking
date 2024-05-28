@@ -4,6 +4,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 // import { GithubOutlined } from '@ant-design/icons';
 // project import
 import { useSelector } from 'react-redux';
+import Connected from './Connected';
 import FolderComponent from './Folder';
 import MobileSection from './MobileSection';
 import Notification from './Notification';
@@ -34,6 +35,7 @@ const HeaderContent = () => {
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
       {/* {addTeams(user?.role) && <OnlyOne/> } */}
       <OnlyOne />
+      <Connected />
 
       <FolderComponent />
       {user?.fonction === 'admin' && <Notification />}

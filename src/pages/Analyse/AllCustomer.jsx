@@ -3,12 +3,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
+import Dot from 'components/@extended/Dot';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { config, lien_read, returnCategorie } from 'static/Lien';
+import { config, lien_read, returnCategorie, sla } from 'static/Lien';
 import Popup from 'static/Popup';
 import moment from '../../../node_modules/moment/moment';
 import OpenResult from './OpenResult';
@@ -246,6 +247,25 @@ function AllCustomer() {
     }
   };
 
+  const affichageZbm = (client, region) => {
+    navigate('/region_monitoring', { state: { data: client, region } });
+  };
+  const today = useSelector((state) => state.today?.today);
+  const returnSLANumber = (data, type) => {
+    let nombre = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (sla({ delaiPrevu: data[i].action.delai, dateFin: today?.datetime, dateDebut: data[i].updatedAt }) === type) {
+        nombre = nombre + 1;
+      }
+    }
+    return nombre;
+  };
+  const returnCOlor = (id) => {
+    if (action && action.length > 0) {
+      let a = _.filter(action, { idAction: id })[0];
+      return a.color ? a.color : '#fff';
+    }
+  };
   return (
     <div>
       {contextHolder}
@@ -257,8 +277,10 @@ function AllCustomer() {
               return (
                 <Grid key={key} lg={2} xs={12} sm={12} md={6}>
                   <Grid
+                    onClick={() => affichageZbm(retournTotal(index), index)}
                     sx={{
                       padding: '5px',
+                      cursor: 'pointer',
                       display: 'flex',
                       justifyContent: 'space-between',
                       backgroundColor: '#002d72',
@@ -284,7 +306,7 @@ function AllCustomer() {
                             onClick={() => functionListe(index, action, 'region')}
                           >
                             <Tooltip title={returnAction(action)}>
-                              <Paper elevation={2} sx={{ padding: '5px' }}>
+                              <Paper elevation={2} sx={{ padding: '5px', backgroundColor: returnCOlor(action) }}>
                                 <Typography noWrap style={{ fontSize: '11px', textAlign: 'center', fontWeight: 700 }}>
                                   {returnAction(action)}
                                 </Typography>
@@ -294,9 +316,31 @@ function AllCustomer() {
                                 <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
                                   {rechercheNombre(index, action, 'region').length}
                                 </p>
-                                <p style={{ fontSize: '9px', textAlign: 'right' }}>
-                                  {returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
-                                </p>
+                                <Grid sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                  <Grid sx={style.flex}>
+                                    <Grid sx={style.flexOutsla}>
+                                      <Dot size={5} color="error" />
+                                      <Typography
+                                        sx={{ fontSize: '9px', marginLeft: '3px', fontWeight: 'bolder', textAlign: 'right' }}
+                                        component="p"
+                                      >
+                                        {returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
+                                      </Typography>
+                                    </Grid>
+                                    <Grid sx={style.flexInsla}>
+                                      <Dot size={5} color="success" />
+                                      <Typography
+                                        sx={{ fontSize: '9px', marginLeft: '3px', fontWeight: 'bolder', textAlign: 'right' }}
+                                        component="p"
+                                      >
+                                        {returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
+                                      </Typography>
+                                    </Grid>
+                                  </Grid>
+                                  <Typography sx={{ fontSize: '9px', textAlign: 'right' }} component="p">
+                                    {returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
+                                  </Typography>
+                                </Grid>
                               </Paper>
                             </Tooltip>
                           </Grid>
@@ -404,4 +448,23 @@ function AllCustomer() {
     </div>
   );
 }
+
+const style = {
+  flex: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  flexOutsla: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: '10px'
+  },
+  flexInsla: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+};
 export default AllCustomer;

@@ -4,6 +4,7 @@ import ConfirmDialog from 'components/ConfirmDialog';
 import ExcelButton from 'components/Excel';
 import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -35,15 +36,15 @@ function Index() {
       return '';
     }
   };
-  const returnLastStatus = (data) => {
+  const returnLastStatus = (data, property) => {
     if (data.client.length === 0) {
-      return 'it is not yet in the tracker clients';
+      return 'No result';
     }
     if (data.client[0]?.result.length === 0) {
-      return 'waiting for action';
+      return 'No result';
     }
     if (data.client[0]?.result.length > 0) {
-      return data.client[0].result[data.client[0].result.length - 1]['action'];
+      return data.client[0].result[data.client[0].result.length - 1]['' + property];
     }
   };
   const returInCharge = (data) => {
@@ -64,6 +65,39 @@ function Index() {
     {
       field: 'customer_name',
       headerName: 'NOMS',
+      width: 100,
+      editable: false
+    },
+    {
+      field: 'statut',
+      headerName: 'statut',
+      width: 150,
+      editable: false
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      width: 50,
+      editable: false,
+      renderCell: (params) => {
+        return params.row.date === 'No result' ? 'No result' : dayjs(params.row.date).format('DD/MM');
+      }
+    },
+    {
+      field: 'nom',
+      headerName: 'Nom',
+      width: 80,
+      editable: false
+    },
+    {
+      field: 'feedbackSelect',
+      headerName: 'Action select',
+      width: 120,
+      editable: false
+    },
+    {
+      field: 'commentaire',
+      headerName: 'Commentaire',
       width: 150,
       editable: false
     },
@@ -79,18 +113,7 @@ function Index() {
       width: 80,
       editable: false
     },
-    {
-      field: 'person_in_charge',
-      headerName: 'in charge',
-      width: 50,
-      editable: false
-    },
-    {
-      field: 'last_status',
-      headerName: 'status',
-      width: 80,
-      editable: false
-    },
+
     {
       field: 'par',
       headerName: 'PAR',
@@ -98,22 +121,17 @@ function Index() {
       editable: false
     },
     {
-      field: 'Last_action',
-      headerName: 'Last action',
-      width: 150,
-      editable: false
-    },
-    {
-      field: 'In_charge',
-      headerName: 'In charge',
-      width: 100,
-      editable: false
-    },
-    {
       field: 'sla',
       headerName: 'SLA',
-      width: 80,
-      editable: false
+      width: 50,
+      editable: false,
+      renderCell: (params) => {
+        if (params.row.sla === 'INSLA') {
+          return <p style={{ background: '#619f62', color: '#fff', fontSize: '9px', padding: '2px', borderRadius: '5px' }}>INSLA</p>;
+        } else {
+          return <p style={{ background: '#971a0b', color: '#fff', fontSize: '10px', padding: '2px', borderRadius: '5px' }}>OUTSLA</p>;
+        }
+      }
     }
   ];
 
@@ -132,11 +150,16 @@ function Index() {
         person_in_charge: dataTotrack_state.datatotrack[i].person_in_charge,
         month: dataTotrack_state.datatotrack[i].month,
         sla: retournSla(dataTotrack_state.datatotrack[i]),
-        Last_action: returnLastStatus(dataTotrack_state.datatotrack[i]),
-        In_charge: returInCharge(dataTotrack_state.datatotrack[i]),
+        statut: returnLastStatus(dataTotrack_state.datatotrack[i], 'action'),
+        date: returnLastStatus(dataTotrack_state.datatotrack[i], 'dateFin'),
+        nom: returnLastStatus(dataTotrack_state.datatotrack[i], 'codeAgent'),
+        feedbackSelect: returnLastStatus(dataTotrack_state.datatotrack[i], 'feedbackSelect'),
+        commentaire: returnLastStatus(dataTotrack_state.datatotrack[i], 'commentaire'),
+
         id: dataTotrack_state.datatotrack[i]._id
       });
     }
+    console.log(table);
     setListe(table);
   };
   React.useEffect(() => {

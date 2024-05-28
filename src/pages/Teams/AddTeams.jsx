@@ -1,10 +1,10 @@
-import React from 'react';
-import Input from 'components/Input';
 import { Button } from '@mui/material';
-import Selected from 'components/Selected';
-import { config, lien_post } from 'static/Lien';
-import axios from 'axios';
 import { message } from 'antd';
+import axios from 'axios';
+import Input from 'components/Input';
+import Selected from 'components/Selected';
+import React from 'react';
+import { config, lien_post } from 'static/Lien';
 
 function AddTeams({ setTeams, team }) {
   const [title, setTitle] = React.useState('');
@@ -13,7 +13,9 @@ function AddTeams({ setTeams, team }) {
   const option = [
     { id: 1, title: 'Call center', value: 'CALL CENTER MANAGER' },
     { id: 2, title: 'Portfolio manager', value: 'PORTFOLIO MANAGER' },
-    { id: 3, title: 'Fraud Managment', value: 'FRAUD MANAGMENT' }
+    { id: 3, title: 'Fraud Managment', value: 'FRAUD MANAGMENT' },
+    { id: 4, title: 'Shop manager', value: 'SHOP MANAGER' },
+    { id: 5, title: 'Responsable Shop', value: 'RS' }
   ];
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -54,7 +56,6 @@ function AddTeams({ setTeams, team }) {
           Valider
         </Button>
       </div>
-      
     </div>
   );
 }

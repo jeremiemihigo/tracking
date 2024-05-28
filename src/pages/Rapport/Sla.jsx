@@ -32,14 +32,14 @@ function Sla() {
   };
   return (
     <Grid container className="container">
-      <Grid item lg={6} className="grid gridinsla">
+      <Grid item lg={6} xs={6} sm={12} md={6} sx={{ borderRadius: { sm: '10px' }, marginBottom: { sm: '7px' } }} className="grid gridinsla">
         <div>
           <Typography className="title">INSLA</Typography>
           <Typography className="nombre">{analyse.delai}</Typography>
           <Typography className="pourcentage">{pourcentage(analyse.delai)}</Typography>
         </div>
       </Grid>
-      <Grid item lg={6} className="grid gridoutsla">
+      <Grid item lg={6} xs={6} sm={12} md={6} sx={{ borderRadius: { sm: '10px' } }} className="grid gridoutsla">
         <div>
           <Typography className="title">OUTSLA</Typography>
           <Typography className="nombre">{analyse.hors}</Typography>

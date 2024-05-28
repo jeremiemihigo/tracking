@@ -25,13 +25,13 @@ function Index() {
         </div>
       </div>
       <Grid container>
-        <Grid item lg={4}>
+        <Grid item lg={4} xs={12} sm={4} md={4}>
           <Agent />
         </Grid>
-        <Grid item lg={3} sx={{ padding: '0px 3px' }}>
+        <Grid item lg={3} xs={12} sm={2} md={2} sx={{ padding: '0px 3px', marginBottom: { xs: '10px' } }}>
           <Sla />
         </Grid>
-        <Grid item lg={5}>
+        <Grid item lg={5} xs={12} sm={6} md={6}>
           <Action />
         </Grid>
       </Grid>

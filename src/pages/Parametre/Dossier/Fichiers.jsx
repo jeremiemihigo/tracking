@@ -68,6 +68,7 @@ function AllAdresse() {
             unique_account_id: searchCode(appel[i]['Destination']),
             Source: appel[i]['Source'],
             Destination: appel[i]['Destination'],
+            feedback: appel[i]['Feedback'],
             StartTime: appel[i]['StartTime'],
             EndTime: appel[i]['EndTime'],
             Duration: appel[i]['Duration'],
@@ -95,6 +96,23 @@ function AllAdresse() {
     return actionFinish;
   };
   const [track, setDonner] = React.useState();
+
+  const returnVisiteInfo = (codeclient) => {
+    let a = _.filter(visited, { codeclient });
+    if (a.length > 0) {
+      if (a.length > 1) {
+        let indice = a.length === 1 ? 0 : 1;
+        return {
+          codeAgent: a[indice].demandeur.codeAgent,
+          idDemande: a[indice].idDemande,
+          raison: a[indice].demande.rairon,
+          dateSave: a[indice].dateSave
+        };
+      }
+    } else {
+      return 'nVisited';
+    }
+  };
   const rechercheSiClientAppeler = () => {
     if (track && track.length > 0) {
       setOpen(true);
@@ -109,7 +127,7 @@ function AllAdresse() {
           ...track[i],
           actionEnCours: actionss,
           beginAction: actionss,
-          visited: _.filter(visited, { codeclient: track[i]['unique_account_id'] }),
+          visited: returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })),
           called: _.filter(appelSortant, { unique_account_id: track[i]['unique_account_id'] })
         });
       }
@@ -166,32 +184,32 @@ function AllAdresse() {
         </Typography>
       </div>
       <Grid container>
-        <Grid item lg={2}>
+        <Grid item lg={2} xs={12} sm={6} md={4}>
           <Typography component="p" noWrap>
             .
           </Typography>
           <Selected label="Statut à tracker" data={statut} value={statValue} setValue={setStatValue} />
         </Grid>
-        <Grid item lg={3} sx={{ paddingLeft: '10px' }}>
+        <Grid item lg={3} xs={12} sm={6} md={4} sx={{ paddingLeft: '10px' }}>
           <Typography component="p" noWrap>
             Importez le fichier all adress
           </Typography>
           <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setAllAdress)} />
         </Grid>
-        <Grid item lg={3} sx={{ paddingLeft: '10px' }}>
+        <Grid item lg={3} xs={12} sm={6} md={4} sx={{ paddingLeft: '10px' }}>
           <Typography component="p" noWrap>
             Importez le fichier d&apos;appels sortant
           </Typography>
           <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setAppel)} />
         </Grid>
-        <Grid item lg={3} sx={{ paddingLeft: '10px' }}>
+        <Grid item lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
           <Typography component="p" noWrap>
             File to track
           </Typography>
           <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setFileToTrack)} />
         </Grid>
 
-        <Grid item lg={1} sx={{ paddingLeft: '10px' }}>
+        <Grid item lg={1} xs={12} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
           <Typography>.</Typography>
           <Button variant="contained" color="primary" fullWidth onClick={(e) => sendings(e)}>
             <Save fontSize="small" />

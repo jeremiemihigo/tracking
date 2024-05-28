@@ -49,26 +49,31 @@ function Liste({ client, action }) {
           placeholder="ID, region, shop"
         />
       </FormControl>
-      <Table>
-        <tbody>
-          {client &&
-            filterFn.fn(client).map((index) => {
-              return (
-                <tr key={index._id}>
-                  <td onClick={() => handleClient(index)} className={clientSelect && clientSelect._id === index._id ? 'select' : 'blacks'}>
-                    <Typography component="p" noWrap sx={{ fontSize: '12px' }}>
-                      {index.unique_account_id + ' ; '}
-                      {differenceDays(index.updatedAt, new Date()) > action?.delai ? 'OUTSLA' : 'INSLA'}
-                    </Typography>
-                    <Typography sx={{ fontSize: '10px' }} noWrap>
-                      {index?.shop_region}--{index?.shop_name}
-                    </Typography>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </Table>
+      <div className="resultTable">
+        <Table>
+          <tbody>
+            {client &&
+              filterFn.fn(client).map((index) => {
+                return (
+                  <tr key={index._id}>
+                    <td
+                      onClick={() => handleClient(index)}
+                      className={clientSelect && clientSelect._id === index._id ? 'select' : 'blacks'}
+                    >
+                      <Typography component="p" noWrap sx={{ fontSize: '12px' }}>
+                        {index.unique_account_id + ' ; '}
+                        {differenceDays(index.updatedAt, new Date()) > action?.delai ? 'OUTSLA' : 'INSLA'}
+                      </Typography>
+                      <Typography sx={{ fontSize: '10px' }} noWrap>
+                        {index?.shop_region}--{index?.shop_name}
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </Table>
+      </div>
     </Grid>
   );
 }

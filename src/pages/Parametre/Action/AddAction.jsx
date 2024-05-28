@@ -1,17 +1,19 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Input } from 'antd';
 import { Button } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import AutoComplement from 'components/AutoComplete';
 import { Postaction, Putaction } from 'Redux/action';
+import { Input } from 'antd';
+import AutoComplement from 'components/AutoComplete';
 import TextArea from 'components/TextArea';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ColorPicker from './ColorPicker';
 
 function AddAction({ edit, status }) {
-  console.log(status);
   const [texte, setTexte] = React.useState('');
   const [delai, setDelai] = React.useState(1);
+  const [hex, setHex] = React.useState('#fff');
   const dispatch = useDispatch();
+
   const role = useSelector((state) => state.role?.role);
 
   const [valueSelect, setValueSelect] = React.useState('');
@@ -24,11 +26,13 @@ function AddAction({ edit, status }) {
       idStatus: status,
       idRole: valueSelect?.id,
       delai,
+      color: hex,
       objectif
     };
     //idStatus, title, idRole, delai
     dispatch(Postaction(data));
     setTexte('');
+    setHex('#fff');
     setValueSelect('');
     setDelai('');
     setObjectif('');
@@ -47,7 +51,7 @@ function AddAction({ edit, status }) {
     }
   }, [edit]);
   return (
-    <div style={{ width: '20rem' }}>
+    <div style={{ width: '30rem' }}>
       <div style={{ marginTop: '10px' }}>
         {role && !edit && <AutoComplement value={valueSelect} setValue={setValueSelect} options={role} title="Select Role" propr="title" />}
       </div>
@@ -57,9 +61,13 @@ function AddAction({ edit, status }) {
       <div style={{ margin: '10px 0px' }}>
         <Input onChange={(e) => setDelai(e.target.value)} type="number" value={delai} placeholder="Délai" />
       </div>
-      <div style={{ margin: '10px 0px' }}>
-        <TextArea setValue={setObjectif} value={objectif} placeholder="Objectif" />
+      <div style={{ margin: '10px 0px', display: 'flex' }}>
+        <ColorPicker setHex={setHex} hex={hex} />
+        <div style={{ marginLeft: '10px' }}>
+          <TextArea setValue={setObjectif} value={objectif} placeholder="Objectif" />
+        </div>
       </div>
+
       <div>
         <Button onClick={!edit ? (e) => sendAction(e) : (e) => EditAction(e)} color="primary" variant="contained">
           Valider

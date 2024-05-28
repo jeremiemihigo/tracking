@@ -23,6 +23,7 @@ const Historique = Loadable(lazy(() => import('pages/History')));
 const Teams = Loadable(lazy(() => import('pages/Teams')));
 const Rapport = Loadable(lazy(() => import('pages/Rapport')));
 const NotFound = Loadable(lazy(() => import('pages/NotFound')));
+const AfficheZbm = Loadable(lazy(() => import('pages/Analyse/AffichageZbm')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -103,6 +104,10 @@ const AdminRoute = {
     {
       path: '*',
       element: <NotFound />
+    },
+    {
+      path: '/region_monitoring',
+      element: <AfficheZbm />
     }
   ]
 };

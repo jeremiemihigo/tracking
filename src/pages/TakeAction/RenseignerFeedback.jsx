@@ -3,6 +3,7 @@ import { Save } from '@mui/icons-material';
 import { Button, Grid, Typography } from '@mui/material';
 import { CreateContexteGlobal } from 'GlobalContext';
 import TextArea from 'components/TextArea';
+import _ from 'lodash';
 import AutoComplement from 'pages/Parametre/Etapes/Complement';
 import React from 'react';
 import Table from 'react-bootstrap/Table';
@@ -38,20 +39,22 @@ function RenseignerFeedback({ visites, changeAction }) {
     setAreaValue('');
     setActionSelect('');
   };
-
-  React.useEffect(() => {
-    socket.on('renseigne', (data) => {
-      if (data.content) {
-        let difference = visites.filter((x) => x._id !== data.content._id);
-        changeAction(difference);
-      }
-    });
-  }, [socket]);
-
+  const rechercheInfoCall = (table) => {
+    let info = _.filter(table, { idAction: 'BXLMWU' });
+    if (info.length > 0) {
+      return {
+        commentaire: info[0].commentaire,
+        action: info[0].action,
+        feedback: info[0].feedbackSelect
+      };
+    } else {
+      return 'rien';
+    }
+  };
   return (
     <div style={{ width: '40rem' }}>
       <Grid container>
-        <Grid item lg={3}>
+        <Grid item lg={3.5} className="resultTable">
           <Table>
             <tbody>
               {visites &&
@@ -76,12 +79,58 @@ function RenseignerFeedback({ visites, changeAction }) {
           </Table>
         </Grid>
         {clientSelect ? (
-          <Grid item lg={9}>
+          <Grid item lg={8.5}>
             <div style={{ marginLeft: '50px' }}>
               {clientSelect !== '' && (
-                <Grid sx={{ marginBottom: '10px' }}>
-                  <p>code client : {clientSelect?.unique_account_id}</p>
-                </Grid>
+                <>
+                  <p style={{ fontSize: '12px', marginBottom: '15px' }}>
+                    ID : {clientSelect?.unique_account_id};{' ' + clientSelect?.customer_name}
+                  </p>
+
+                  <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>
+                    Visited :{' '}
+                    {!clientSelect.visited || clientSelect?.visited === 'pending' ? (
+                      <span
+                        style={{
+                          color: 'green'
+                        }}
+                      >
+                        pending feedback
+                      </span>
+                    ) : (
+                      clientSelect?.visited
+                    )}{' '}
+                  </p>
+                  <ol>
+                    <li style={{ fontSize: '11px' }}>ID agent : {clientSelect?.objectVisite?.codeAgent}</li>
+                    <li style={{ fontSize: '11px' }}>ID visite : {clientSelect?.objectVisite?.idDemande}</li>
+                    <li style={{ fontSize: '11px' }}>Feedback : {clientSelect?.objectVisite?.raison}</li>
+                    <li style={{ fontSize: '11px' }}>Date : {clientSelect?.objectVisite?.dateSave.split('T')[0]}</li>
+                  </ol>
+                  <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>
+                    Called :{' '}
+                    {!clientSelect.called || clientSelect?.called === 'pending' ? (
+                      <span
+                        style={{
+                          color: 'green'
+                        }}
+                      >
+                        pending feedback
+                      </span>
+                    ) : (
+                      clientSelect?.called
+                    )}{' '}
+                  </p>
+                  {rechercheInfoCall(clientSelect?.result) !== 'rien' && (
+                    <>
+                      <ol>
+                        <li style={{ fontSize: '11px' }}>commentaire :{rechercheInfoCall(clientSelect?.result).commentaire}</li>
+                        <li style={{ fontSize: '11px' }}>Feedback :{rechercheInfoCall(clientSelect?.result).feedback}</li>
+                        <li style={{ fontSize: '11px' }}>Action :{rechercheInfoCall(clientSelect?.result).action}</li>
+                      </ol>
+                    </>
+                  )}
+                </>
               )}
 
               {action ? (

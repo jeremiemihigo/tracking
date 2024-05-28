@@ -15,6 +15,7 @@ function TextArea({ setValue, value, placeholder }) {
         onChange={(e) => setValue(e.target.value)}
         id="outlined-multiline-static"
         value={value}
+        fullWidth
         label={placeholder}
         multiline
         rows={4}

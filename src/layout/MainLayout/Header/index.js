@@ -5,11 +5,11 @@ import { AppBar, IconButton, Toolbar, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 // project import
+import Logo from 'assets/images/icons/images.png';
 import AppBarStyled from './AppBarStyled';
 import HeaderContent from './HeaderContent';
 
 // assets
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
 // ==============================|| MAIN LAYOUT - HEADER ||============================== //
 
@@ -31,7 +31,7 @@ const Header = ({ open, handleDrawerToggle }) => {
         color="secondary"
         sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
       >
-        {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        {!open ? <img src={Logo} width={30} height={30} alt="logo" /> : <img src={Logo} width={35} height={35} alt="logo" />}
       </IconButton>
       <HeaderContent />
     </Toolbar>

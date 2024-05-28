@@ -1,13 +1,12 @@
+import { Grid } from '@mui/material';
 import React from 'react';
 import { CreateContexte } from './Contexte';
-
 import Result from './Result';
-
 function DetailListe() {
   const { clientSelect } = React.useContext(CreateContexte);
 
   return (
-    <div style={{ height: '10rem' }}>
+    <Grid className="resultTable">
       {clientSelect && clientSelect.result.length > 0 ? (
         clientSelect.result.reverse().map((index) => {
           return (
@@ -19,7 +18,7 @@ function DetailListe() {
       ) : (
         <p style={{ textAlign: 'center' }}>Until now there is no action for this customer</p>
       )}
-    </div>
+    </Grid>
   );
 }
 

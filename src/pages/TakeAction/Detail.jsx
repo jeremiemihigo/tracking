@@ -39,22 +39,46 @@ function Detail({ action }) {
     <Stack>
       <DirectionSnack open={open} setOpen={setOpen} message="error" />
       {clientSelect && (
-        <MainCard
-          title={
-            <>
-              <p>Action : {clientSelect.action?.title}</p>
-              {clientSelect.action?.objectif && (
-                <Typography variant="h6" color="primary">
-                  But : {clientSelect.action?.objectif}
-                </Typography>
-              )}
-
-              <p>
-                ID : {clientSelect?.unique_account_id} ; {clientSelect?.customer_name}
-              </p>
-            </>
-          }
-        >
+        <MainCard title={clientSelect?.unique_account_id + ' ; ' + clientSelect?.customer_name}>
+          {clientSelect.action?.objectif && (
+            <Typography variant="h6" color="primary">
+              But : {clientSelect.action?.objectif}
+            </Typography>
+          )}
+          <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>
+            Visited :{' '}
+            {!clientSelect.visited || clientSelect?.visited === 'nVisited' ? (
+              <span
+                style={{
+                  color: 'green'
+                }}
+              >
+                pending feedback
+              </span>
+            ) : (
+              clientSelect?.visited
+            )}{' '}
+          </p>
+          <ol>
+            <li style={{ fontSize: '11px' }}>ID agent : {clientSelect?.objectVisite?.codeAgent}</li>
+            <li style={{ fontSize: '11px' }}>ID visite : {clientSelect?.objectVisite?.idDemande}</li>
+            <li style={{ fontSize: '11px' }}>Feedback : {clientSelect?.objectVisite?.raison}</li>
+            <li style={{ fontSize: '11px' }}>Date : {clientSelect?.objectVisite?.dateSave.split('T')[0]}</li>
+          </ol>
+          <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>
+            Called :{' '}
+            {!clientSelect.called || clientSelect?.called === 'nCalled' ? (
+              <span
+                style={{
+                  color: 'green'
+                }}
+              >
+                pending feedback
+              </span>
+            ) : (
+              clientSelect?.called
+            )}{' '}
+          </p>
           <div>
             <AutoComplement value={value} setValue={setValue} options={clientSelect?.statutaction} title="Feedback" propr="title" />
           </div>

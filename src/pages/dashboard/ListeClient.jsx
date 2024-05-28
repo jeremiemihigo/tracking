@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { lienVisiteMenage, lien_post } from 'static/Lien';
+import axios from '../../../node_modules/axios/index';
 
 function ListeClient() {
   const location = useLocation();
@@ -84,10 +86,32 @@ function ListeClient() {
       return _.filter(allaction, { idAction: id })[0]?.title;
     }
   };
-
+  const sendListe = async () => {
+    let table = [];
+    for (let i = 0; i < state.visites.length; i++) {
+      table.push(state.visites[i].unique_account_id);
+    }
+    const response = await axios.post(lienVisiteMenage + '/visited', { client: table });
+    if (response.status === 200 && response.data.length > 0) {
+      let v = [];
+      for (let i = 0; i < response.data.length; i++) {
+        v.push({
+          codeAgent: response.data[i].demandeur.codeAgent,
+          raison: response.data[i].demande.raison,
+          dateSave: response.data[i].dateSave,
+          idDemande: response.data[i].idDemande,
+          codeclient: response.data[i].codeclient,
+          periode: response.data[i].demande.lot
+        });
+      }
+      const tracker = await axios.post(lien_post + '/feedbackvm', { data: v });
+      console.log(tracker);
+    }
+  };
   return (
     <div>
       <PaperHead texte={`list of clients with status ${'<< ' + returnAction(state.action) + ' >>'}`} />
+      <p onClick={() => sendListe()}>send liste</p>
       <MainCard>
         <div style={{ width: '70vw' }}>
           {state && (

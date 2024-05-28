@@ -1,9 +1,8 @@
-import { FileCopy } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import IconExcel from 'assets/images/icons/excelIcon.jpg';
 import * as XLSX from 'xlsx';
 
 // eslint-disable-next-line react/prop-types
-function ExcelButton({ data, title, fileName, sheetName }) {
+function ExcelButton({ data, fileName, sheetName }) {
   const downloadExcel = (data) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -12,9 +11,7 @@ function ExcelButton({ data, title, fileName, sheetName }) {
   };
   return (
     <>
-      <Button color="success" variant="contained" disabled={data ? false : true} onClick={() => downloadExcel(data)}>
-        <FileCopy fontSize="small" /> <span className="ml-2">{title}</span>
-      </Button>
+      <img style={{ cursor: 'pointer' }} src={IconExcel} alt="excel" width={60} height={30} onClick={() => downloadExcel(data)} />
     </>
   );
 }

@@ -6,9 +6,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import { message } from 'antd';
 import axios from 'axios';
 import Input from 'components/Input';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import React from 'react';
-import { config, lien_post, sla } from 'static/Lien';
+import { config, differenceDays, lien_post, sla } from 'static/Lien';
 import { Button } from '../../../node_modules/@mui/material/index';
 import './history.css';
 
@@ -66,25 +67,29 @@ function Index() {
         });
       }
     }
+    console.log(table);
     return table;
   };
 
   const columns = [
     {
-      field: 'status',
-      headerName: 'Status',
-      width: 120,
-      editable: false
+      field: 'dateFin',
+      headerName: 'Date',
+      width: 50,
+      editable: false,
+      renderCell: (params) => {
+        return dayjs(params.row.dateFin).format('DD/MM');
+      }
     },
     {
-      field: 'role',
-      headerName: 'Role',
+      field: 'codeAgent',
+      headerName: 'Nom',
       width: 100,
       editable: false
     },
     {
       field: 'action',
-      headerName: 'Action',
+      headerName: 'Statut',
       width: 140,
       editable: false
     },
@@ -95,10 +100,44 @@ function Index() {
       editable: false
     },
     {
+      field: 'commentaire',
+      headerName: 'Commentaire',
+      width: 200,
+      editable: false
+    },
+    {
       field: 'sla',
       headerName: 'SLA',
-      width: 100,
-      editable: false
+      width: 50,
+      editable: false,
+      renderCell: (params) => {
+        if (params.row.sla === 'INSLA') {
+          return <p style={{ background: '#619f62', color: '#fff', fontSize: '9px', padding: '2px', borderRadius: '5px' }}>INSLA</p>;
+        } else {
+          return <p style={{ background: '#971a0b', color: '#fff', fontSize: '10px', padding: '2px', borderRadius: '5px' }}>OUTSLA</p>;
+        }
+      }
+    },
+    {
+      field: 'day',
+      headerName: 'Day',
+      width: 50,
+      editable: false,
+      renderCell: (params) => {
+        return (
+          <p
+            style={{
+              background: params.row.sla === 'INSLA' ? '#619f62' : '#971a0b',
+              color: '#fff',
+              width: '100%',
+              textAlign: 'center',
+              fontSize: '10px',
+              padding: '2px',
+              borderRadius: '5px'
+            }}
+          >{`${differenceDays(params.row.dateFin, params.row.dateDebut)}/${params.row.delaiPrevu}`}</p>
+        );
+      }
     }
   ];
 
@@ -135,7 +174,7 @@ function Index() {
         allmonth.map((index) => {
           return (
             <Grid container sx={{ marginTop: '10px' }} key={index}>
-              <Grid item lg={4} xs={12} sm={4} md={4}>
+              <Grid item lg={2} xs={12} sm={4} md={4}>
                 <Paper>
                   <Grid sx={{ padding: '5px', backgroundColor: '#002d72', color: '#fff', borderRadius: '5px' }}>
                     <Typography sx={{ fontSize: '12px', fontWeight: 'bolder' }} noWrap>
@@ -145,43 +184,31 @@ function Index() {
                   <Grid sx={{ padding: '5px' }} key={index}>
                     <Grid className="month">{data[0]?.month}</Grid>
                     <Grid container>
-                      <Grid item lg={6} xs={6} sm={6} md={6} className="grid">
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">Region</Typography>
                         <Typography className="values">{returnField(index, 'shop_region')}</Typography>
                       </Grid>
-                      <Grid item lg={6} xs={6} sm={6} md={6} className="grid">
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">Shop</Typography>
                         <Typography className="values">{returnField(index, 'shop_name')}</Typography>
                       </Grid>
-                      <Grid item lg={6} xs={6} sm={6} md={6} className="grid">
-                        <Typography className="title">payment_status</Typography>
-                        <Typography className="values">{returnField(index, 'payment_status')}</Typography>
-                      </Grid>
-                      <Grid item lg={6} xs={6} sm={6} md={6} className="grid">
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">par_to_date</Typography>
                         <Typography className="values">{returnField(index, 'par_to_date')}</Typography>
                       </Grid>
-                      <Grid item lg={6} xs={6} sm={6} md={6} className="grid">
-                        <Typography className="title">enable_status</Typography>
-                        <Typography className="values">{returnField(index, 'enable_status')}</Typography>
-                      </Grid>
                     </Grid>
                     <Grid container>
-                      <Grid item lg={6} xs={6} sm={12} md={6} className="grid">
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">expiry_timestamp</Typography>
                         <Typography className="values">{returnField(index, 'expiry_timestamp')}</Typography>
                       </Grid>
-                      <Grid item lg={6} xs={6} sm={12} md={6} className="grid">
-                        <Typography className="title">default_timestamp</Typography>
-                        <Typography className="values">{returnField(index, 'default_timestamp')}</Typography>
-                      </Grid>
-                      <Grid item lg={6} xs={6} sm={12} md={6} className="grid">
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">date_timestamp</Typography>
                         <Typography className="values">{returnField(index, 'date_timestamp')}</Typography>
                       </Grid>
                     </Grid>
                     <Grid container>
-                      <Grid item lg={6} xs={6} sm={6} md={6} className="grid">
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">First action</Typography>
                         <Typography className="values">{returnField(index, 'begin')}</Typography>
                       </Grid>
@@ -192,7 +219,7 @@ function Index() {
               <Grid
                 sx={{ padding: { md: '0px 10px', sm: '0px 10px' }, marginTop: { xs: '10px', lg: '0px' } }}
                 item
-                lg={8}
+                lg={10}
                 xs={12}
                 sm={8}
                 md={8}
@@ -226,7 +253,7 @@ function Index() {
       {allmonth === 'loading' && (
         <>
           <Grid container sx={{ marginTop: '10px' }}>
-            <Grid item lg={4}>
+            <Grid item lg={2}>
               <Paper>
                 <Grid sx={{ padding: '5px', backgroundColor: '#002d72', color: '#fff', borderRadius: '5px' }}>
                   <Typography sx={{ fontSize: '12px', fontWeight: 'bolder' }} noWrap>
@@ -238,51 +265,35 @@ function Index() {
                     <SkeletonComponent />
                   </Grid>
                   <Grid container>
-                    <Grid item lg={6} className="grid">
+                    <Grid item lg={12} className="grid">
                       <Typography className="title">Region</Typography>
                       <Typography className="values">
                         <SkeletonComponent />
                       </Typography>
                     </Grid>
-                    <Grid item lg={6} className="grid">
+                    <Grid item lg={12} className="grid">
                       <Typography className="title">Shop</Typography>
                       <Typography className="values">
                         <SkeletonComponent />
                       </Typography>
                     </Grid>
-                    <Grid item lg={6} className="grid">
-                      <Typography className="title">payment_status</Typography>
-                      <Typography className="values">
-                        <SkeletonComponent />
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={6} className="grid">
+
+                    <Grid item lg={12} className="grid">
                       <Typography className="title">par_to_date</Typography>
-                      <Typography className="values">
-                        <SkeletonComponent />
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={6} className="grid">
-                      <Typography className="title">enable_status</Typography>
                       <Typography className="values">
                         <SkeletonComponent />
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item lg={6} className="grid">
+                    <Grid item lg={12} className="grid">
                       <Typography className="title">expiry_timestamp</Typography>
                       <Typography className="values">
                         <SkeletonComponent />
                       </Typography>
                     </Grid>
-                    <Grid item lg={6} className="grid">
-                      <Typography className="title">default_timestamp</Typography>
-                      <Typography className="values">
-                        <SkeletonComponent />
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={6} className="grid">
+
+                    <Grid item lg={12} className="grid">
                       <Typography className="title">date_timestamp</Typography>
                       <Typography className="values">
                         <SkeletonComponent />
@@ -308,7 +319,7 @@ function Index() {
                   </Typography>
                 </Grid>
                 <Grid sx={{ padding: '5px' }}>
-                  <Skeleton variant="rounded" width="100%" height={60} />
+                  <Skeleton variant="rounded" width="100%" height={120} />
                 </Grid>
               </Paper>
             </Grid>

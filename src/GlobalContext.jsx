@@ -2,16 +2,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext } from 'react';
 import { io } from 'socket.io-client';
+import { lien_socket } from 'static/Lien';
 import { useSelector } from '../node_modules/react-redux/es/exports';
 export const CreateContexteGlobal = createContext();
 
 const ContexteGlobal = (props) => {
   const [socket, setSocket] = React.useState(null);
   const user = useSelector((state) => state?.user.user);
-  console.log(user);
 
   React.useEffect(() => {
-    setSocket(io('http://localhost:800'));
+    setSocket(io(lien_socket));
   }, []);
   React.useEffect(() => {
     if (socket !== null && user) {

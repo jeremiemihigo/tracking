@@ -2,15 +2,18 @@
 // export const lien = 'http://109.199.122.241:5000/bboxx/support';
 
 // export const lien = 'http://trackingback-m9iu.onrender.com/tracker';
+// const server = 'localhost';
+const serverhost = 'tracker-0139.onrender.com';
 
-// export const lien_post = 'http://localhost:8000/tracker/post';
-// export const lien_read = 'http://localhost:8000/tracker/read';
-// export const lien_update = 'http://localhost:8000/tracker/update';
-export const lien_post = 'https://tracker-0139.onrender.com/tracker/post';
-export const lien_read = 'https://tracker-0139.onrender.com/tracker/read';
-export const lien_update = 'https://tracker-0139.onrender.com/tracker/update';
-export const lienVisiteMenage = 'https://bboxxother.onrender.com/bboxx/support';
-// export const lienVisiteMenage = 'http://localhost:4000/bboxx/support';
+// export const lien_post = `http://${server}:8000/tracker/post`;
+// export const lien_socket = `http://${server}:800`;
+// export const lien_read = `http://${server}:8000/tracker/read`;
+// export const lien_update = `http://${server}:8000/tracker/update`;
+export const lien_post = `https://${serverhost}/tracker/post`;
+export const lien_read = `https://${serverhost}/tracker/read`;
+export const lien_update = `https://${serverhost}/tracker/update`;
+export const lienVisiteMenage = `https://${serverhost}/bboxx/support`;
+// export const lienVisiteMenage = `http://${server}:4000/bboxx/support`;
 export const config = {
   headers: {
     'Content-Type': 'Application/json',
@@ -18,12 +21,15 @@ export const config = {
   }
 };
 export const differenceDays = (date1, date2) => {
-  let resultat = (new Date(date1).getTime() - new Date(date2).getTime()) / 86400000;
-  return resultat.toFixed(0);
+  if (date1 && date2) {
+    let resultat = (new Date(date1).getTime() - new Date(date2).getTime()) / 86400000;
+    return resultat.toFixed(0);
+  }
 };
 export const sla = (index) => {
-  return index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut) >= 0 ? 'INSLA' : 'OUTSLA';
+  return index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut) < 0 ? 'OUTSLA' : 'INSLA';
 };
+
 export const allpermissions = (user) => {
   return ['SYSTEM AND DATA', 'MANAGING DIRECTOR', 'SUPER USER'].includes(user);
 };
