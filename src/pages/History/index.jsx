@@ -196,8 +196,6 @@ function Index() {
                         <Typography className="title">par_to_date</Typography>
                         <Typography className="values">{returnField(index, 'par_to_date')}</Typography>
                       </Grid>
-                    </Grid>
-                    <Grid container>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">expiry_timestamp</Typography>
                         <Typography className="values">{returnField(index, 'expiry_timestamp')}</Typography>
@@ -206,8 +204,6 @@ function Index() {
                         <Typography className="title">date_timestamp</Typography>
                         <Typography className="values">{returnField(index, 'date_timestamp')}</Typography>
                       </Grid>
-                    </Grid>
-                    <Grid container>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">First action</Typography>
                         <Typography className="values">{returnField(index, 'begin')}</Typography>
