@@ -2,11 +2,11 @@
 // export const lien = 'http://109.199.122.241:5000/bboxx/support';
 
 // export const lien = 'http://trackingback-m9iu.onrender.com/tracker';
-// const server = 'localhost';
+const server = 'localhost';
 const serverhost = 'tracker-0139.onrender.com';
 
 // export const lien_post = `http://${server}:8000/tracker/post`;
-// export const lien_socket = `http://${server}:800`;
+export const lien_socket = `http://${server}:800`;
 // export const lien_read = `http://${server}:8000/tracker/read`;
 // export const lien_update = `http://${server}:8000/tracker/update`;
 export const lien_post = `https://${serverhost}/tracker/post`;
