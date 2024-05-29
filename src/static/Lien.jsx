@@ -4,15 +4,17 @@
 // export const lien = 'http://trackingback-m9iu.onrender.com/tracker';
 const server = 'localhost';
 const serverhost = 'tracker-0139.onrender.com';
+// const serverhost = 'http://localhost:8000';
+// const serverhost = 'tracker-0139.onrender.com';
 
 // export const lien_post = `http://${server}:8000/tracker/post`;
 export const lien_socket = `http://${server}:800`;
 // export const lien_read = `http://${server}:8000/tracker/read`;
 // export const lien_update = `http://${server}:8000/tracker/update`;
-export const lien_post = `https://${serverhost}/tracker/post`;
-export const lien_read = `https://${serverhost}/tracker/read`;
-export const lien_update = `https://${serverhost}/tracker/update`;
-export const lienVisiteMenage = `https://${serverhost}/bboxx/support`;
+export const lien_post = `${serverhost}/tracker/post`;
+export const lien_read = `${serverhost}/tracker/read`;
+export const lien_update = `${serverhost}/tracker/update`;
+export const lienVisiteMenage = `${serverhost}/bboxx/support`;
 // export const lienVisiteMenage = `http://${server}:4000/bboxx/support`;
 export const config = {
   headers: {

@@ -96,7 +96,7 @@ const Connected = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={dataChange.length} color="primary">
+        <Badge badgeContent={dataChange.filter((x) => x.nom !== undefined).length} color="primary">
           <SettingOutlined />
         </Badge>
       </IconButton>
@@ -157,27 +157,29 @@ const Connected = () => {
                   >
                     {dataChange.reverse().map((index, key) => {
                       return (
-                        <div
-                          key={key}
-                          style={{
-                            display: 'flex',
-                            borderRadius: '10px',
-                            marginBottom: '5px',
-                            alignItems: 'center',
-                            background: '#dedede',
-                            padding: '5px'
-                          }}
-                        >
-                          <div style={{ width: '10%', display: 'flex', justifyContent: 'center' }}>
-                            <Dot color="success" />
+                        index.nom !== undefined && (
+                          <div
+                            key={key}
+                            style={{
+                              display: 'flex',
+                              borderRadius: '10px',
+                              marginBottom: '5px',
+                              alignItems: 'center',
+                              background: '#dedede',
+                              padding: '5px'
+                            }}
+                          >
+                            <div style={{ width: '10%', display: 'flex', justifyContent: 'center' }}>
+                              <Dot color="success" />
+                            </div>
+                            <div style={{ width: '90%', padding: 0 }}>
+                              <p style={{ padding: 0, margin: 0, fontSize: '10px', fontWeight: 'bolder' }}>
+                                {returnNom(index.codeAgent, index?.nom)}
+                              </p>
+                              <p style={{ padding: 0, margin: 0, fontSize: '9px' }}>{returnAgent(index?.codeAgent)}</p>
+                            </div>
                           </div>
-                          <div style={{ width: '90%', padding: 0 }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '10px', fontWeight: 'bolder' }}>
-                              {returnNom(index.codeAgent, index?.nom)}
-                            </p>
-                            <p style={{ padding: 0, margin: 0, fontSize: '9px' }}>{returnAgent(index?.codeAgent)}</p>
-                          </div>
-                        </div>
+                        )
                       );
                     })}
 

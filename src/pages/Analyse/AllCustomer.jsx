@@ -1,12 +1,13 @@
-import { Fab, Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { Fab, Grid, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
-import Dot from 'components/@extended/Dot';
 import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
+import ActionPending from 'pages/Component/ActionPending';
+import PositionMenu from 'pages/Component/ListePopup';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -313,44 +314,15 @@ function AllCustomer() {
                             sx={{ padding: '2px', cursor: 'pointer' }}
                             onClick={() => functionListe(index, action, 'region')}
                           >
-                            <Tooltip title={returnAction(action)}>
-                              <Paper elevation={2} sx={{ padding: '5px', backgroundColor: returnCOlor(action) }}>
-                                <Typography noWrap style={{ fontSize: '11px', textAlign: 'center', fontWeight: 700 }}>
-                                  {returnAction(action)}
-                                </Typography>
-                                <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>
-                                  {returnRole(action)}
-                                </Typography>
-                                <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
-                                  {rechercheNombre(index, action, 'region').length}
-                                </p>
-                                <Grid sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                  <Grid sx={style.flex}>
-                                    <Grid sx={style.flexOutsla}>
-                                      <Dot size={5} color="error" />
-                                      <Typography
-                                        sx={{ fontSize: '9px', marginLeft: '3px', fontWeight: 'bolder', textAlign: 'right' }}
-                                        component="p"
-                                      >
-                                        {returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
-                                      </Typography>
-                                    </Grid>
-                                    <Grid sx={style.flexInsla}>
-                                      <Dot size={5} color="success" />
-                                      <Typography
-                                        sx={{ fontSize: '9px', marginLeft: '3px', fontWeight: 'bolder', textAlign: 'right' }}
-                                        component="p"
-                                      >
-                                        {returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
-                                      </Typography>
-                                    </Grid>
-                                  </Grid>
-                                  <Typography sx={{ fontSize: '9px', textAlign: 'right' }} component="p">
-                                    {returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
-                                  </Typography>
-                                </Grid>
-                              </Paper>
-                            </Tooltip>
+                            <ActionPending
+                              action={returnAction(action)}
+                              role={returnRole(action)}
+                              nombre={rechercheNombre(index, action, 'region').length}
+                              outsla={returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
+                              insla={returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
+                              lastupdate={returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
+                              bg={returnCOlor(action)}
+                            />
                           </Grid>
                         )
                       );
@@ -385,18 +357,15 @@ function AllCustomer() {
                             sx={{ padding: '2px', cursor: 'pointer' }}
                             onClick={() => functionListe(shop, action, 'shop')}
                           >
-                            <Paper elevation={2} sx={{ padding: '5px' }}>
-                              <p style={{ fontSize: '11px', textAlign: 'center' }}>{returnAction(action)}</p>
-                              <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>
-                                {returnRole(action)}
-                              </Typography>
-                              <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>
-                                {rechercheNombre(shop, action, 'shop').length}
-                              </p>
-                              <p style={{ fontSize: '9px', textAlign: 'right' }}>
-                                {returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
-                              </p>
-                            </Paper>
+                            <ActionPending
+                              action={returnAction(action)}
+                              role={returnRole(action)}
+                              nombre={rechercheNombre(shop, action, 'shop').length}
+                              outsla={returnSLANumber(rechercheNombre(shop, action, 'shop'), 'OUTSLA')}
+                              insla={returnSLANumber(rechercheNombre(shop, action, 'shop'), 'INSLA')}
+                              lastupdate={returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
+                              bg={returnCOlor(action)}
+                            />
                           </Grid>
                         )
                       );
@@ -428,18 +397,38 @@ function AllCustomer() {
           team &&
           team.length > 0 &&
           team.map((index) => {
+            console.log(index);
             return (
               <div key={index._id}>
-                <Grid sx={{ padding: '5px', backgroundColor: '#002d72', color: '#fff', fontWeight: 'bolder', margin: '5px' }}>
-                  <>{index.title}</>
+                <Grid
+                  sx={{
+                    padding: '5px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    backgroundColor: '#002d72',
+                    color: '#fff',
+                    margin: '3px',
+                    borderRadius: '5px'
+                  }}
+                >
+                  <p>{index.title}</p>
+                  <PositionMenu data={index.agent} />
                 </Grid>
+
                 <Grid container>
                   {index.actions.map((action) => {
                     return (
                       <Grid item lg={3} key={action} sx={{ padding: '2px', cursor: 'pointer' }} onClick={() => navigationManagment(action)}>
-                        <MainCard title={returnAction(action)}>
-                          <p style={{ fontSize: '25px', textAlign: 'center', fontWeight: 'bolder' }}>{retournForTeam(action).length}</p>
-                        </MainCard>
+                        <ActionPending
+                          action={returnAction(action)}
+                          role=""
+                          nombre={retournForTeam(action).length}
+                          outsla={returnSLANumber(retournForTeam(action), 'OUTSLA')}
+                          insla={returnSLANumber(retournForTeam(action), 'INSLA')}
+                          lastupdate=""
+                          bg={returnCOlor(action)}
+                        />
                       </Grid>
                     );
                   })}
