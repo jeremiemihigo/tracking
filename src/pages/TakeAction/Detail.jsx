@@ -1,70 +1,91 @@
 import { Save } from '@mui/icons-material';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Grid, Stack, Typography } from '@mui/material';
 import { CreateContexteGlobal } from 'GlobalContext';
 import AutoComplement from 'components/AutoComplete';
 import DirectionSnack from 'components/Direction';
-import MainCard from 'components/MainCard';
 import TextArea from 'components/TextArea';
+import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { CreateContexte } from './Contexte';
 
-function Detail({ action }) {
-  const { clientSelect, handleClient } = React.useContext(CreateContexte);
+function Detail({ clientSelect }) {
   const [value, setValue] = React.useState('');
   const [areaValue, setAreaValue] = React.useState('');
   const [open, setOpen] = React.useState(true);
   const { socket } = React.useContext(CreateContexteGlobal);
+  const [actionSelect, setActionSelect] = React.useState();
+  const action = useSelector((state) => state.action?.action);
+  const [actionSelectFeedback, setActionSelectFeedback] = React.useState('');
+
+  const returnAction = () => {
+    setActionSelect(_.filter(action, { idAction: clientSelect.action.idAction })[0]);
+  };
+  React.useEffect(() => {
+    if (action && clientSelect) {
+      returnAction();
+    }
+  }, [clientSelect]);
   const user = useSelector((state) => state.user?.user);
 
   const send = async (e) => {
     e.preventDefault();
     let data = {
-      feedbackSelect: value,
       commentaire: areaValue,
-      type: 'post',
       customer_id: clientSelect?.unique_account_id,
-      status: action?.status?.title,
-      role: action?.roles[0].title,
+      status: actionSelect?.status?.title,
+      role: actionSelect?.roles[0].title,
       dateDebut: clientSelect?.updatedAt,
-      action,
       codeAgent: user?.codeAgent
     };
+    if (clientSelect.action.idAction === 'SA89AF') {
+      let feedback = {
+        _idClient: clientSelect._id,
+        ancienAction: clientSelect.action,
+        type: 'feedback',
+        action: actionSelectFeedback
+      };
+      data._idClient = feedback._idClient;
+      data.ancienAction = feedback.ancienAction;
+      data.type = 'feedback';
+      data.action = feedback.action;
+    } else {
+      let post = {
+        feedbackSelect: value,
+        type: 'post',
+        action: clientSelect?.action
+      };
+      data.feedbackSelect = post.feedbackSelect;
+      data.type = post.type;
+      data.action = post.action;
+    }
     socket.emit('renseignefeedback', data);
     setAreaValue('');
     setValue('');
-    handleClient(undefined);
   };
   return (
     <Stack>
+      <Typography
+        component="p"
+        style={{ backgroundColor: '#002d72', padding: '5px', margin: '0px', fontSize: '12px', color: 'white', textAlign: 'center' }}
+      >
+        {clientSelect.action.title}
+      </Typography>
       <DirectionSnack open={open} setOpen={setOpen} message="error" />
       {clientSelect && (
-        <MainCard title={clientSelect?.unique_account_id + ' ; ' + clientSelect?.customer_name}>
+        <div style={{ padding: '10px' }}>
+          <p style={{ padding: '0px', margin: '0px' }}>{clientSelect?.unique_account_id + ' ; ' + clientSelect?.customer_name}</p>
           {clientSelect.action?.objectif && (
             <Typography variant="h6" color="primary">
               But : {clientSelect.action?.objectif}
             </Typography>
           )}
-          <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>
-            Visited :{' '}
-            {!clientSelect.visited || clientSelect?.visited === 'nVisited' ? (
-              <span
-                style={{
-                  color: 'green'
-                }}
-              >
-                pending feedback
-              </span>
-            ) : (
-              clientSelect?.visited
-            )}{' '}
-          </p>
           <ol>
-            <li style={{ fontSize: '11px' }}>ID agent : {clientSelect?.objectVisite?.codeAgent}</li>
-            <li style={{ fontSize: '11px' }}>ID visite : {clientSelect?.objectVisite?.idDemande}</li>
-            <li style={{ fontSize: '11px' }}>Feedback : {clientSelect?.objectVisite?.raison}</li>
-            <li style={{ fontSize: '11px' }}>Date : {clientSelect?.objectVisite?.dateSave.split('T')[0]}</li>
+            <li style={{ fontSize: '11px' }}>ID agent : {clientSelect?.objectVisite?.codeAgent || 'aucune information'}</li>
+            <li style={{ fontSize: '11px' }}>ID visite : {clientSelect?.objectVisite?.idDemande || 'aucune information'}</li>
+            <li style={{ fontSize: '11px' }}>Feedback : {clientSelect?.objectVisite?.raison || 'aucune information'}</li>
+            <li style={{ fontSize: '11px' }}>Date : {clientSelect?.objectVisite?.dateSave.split('T')[0] || 'aucune information'}</li>
           </ol>
+
           <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>
             Called :{' '}
             {!clientSelect.called || clientSelect?.called === 'nCalled' ? (
@@ -79,9 +100,22 @@ function Detail({ action }) {
               clientSelect?.called
             )}{' '}
           </p>
-          <div>
-            <AutoComplement value={value} setValue={setValue} options={clientSelect?.statutaction} title="Feedback" propr="title" />
-          </div>
+          {action && clientSelect.action.idAction === 'SA89AF' && (
+            <Grid item lg={12} sx={{ marginTop: '10px' }}>
+              <AutoComplement
+                value={actionSelectFeedback}
+                setValue={setActionSelectFeedback}
+                options={action}
+                title="Action"
+                propr="title"
+              />
+            </Grid>
+          )}
+          {clientSelect.action.idAction !== 'SA89AF' && (
+            <div>
+              <AutoComplement value={value} setValue={setValue} options={clientSelect?.statutaction} title="Feedback" propr="title" />
+            </div>
+          )}
 
           <div style={{ marginTop: '10px' }}>
             <TextArea setValue={setAreaValue} value={areaValue} placeholder="Commentaire" />
@@ -89,7 +123,7 @@ function Detail({ action }) {
           <Button onClick={(e) => send(e)} variant="contained" fullWidth sx={{ marginTop: '10px' }} color="primary">
             <Save fontSize="small" /> <span style={{ marginLeft: '10px' }}>Valier</span>
           </Button>
-        </MainCard>
+        </div>
       )}
     </Stack>
   );

@@ -397,7 +397,6 @@ function AllCustomer() {
           team &&
           team.length > 0 &&
           team.map((index) => {
-            console.log(index);
             return (
               <div key={index._id}>
                 <Grid
@@ -446,22 +445,4 @@ function AllCustomer() {
   );
 }
 
-const style = {
-  flex: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  flexOutsla: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: '10px'
-  },
-  flexInsla: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-};
 export default AllCustomer;
