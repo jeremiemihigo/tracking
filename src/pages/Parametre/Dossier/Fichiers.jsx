@@ -144,15 +144,19 @@ function AllAdresse() {
   }, [fileToTrack, statValue]);
 
   const loadingVisites = async () => {
-    setLoadVisites(true);
-    const response = await axios.get(lienVisiteMenage + '/trackingLoading');
-    if (response.status === 201) {
-      success(response.data, 'error');
-      setLoadVisites({ bool: false, message: response.data });
-    }
-    if (response.status === 200) {
-      setVisited(response.data);
-      setLoadVisites({ bool: true, message: 'connected successfuly' });
+    try {
+      setLoadVisites(true);
+      const response = await axios.get(lienVisiteMenage + '/trackingLoading');
+      if (response.status === 201) {
+        success(response.data, 'error');
+        setLoadVisites({ bool: false, message: response.data });
+      }
+      if (response.status === 200) {
+        setVisited(response.data);
+        setLoadVisites({ bool: true, message: 'connected successfuly' });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   React.useEffect(() => {
