@@ -61,6 +61,7 @@ function Detail({ clientSelect }) {
     socket.emit('renseignefeedback', data);
     setAreaValue('');
     setValue('');
+    setActionSelectFeedback('');
   };
   return (
     <Stack>

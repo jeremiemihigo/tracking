@@ -123,7 +123,7 @@ function Index() {
     {
       field: 'sla',
       headerName: 'SLA',
-      width: 50,
+      width: 70,
       editable: false,
       renderCell: (params) => {
         if (params.row.sla === 'INSLA') {
