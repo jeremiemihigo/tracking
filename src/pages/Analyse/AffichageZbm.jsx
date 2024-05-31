@@ -10,7 +10,6 @@ import moment from '../../../node_modules/moment/moment';
 function AllCustomer() {
   const location = useLocation();
   const { handleLogout } = React.useContext(CreateContexteGlobal);
-  console.log(location.state?.region === undefined);
   React.useEffect(() => {
     if (!location.state?.region) {
       handleLogout();

@@ -10,7 +10,6 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 const MainProcess = Loadable(lazy(() => import('pages/Parametre/MainProcess')));
 const Details = Loadable(lazy(() => import('pages/Parametre')));
 const Agent = Loadable(lazy(() => import('pages/Parametre/Agent')));
-const Departement = Loadable(lazy(() => import('pages/Parametre/Departement')));
 const Role = Loadable(lazy(() => import('pages/Parametre/Role')));
 const Action = Loadable(lazy(() => import('pages/Parametre/Action')));
 const Etape = Loadable(lazy(() => import('pages/Parametre/Etapes')));
@@ -49,10 +48,7 @@ const AdminRoute = {
       path: 'agent',
       element: <Agent />
     },
-    {
-      path: 'departement',
-      element: <Departement />
-    },
+
     {
       path: '/role',
       element: <Role />

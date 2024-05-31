@@ -1,7 +1,4 @@
-import { useRef, useState } from 'react';
-
-// material-ui
-import { useTheme } from '@mui/material/styles';
+import { CoffeeMaker, DoNotStep, Engineering, Person, Settings } from '@mui/icons-material';
 import {
   Avatar,
   Badge,
@@ -10,22 +7,24 @@ import {
   Divider,
   IconButton,
   List,
-  ListItemButton,
   ListItemAvatar,
+  ListItemButton,
   ListItemText,
   Paper,
   Popper,
   Typography,
   useMediaQuery
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // project import
-import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
+import MainCard from 'components/MainCard';
 
 // assets
-import { CloseOutlined, SettingOutlined, MessageOutlined } from '@ant-design/icons';
+import { CloseOutlined, SettingOutlined } from '@ant-design/icons';
 
 // sx styles
 const avatarSX = {
@@ -67,12 +66,17 @@ const Notification = () => {
   const iconBackColor = 'grey.100';
 
   const table = [
-    { id: 1, title: 'Main process', secondary: 'default tracker', link: 'mainProcess' },
-    { id: 2, title: 'Départements', secondary: 'All department', link: 'departement' },
-    { id: 3, title: 'Agents', secondary: 'Agents de tous les départements', link: 'agent' },
-    { id: 4, title: 'Roles', secondary: 'All role', link: 'role' },
-    { id: 5, title: 'Processus', secondary: 'Comment les étapes vont se succeder', link: 'etapes' },
-    { id: 6, title: 'Parametre', secondary: 'Parametre', link: 'parametre' }
+    { id: 1, title: 'Main process', secondary: 'default tracker', link: 'mainProcess', icon: <Engineering fontSize="small" /> },
+    { id: 3, title: 'Agents', secondary: 'Agents de tous les départements', link: 'agent', icon: <Person fontSize="small" /> },
+    { id: 4, title: 'Roles', secondary: 'All role', link: 'role', icon: <CoffeeMaker fontSize="small" /> },
+    {
+      id: 5,
+      title: 'Processus',
+      secondary: 'Comment les étapes vont se succeder',
+      icon: <DoNotStep fontSize="small" />,
+      link: 'etapes'
+    },
+    { id: 6, title: 'Parametre', secondary: 'Parametre', link: 'parametre', icon: <Settings fontSize="small" /> }
   ];
 
   return (
@@ -151,11 +155,10 @@ const Notification = () => {
                           <ListItemAvatar>
                             <Avatar
                               sx={{
-                                color: 'primary.main',
-                                bgcolor: 'primary.lighter'
+                                color: 'primary.main'
                               }}
                             >
-                              <MessageOutlined />
+                              {index.icon}
                             </Avatar>
                           </ListItemAvatar>
                           <Link to={index.link} style={{ textDecoration: 'none', color: 'black' }}>

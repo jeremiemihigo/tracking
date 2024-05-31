@@ -1,3 +1,4 @@
+import DangerousSharpIcon from '@mui/icons-material/DangerousSharp';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import StartIcon from '@mui/icons-material/Start';
@@ -7,6 +8,7 @@ import Button from '@mui/material/Button';
 import MobileStepper from '@mui/material/MobileStepper';
 import { useTheme } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
+import { message } from 'antd';
 import Images from 'assets/images/icons/attente.png';
 import AnalyticEcommerce from 'components/AnalyticEcommerce';
 import LoaderGif from 'components/LoaderGif';
@@ -27,18 +29,26 @@ const steps = [
   }
 ];
 
-export default function TextMobileStepper() {
+function TextMobileStepper() {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = steps.length;
   const allaction = useSelector((state) => state?.action.action);
+  const user = useSelector((state) => state.user?.user);
   const [dataChange, setDataChange] = React.useState();
 
   const handleNext = (dataStep) => {
     setDataChange(dataStep);
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
-
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = (texte, type) => {
+    messageApi.open({
+      type,
+      content: '' + texte,
+      duration: 5
+    });
+  };
   const columns = [
     {
       field: 'unique_account_id',
@@ -49,7 +59,7 @@ export default function TextMobileStepper() {
     {
       field: 'nomclient',
       headerName: 'Name',
-      width: 120,
+      width: 170,
       editable: false
     },
 
@@ -107,23 +117,30 @@ export default function TextMobileStepper() {
       editable: false,
       renderCell: (params) => {
         return (
-          <Fab size="small" onClick={() => handleNext(params.row)} color="primary">
-            <StartIcon fontSize="small" />
-          </Fab>
+          <>
+            {user && user.permission.includes(params.row.actionEnCours) ? (
+              <Fab size="small" onClick={() => handleNext(params.row)} color="primary">
+                <StartIcon fontSize="small" />
+              </Fab>
+            ) : (
+              <Fab color="secondary" size="small" onClick={() => success('you are not authorized to take action on this client', 'error')}>
+                <DangerousSharpIcon fontSize="small" />
+              </Fab>
+            )}
+          </>
         );
       }
     }
   ];
 
   const [data, setData] = React.useState();
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
   const loadingClient = async () => {
     try {
       const response = await axios.get(lien_read + '/clientField', config);
+      console.log(response);
       if (response.status === 200) {
         setData(response.data);
       }
@@ -134,7 +151,6 @@ export default function TextMobileStepper() {
   React.useEffect(() => {
     loadingClient();
   }, []);
-
   const [analyse, setAnalyse] = React.useState([]);
   const structuration = () => {
     if (data && data.length > 0) {
@@ -153,7 +169,6 @@ export default function TextMobileStepper() {
   React.useEffect(() => {
     structuration();
   }, [data]);
-
   const returnAction = (id) => {
     if (allaction && allaction.length > 0) {
       return _.filter(allaction, { idAction: id })[0]?.title;
@@ -193,8 +208,10 @@ export default function TextMobileStepper() {
   React.useEffect(() => {
     structreData();
   }, [data]);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
+      {contextHolder}
       {!data && <LoaderGif width={100} height={100} />}
       {data && data.length > 0 && (
         <>
@@ -249,10 +266,11 @@ export default function TextMobileStepper() {
             <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
               <img src={Images} alt="info-attente" />
             </div>
-            <p>Aucune action en attente chez vous</p>
+            <p>No action pending at your location</p>
           </div>
         </div>
       )}
     </Box>
   );
 }
+export default TextMobileStepper;

@@ -11,7 +11,7 @@ import { Grid, Paper, Typography } from '@mui/material';
 
 const AnalyticEcommerce = ({ title, count, bg }) => (
   <Paper sx={{ padding: '4px' }}>
-    <div style={{ maxWidth: '15rem', minWidth: '5rem' }}>
+    <div style={{ minWidth: '5rem' }}>
       <Grid container>
         <Grid item lg={10}>
           <Typography component="p" sx={{ fontSize: '12px', fontWeight: 'bolder' }} noWrap>

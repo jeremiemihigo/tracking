@@ -14,8 +14,8 @@ export const lien_socket = `http://${server}:800`;
 export const lien_post = `${serverhost}/tracker/post`;
 export const lien_read = `${serverhost}/tracker/read`;
 export const lien_update = `${serverhost}/tracker/update`;
-export const lienVisiteMenage = `${serverhost}/bboxx/support`;
-// export const lienVisiteMenage = `http://${server}:4000/bboxx/support`;
+// export const lienVisiteMenage = `${serverhost}/bboxx/support`;
+export const lienVisiteMenage = `http://${server}:4000/bboxx/support`;
 export const config = {
   headers: {
     'Content-Type': 'Application/json',
