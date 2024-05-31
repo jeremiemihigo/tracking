@@ -8,7 +8,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-function Detail({ clientSelect }) {
+function Detail({ clientSelect, step }) {
   const [value, setValue] = React.useState('');
   const [areaValue, setAreaValue] = React.useState('');
   const [open, setOpen] = React.useState(true);
@@ -62,6 +62,7 @@ function Detail({ clientSelect }) {
     setAreaValue('');
     setValue('');
     setActionSelectFeedback('');
+    step();
   };
   return (
     <Stack>
@@ -81,10 +82,10 @@ function Detail({ clientSelect }) {
             </Typography>
           )}
           <ol>
-            <li style={{ fontSize: '11px' }}>ID agent : {clientSelect?.objectVisite?.codeAgent || 'aucune information'}</li>
-            <li style={{ fontSize: '11px' }}>ID visite : {clientSelect?.objectVisite?.idDemande || 'aucune information'}</li>
-            <li style={{ fontSize: '11px' }}>Feedback : {clientSelect?.objectVisite?.raison || 'aucune information'}</li>
-            <li style={{ fontSize: '11px' }}>Date : {clientSelect?.objectVisite?.dateSave.split('T')[0] || 'aucune information'}</li>
+            <li style={{ fontSize: '11px' }}>ID agent : {clientSelect?.objectVisite?.codeAgent}</li>
+            <li style={{ fontSize: '11px' }}>ID visite : {clientSelect?.objectVisite?.idDemande}</li>
+            <li style={{ fontSize: '11px' }}>Feedback : {clientSelect?.objectVisite?.raison}</li>
+            <li style={{ fontSize: '11px' }}>Date : {clientSelect?.objectVisite?.dateSave}</li>
           </ol>
 
           <p style={{ fontSize: '12px', padding: '0px', margin: '0px' }}>

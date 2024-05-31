@@ -1,8 +1,5 @@
 .itemes {
-  width: 70vw;
-  overflow-x: auto;
-  display: flex;
-  padding: 5px;
+  width: 80vw;
 }
 .item {
   margin: 0px 4px;

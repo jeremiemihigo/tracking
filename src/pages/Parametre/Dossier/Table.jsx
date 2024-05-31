@@ -1,20 +1,21 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { CreateContexte } from './Context';
 import './style.css';
 
-function Table({ dataToSend }) {
+function Table() {
+  const { track } = React.useContext(CreateContexte);
   const action = useSelector((state) => state.action?.action);
-  let analyse = _.groupBy(dataToSend, 'beginAction');
+  let analyse = _.groupBy(track, 'beginAction');
   function getRowId(row) {
     return row.customer_name;
   }
 
   const retournAction = (idAction) => {
-    console.log(_.filter(action, { idAction }));
     return _.filter(action, { idAction });
   };
 
@@ -60,14 +61,22 @@ function Table({ dataToSend }) {
       }
     }
   ];
+
+  // const [statValue, setStatValue] = React.useState('');
+  // const statut = [
+  //   { id: 1, title: 'Normal', value: 'normal' },
+  //   { id: 2, title: 'Expired', value: 'late' },
+  //   { id: 2, title: 'Defaulted', value: 'default' }
+  // ];
   return (
     <div style={{ marginTop: '20px' }}>
+      {/* <Selected label="Statut à tracker" data={statut} value={statValue} setValue={setStatValue} /> */}
       <Grid container>
         <Grid item lg={8}>
-          {dataToSend && dataToSend !== 'token expired' && dataToSend.length > 0 && (
+          {track && track.length > 0 && (
             <DataGrid
               getRowId={getRowId}
-              rows={dataToSend}
+              rows={track}
               columns={columns}
               initialState={{
                 pagination: {

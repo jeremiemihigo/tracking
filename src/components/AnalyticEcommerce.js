@@ -13,12 +13,12 @@ const AnalyticEcommerce = ({ title, count, bg }) => (
   <Paper sx={{ padding: '4px' }}>
     <div style={{ minWidth: '5rem' }}>
       <Grid container>
-        <Grid item lg={10}>
+        <Grid item lg={10} xs={10} sm={10} md={10}>
           <Typography component="p" sx={{ fontSize: '12px', fontWeight: 'bolder' }} noWrap>
             {title}
           </Typography>
         </Grid>
-        <Grid item lg={2} sx={{ background: '#002d72', borderRadius: '20px', textAlign: 'center', color: 'white' }}>
+        <Grid item lg={2} xs={2} sm={2} md={2} sx={{ background: '#002d72', borderRadius: '20px', textAlign: 'center', color: 'white' }}>
           <Typography component="p">{count}</Typography>
         </Grid>
       </Grid>

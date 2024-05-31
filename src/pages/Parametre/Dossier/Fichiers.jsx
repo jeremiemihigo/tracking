@@ -32,59 +32,6 @@ function AllAdresse() {
 
   const { readUploadFile, sendData, setOpen } = React.useContext(CreateContexte);
 
-  const formatedNumero = (numero) => {
-    if (numero.length > 0) {
-      if (numero.length === 12) {
-        return numero;
-      }
-      if (numero.length === 13) {
-        return Array.from(numero).slice(1).join('');
-      }
-      if (numero.length === 9) {
-        return '243' + numero;
-      }
-      if (numero.length === 10) {
-        return '243' + Array.from(numero).slice(1).join('');
-      }
-    }
-  };
-
-  const searchCode = (numero) => {
-    if (_.filter(allAdresse, { customer_phone_1: formatedNumero(numero) }).length > 0) {
-      return _.filter(allAdresse, { customer_phone_1: formatedNumero(numero) })[0]['unique_account_id'];
-    }
-    if (_.filter(allAdresse, { customer_phone_2: formatedNumero(numero) }).length > 0) {
-      return _.filter(allAdresse, { customer_phone_1: formatedNumero(numero) })[0]['unique_account_id'];
-    }
-  };
-
-  const functionAppelSortant = () => {
-    if (allAdresse && appel && appel.length > 0) {
-      let table = [];
-      for (let i = 0; i < appel.length; i++) {
-        if (appel[i].Type === 'outbound') {
-          table.push({
-            UniqueID: appel[i]['UniqueID'],
-            unique_account_id: searchCode(appel[i]['Destination']),
-            Source: appel[i]['Source'],
-            Destination: appel[i]['Destination'],
-            feedback: appel[i]['Feedback'],
-            StartTime: appel[i]['StartTime'],
-            EndTime: appel[i]['EndTime'],
-            Duration: appel[i]['Duration'],
-            Disposition: appel[i]['Disposition'],
-            appel: true
-          });
-        }
-      }
-      setAppelSortant(table);
-    }
-  };
-
-  React.useEffect(() => {
-    functionAppelSortant();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allAdresse, appel]);
   const initiale = useSelector((state) => state?.initiale.initiale);
 
   const retournAction = (visites, called) => {
@@ -113,6 +60,23 @@ function AllAdresse() {
       return 'nVisited';
     }
   };
+
+  const infoV = (visit, property) => {
+    console.log(visit);
+    if (visit.length > 0) {
+      if (['dateSave', 'idDemande'].includes(property)) {
+        return visit[0]['' + property];
+      }
+      if (property === 'codeAgent') {
+        return visit[0]?.demandeur.codeAgent;
+      }
+      if (property === 'raison') {
+        return visit[0]?.demande.raison;
+      }
+    } else {
+      return '';
+    }
+  };
   const rechercheSiClientAppeler = () => {
     if (track && track.length > 0) {
       setOpen(true);
@@ -128,7 +92,13 @@ function AllAdresse() {
           actionEnCours: actionss,
           beginAction: actionss,
           visited: returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })),
-          called: _.filter(appelSortant, { unique_account_id: track[i]['unique_account_id'] })
+          objectVisite: {
+            codeAgent: infoV(returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })), 'codeAgent'),
+            idDemande: infoV(returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })), 'idDemande'),
+            raison: infoV(returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })), 'raison'),
+            dateSave: infoV(returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })), 'dateSave')
+          },
+          called: _.filter(appelSortant, { unique_account_id: track[i]['unique_account_id'] }).length > 0 ? 'called' : 'nCalled'
         });
       }
       setDemandeFeed(table);
@@ -165,17 +135,9 @@ function AllAdresse() {
 
   const sendings = (e) => {
     e.preventDefault();
-    if (loadVisites.bool) {
-      sendData({ donner: demandeFeedBack, title: 'Feedback', lien: lien_post + '/client' });
-    } else {
-      success(loadVisites.message, 'error');
-    }
+    sendData({ donner: demandeFeedBack, lien: lien_post + '/client' });
   };
-  const statut = [
-    { id: 1, title: 'Normal', value: 'normal' },
-    { id: 2, title: 'Expired', value: 'late' },
-    { id: 2, title: 'Defaulted', value: 'default' }
-  ];
+
   return (
     <>
       {contextHolder}

@@ -79,7 +79,7 @@ function Index() {
     <MainCard>
       {contextHolder}
       <Grid container>
-        <Grid item lg={4}>
+        <Grid item lg={4} xs={12} sm={12} md={4}>
           <Grid className="gridAdd" sx={{ border: '2px dashed black' }} onClick={() => setOpen(true)}>
             <div style={{ textAlign: 'center', fontSize: '12px', fontWeight: 'bolder' }}>
               <Add />
@@ -98,7 +98,7 @@ function Index() {
             })}
           </Grid>
         </Grid>
-        <Grid item lg={8}>
+        <Grid item lg={8} xs={12} sm={6} md={8}>
           {dataTeam && dataTeam.length > 0 && (
             <>
               <div className="divTitle">

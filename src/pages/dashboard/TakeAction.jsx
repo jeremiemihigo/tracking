@@ -3,12 +3,12 @@ import Detail from 'pages/TakeAction/Detail';
 import Result from 'pages/TakeAction/Result';
 import React from 'react';
 
-function TakeAction({ data }) {
+function TakeAction({ data, step }) {
   return (
     <Grid container>
       <Grid item lg={5}>
         <Paper elevation={2}>
-          <Detail clientSelect={data} />
+          <Detail clientSelect={data} step={step} />
         </Paper>
       </Grid>
       <Grid item lg={7} sx={{ paddingLeft: '15px' }}>

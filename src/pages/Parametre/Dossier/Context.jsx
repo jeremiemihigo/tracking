@@ -3,15 +3,13 @@
 import axios from 'axios';
 import SimpleBackdrop from 'components/Backdrop';
 import React, { createContext } from 'react';
-import { config } from 'static/Lien';
+import { config, lien_post } from 'static/Lien';
 import * as xlsx from 'xlsx';
 export const CreateContexte = createContext();
 
 const ContexteAnalyse = (props) => {
   const [open, setOpen] = React.useState(false);
-
   const [sending, setSending] = React.useState('');
-
   const readUploadFile = (e, setData) => {
     e.preventDefault();
     try {
@@ -33,30 +31,41 @@ const ContexteAnalyse = (props) => {
       alert('Error ' + error);
     }
   };
-
-  const sendData = async (file) => {
-    const { donner, title, lien } = file;
+  const [visited, setVisited] = React.useState();
+  const [track, setTrack] = React.useState([]);
+  const [allAdresse, setAllAdresse] = React.useState();
+  const [appelSortant, setAppelSortant] = React.useState();
+  const sendData = async () => {
     setSending(true);
-
-    if (donner && donner.length > 0 && lien) {
+    if (track.length > 0) {
       const response = await axios.post(
-        lien,
+        lien_post + '/client',
         {
-          data: donner,
-          title
+          data: track
         },
         config
       );
       console.log(response);
+    } else {
     }
   };
+
   return (
     <CreateContexte.Provider
       value={{
         sendData,
         readUploadFile,
         sending,
-        setOpen
+        setOpen,
+        //updated
+        setVisited,
+        visited,
+        setAllAdresse,
+        allAdresse,
+        appelSortant,
+        setAppelSortant,
+        setTrack,
+        track
       }}
     >
       {props.children}
