@@ -262,7 +262,9 @@ function AllCustomer() {
   const returnSLANumber = (data, type) => {
     let nombre = 0;
     for (let i = 0; i < data.length; i++) {
-      if (sla({ delaiPrevu: data[i].action.delai, dateFin: today?.datetime, dateDebut: data[i].updatedAt }) === type) {
+      if (
+        sla({ delaiPrevu: data[i].action.delai, dateFin: today?.unixtime || new Date().getTime(), dateDebut: data[i].updatedAt }) === type
+      ) {
         nombre = nombre + 1;
       }
     }

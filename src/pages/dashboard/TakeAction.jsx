@@ -4,12 +4,10 @@ import Result from 'pages/TakeAction/Result';
 import React from 'react';
 
 function TakeAction({ data }) {
-  console.log(data);
   return (
     <Grid container>
       <Grid item lg={5}>
         <Paper elevation={2}>
-          {' '}
           <Detail clientSelect={data} />
         </Paper>
       </Grid>

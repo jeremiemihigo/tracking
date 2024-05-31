@@ -1,14 +1,12 @@
 /* eslint-disable react/prop-types */
 import _ from 'lodash';
 import moment from 'moment';
+import PropType from 'prop-types';
 import { useSelector } from 'react-redux';
-import { differenceDays } from 'static/Lien';
+import { differenceDays, sla } from 'static/Lien';
 import './action.css';
 
 function Result({ index }) {
-  console.log(index);
-  console.log(differenceDays(index.dateFin, index.dateDebut));
-
   const agent = useSelector((state) => state.agent.agent);
   const retournAgent = (id) => {
     return _.filter(agent, { codeAgent: id });
@@ -17,7 +15,7 @@ function Result({ index }) {
     <div
       className="result"
       style={
-        index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut) >= 0
+        sla(index) === 'INSLA'
           ? {
               border: '1px solid black',
               borderRadius: '10px',
@@ -48,14 +46,16 @@ function Result({ index }) {
 
       <p>
         <span>resolved in : </span> {differenceDays(index.dateFin, index.dateDebut)} jour(s)
-        {index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut) > 0 ? '; INSLA' : '; OUTSLA'}
+        {sla(index)}
       </p>
       <p>
         <span>deadline : </span> {`${index.delaiPrevu} ${index?.delaiPrevu > 1 ? ' jours' : ' jour'}`}
-        <span style={{ float: 'right' }}>{moment(index.createdAt).fromNow()}</span>
+        <span style={{ float: 'right' }}>{moment(index.updatedAt).fromNow()}</span>
       </p>
     </div>
   );
 }
-
+Result.prototype = {
+  index: PropType.object
+};
 export default Result;

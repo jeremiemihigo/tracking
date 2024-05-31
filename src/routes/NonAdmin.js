@@ -7,7 +7,6 @@ import ListeClient from 'pages/dashboard/ListeClient';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
-const TakeAction = Loadable(lazy(() => import('pages/TakeAction')));
 const Analyse = Loadable(lazy(() => import('pages/Analyse')));
 const Params = Loadable(lazy(() => import('pages/Param')));
 const DataToTrack = Loadable(lazy(() => import('pages/DataToTrack')));
@@ -16,6 +15,7 @@ const Teams = Loadable(lazy(() => import('pages/Teams')));
 const Rapport = Loadable(lazy(() => import('pages/Rapport')));
 const NotFound = Loadable(lazy(() => import('pages/NotFound')));
 const AfficheZbm = Loadable(lazy(() => import('pages/Analyse/AffichageZbm')));
+const Folder = Loadable(lazy(() => import('pages/Parametre/Dossier')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -28,10 +28,6 @@ const RouteNonAdmin = {
       element: <DashboardDefault />
     },
 
-    {
-      path: 'event',
-      element: <TakeAction />
-    },
     {
       path: 'analyse',
       element: <Analyse />
@@ -67,6 +63,10 @@ const RouteNonAdmin = {
     {
       path: '/region_monitoring',
       element: <AfficheZbm />
+    },
+    {
+      path: 'folder',
+      element: <Folder />
     }
   ]
 };

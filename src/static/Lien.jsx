@@ -9,12 +9,9 @@ const serverhost = 'https://backendtracking.onrender.com';
 
 // export const lien_post = `http://${server}:8000/tracker/post`;
 export const lien_socket = `http://${server}:800`;
-// export const lien_read = `http://${server}:8000/tracker/read`;
-// export const lien_update = `http://${server}:8000/tracker/update`;
 export const lien_post = `${serverhost}/tracker/post`;
 export const lien_read = `${serverhost}/tracker/read`;
 export const lien_update = `${serverhost}/tracker/update`;
-// export const lienVisiteMenage = `${serverhost}/bboxx/support`;
 export const lienVisiteMenage = `http://${server}:4000/bboxx/support`;
 export const config = {
   headers: {
@@ -29,7 +26,7 @@ export const differenceDays = (date1, date2) => {
   }
 };
 export const sla = (index) => {
-  return index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut) < 0 ? 'OUTSLA' : 'INSLA';
+  return index.delaiPrevu - (index.dateFin - index.dateDebut) < 0 ? 'OUTSLA' : 'INSLA';
 };
 
 export const allpermissions = (user) => {
