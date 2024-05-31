@@ -2,7 +2,7 @@ import React from 'react';
 import { useRoutes } from 'react-router-dom';
 
 // project import
-import { useSelector } from '../../node_modules/react-redux/es/exports';
+import { useSelector } from 'react-redux';
 import AdminRoute from './AdminRoute';
 import LoginRoutes from './LoginRoutes';
 import RouteNonAdmin from './NonAdmin';
@@ -25,5 +25,4 @@ export default function ThemeRoutes() {
     }
   }, [user]);
   return useRoutes(routes);
-  //team managment ZBM field
 }

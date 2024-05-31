@@ -1,47 +1,14 @@
 // import { Input } from 'antd';
 import { Paper } from '@mui/material';
-import React from 'react';
-// import { config, lien } from 'static/Lien';
-// import axios from 'axios';
-// import DirectionSnackbar from 'components/Direction';
-
-import { useSelector } from 'react-redux';
-import './history.css';
-// import MainCard from 'components/MainCard';
-
 import { CreateContexteGlobal } from 'GlobalContext';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Component from './Component';
 import Contexte from './Contexte';
 import Deroulant from './Deroulant';
+import './history.css';
 
 function Index() {
-  // const [data, setData] = React.useState();
-
-  // const [message, setMessage] = React.useState();
-  // const [open, setOpen] = React.useState(true);
-
-  // const loading = async () => {
-  //   try {
-  //     const response = await axios.post(lien + '/history', { codeclient }, config);
-  //     if (response.status === 201) {
-  //       setMessage(response.data);
-  //     }
-  //     if (response.status === 200) {
-  //       setData(response.data);
-  //     }
-  //   } catch (error) {
-  //     setMessage(error?.response?.data);
-  //   }
-  // };
-
-  // const client = useSelector((state) => state.client.client);
-
-  // React.useEffect(() => {
-  //   if (client && client.length > 0) {
-  //     setData(client.filter((x) => x.result.length > 0));
-  //   }
-  // }, [client]);
-
   const menu = useSelector((state) => state.menu.drawerOpen);
 
   const option = [
@@ -69,9 +36,7 @@ function Index() {
 
   const { socket } = React.useContext(CreateContexteGlobal);
   React.useEffect(() => {
-    socket.on('renseigne', (data) => {
-      new Notification('Action effectuee');
-    });
+    socket.on('renseigne', (data) => {});
   }, [socket]);
 
   return (

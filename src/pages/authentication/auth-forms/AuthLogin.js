@@ -7,7 +7,6 @@ import {
   Divider,
   FormHelperText,
   Grid,
-  // Link,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -147,7 +146,7 @@ const AuthLogin = () => {
               </Grid>
               <Grid item xs={12}>
                 <Divider>
-                  <Typography variant="caption"> Login with Bboxx Tracker</Typography>
+                  <Typography variant="caption"> Login with Bboxx Default Tracker</Typography>
                 </Divider>
               </Grid>
             </Grid>

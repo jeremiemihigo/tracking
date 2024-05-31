@@ -23,7 +23,3 @@ AnimateButton.propTypes = {
   children: PropTypes.node,
   type: PropTypes.oneOf(['slide', 'scale', 'rotate'])
 };
-
-AnimateButton.defaultProps = {
-  type: 'scale'
-};

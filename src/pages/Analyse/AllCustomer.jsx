@@ -284,7 +284,7 @@ function AllCustomer() {
             returnCategorie(user?.role) === 'field' &&
             analyseField.region.map((index, key) => {
               return (
-                <Grid key={key} lg={2} xs={12} sm={12} md={6}>
+                <Grid item key={key} lg={2} xs={12} sm={12} md={6}>
                   <Grid
                     onClick={() => affichageZbm(retournTotal(index), index)}
                     sx={{

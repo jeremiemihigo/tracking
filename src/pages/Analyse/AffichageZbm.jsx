@@ -1,17 +1,26 @@
 import { Grid, Paper, Typography } from '@mui/material';
+import { CreateContexteGlobal } from 'GlobalContext';
 import _ from 'lodash';
 import PaperHead from 'pages/Component/PaperHead';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import moment from '../../../node_modules/moment/moment';
 
 function AllCustomer() {
   const location = useLocation();
-  const { state } = location;
-  const { data, region } = state;
-  const [analyseZbm, setAnalyseZbm] = React.useState();
+  const { handleLogout } = React.useContext(CreateContexteGlobal);
+  console.log(location.state?.region === undefined);
+  React.useEffect(() => {
+    if (!location.state?.region) {
+      handleLogout();
+    }
+  }, []);
 
+  const data = location.state?.data;
+  const region = location.state?.region;
+
+  const [analyseZbm, setAnalyseZbm] = React.useState();
   const allAnalyse = () => {
     const shop = Object.keys(_.groupBy(data, 'shop_name'));
     const action = Object.keys(_.groupBy(data, 'action.idAction'));
@@ -20,6 +29,8 @@ function AllCustomer() {
   React.useEffect(() => {
     if (data) {
       allAnalyse();
+    } else {
+      handleLogout();
     }
   }, [data]);
 
@@ -31,17 +42,12 @@ function AllCustomer() {
       return data.filter((x) => x.actionEnCours === action && x.shop_region === lieu);
     }
   };
-
-  const navigate = useNavigate();
-
   const action = useSelector((state) => state.action?.action);
-
   const returnAction = (id) => {
     if (action && action.length > 0) {
       return _.filter(action, { idAction: id })[0]?.title;
     }
   };
-
   const returnRole = (item) => {
     if (action) {
       let roles = action.filter((x) => x.idAction === item)[0]?.roles;
@@ -54,7 +60,6 @@ function AllCustomer() {
       return 'maybe a household visit';
     }
   };
-
   const returnLastupdate = (action) => {
     if (data && data.length > 0) {
       let donner = _.filter(data, { actionEnCours: action });
@@ -78,7 +83,7 @@ function AllCustomer() {
         {analyseZbm &&
           analyseZbm.shop.map((shop, key) => {
             return (
-              <Grid key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
+              <Grid item key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
                 <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff' }}>
                   <Typography component="p" noWrap>
                     {shop}

@@ -19,10 +19,16 @@ const ContexteGlobal = (props) => {
       socket.emit('newUser', data);
     }
   }, [socket, user]);
+
+  const handleLogout = async () => {
+    localStorage.removeItem('auth');
+    window.location.replace('/login');
+  };
   return (
     <CreateContexteGlobal.Provider
       value={{
-        socket
+        socket,
+        handleLogout
       }}
     >
       {props.children}

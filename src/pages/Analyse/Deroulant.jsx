@@ -1,13 +1,13 @@
-import { useRef, useState, useContext } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 // material-ui
+import { Box, ClickAwayListener, List, ListItemButton, ListItemText, Paper, Popper, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { Box, ClickAwayListener, List, ListItemButton, ListItemText, Paper, Popper, Typography, useMediaQuery } from '@mui/material';
 
 // project import
-import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
+import MainCard from 'components/MainCard';
 import { CreateContexte } from './Contexte';
 
 // assets
@@ -48,19 +48,11 @@ const Deroulant = ({ texte, table }) => {
     setOpen(false);
   };
 
-  // const table = [
-  //   { id: 1, title: 'Main process', secondary: 'default tracker', link: 'mainProcess' },
-  //   { id: 2, title: 'Départements', secondary: 'All department', link: 'departement' },
-  //   { id: 3, title: 'Agents', secondary: 'Agents de tous les départements', link: 'agent' },
-  //   { id: 4, title: 'Roles', secondary: 'All role', link: 'role' },
-  //   { id: 5, title: 'Processus', secondary: 'Comment les étapes vont se succeder', link: 'etapes' },
-  //   { id: 6, title: 'Parametre', secondary: 'Parametre', link: 'parametre' }
-  // ];
   const { handleSelect } = useContext(CreateContexte);
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
       <Typography
-        disableRipple
+        disableripple="true"
         color="secondary"
         sx={{ color: 'text.primary', cursor: 'pointer' }}
         aria-label="open profile"

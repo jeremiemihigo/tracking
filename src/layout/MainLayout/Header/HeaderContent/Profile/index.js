@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
 import { Avatar, Box, ButtonBase, CardContent, ClickAwayListener, Grid, IconButton, Paper, Popper, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // project import
-import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
+import MainCard from 'components/MainCard';
 
 // assets
-import avatar1 from 'assets/images/users/avatar-1.png';
 import { LogoutOutlined } from '@ant-design/icons';
+import avatar1 from 'assets/images/users/avatar-1.png';
 import { useSelector } from 'react-redux';
 
 // tab panel wrapper
@@ -35,7 +35,6 @@ const Profile = () => {
   const theme = useTheme();
 
   const handleLogout = async () => {
-    // logout
     localStorage.removeItem('auth');
     window.location.replace('/login');
   };

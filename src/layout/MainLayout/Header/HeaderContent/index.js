@@ -4,19 +4,20 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 // import { GithubOutlined } from '@ant-design/icons';
 // project import
 import { useSelector } from 'react-redux';
+import { addTeams } from 'static/Lien';
 import Connected from './Connected';
 import FolderComponent from './Folder';
 import MobileSection from './MobileSection';
 import Notification from './Notification';
 import OnlyOne from './OnlyOne';
 import Profile from './Profile';
-// import { addTeams } from 'static/Lien';
 
 // ==============================|| HEADER - CONTENT ||============================== //
 
 const HeaderContent = () => {
   const matchesXs = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const user = useSelector((state) => state.user.user);
+  console.log(user);
 
   const menu = useSelector((state) => state.menu);
 
@@ -33,11 +34,10 @@ const HeaderContent = () => {
         </Box>
       )}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {/* {addTeams(user?.role) && <OnlyOne/> } */}
-      <OnlyOne />
+      {addTeams(user?.role) && <OnlyOne />}
+      {addTeams(user?.role) && <FolderComponent />}
       <Connected />
 
-      <FolderComponent />
       {user?.fonction === 'admin' && <Notification />}
 
       {!matchesXs && <Profile />}

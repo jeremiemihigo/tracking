@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
 // material-ui
+import WifiTetheringIcon from '@mui/icons-material/WifiTethering';
 import { Badge, Box, ClickAwayListener, Divider, IconButton, List, Paper, Popper, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -10,7 +11,7 @@ import Transitions from 'components/@extended/Transitions';
 import MainCard from 'components/MainCard';
 
 // assets
-import { CloseOutlined, SettingOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import { CreateContexteGlobal } from 'GlobalContext';
 import Dot from 'components/@extended/Dot';
 import _ from 'lodash';
@@ -97,7 +98,7 @@ const Connected = () => {
         onClick={handleToggle}
       >
         <Badge badgeContent={dataChange.filter((x) => x.nom !== undefined).length} color="primary">
-          <SettingOutlined />
+          <WifiTetheringIcon />
         </Badge>
       </IconButton>
       <Popper

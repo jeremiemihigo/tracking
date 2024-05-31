@@ -5,7 +5,6 @@ import ExcelButton from 'components/Excel';
 import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
 import dayjs from 'dayjs';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { allpermissions, differenceDays } from 'static/Lien';
@@ -15,16 +14,8 @@ import './style.css';
 function Index() {
   const dataTotrack_state = useSelector((state) => state.data_to_track);
   const [liste, setListe] = React.useState();
-  const agent = useSelector((state) => state.agent?.agent);
   const user = useSelector((state) => state.user?.user);
 
-  const laodingAgent = (codeAgent) => {
-    if (agent && agent.length > 0 && _.filter(agent, { codeAgent: codeAgent }).length > 0) {
-      return _.filter(agent, { codeAgent: codeAgent })[0].nom;
-    } else {
-      return '';
-    }
-  };
   const loadingSla = (index) => {
     return index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut);
   };
@@ -45,13 +36,6 @@ function Index() {
     }
     if (data.client[0]?.result.length > 0) {
       return data.client[0].result[data.client[0].result.length - 1]['' + property];
-    }
-  };
-  const returInCharge = (data) => {
-    if (data.client[0]?.result.length > 0) {
-      return laodingAgent(data.client[0].result[data.client[0].result.length - 1]['codeAgent']);
-    } else {
-      return '';
     }
   };
 

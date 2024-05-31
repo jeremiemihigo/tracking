@@ -1,9 +1,8 @@
 import { useRef, useState } from 'react';
 
 // material-ui
+import GroupWorkSharpIcon from '@mui/icons-material/GroupWorkSharp';
 import { Box, IconButton } from '@mui/material';
-
-import { People } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 // project import
 
@@ -36,7 +35,7 @@ const OnlyOne = () => {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <People fontSize="small" />
+          <GroupWorkSharpIcon fontSize="small" />
         </IconButton>
       </Link>
     </Box>

@@ -87,7 +87,6 @@ export default function TextMobileStepper() {
         return (
           <p
             style={{
-              padding: '0px',
               fontSize: '10px',
               padding: '3px',
               borderRadius: '5px',
