@@ -11,7 +11,7 @@ import PositionMenu from 'pages/Component/ListePopup';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { allpermissions, config, lien_read, returnCategorie, sla } from 'static/Lien';
+import { addTeams, allpermissions, config, lien_read, returnCategorie, sla } from 'static/Lien';
 import Popup from 'static/Popup';
 import moment from '../../../node_modules/moment/moment';
 import OpenResult from './OpenResult';
@@ -212,14 +212,12 @@ function AllCustomer() {
   };
 
   const [dataChange, setDataChange] = React.useState({ content: null, error: '' });
-  const { content, error } = dataChange;
+  const { content } = dataChange;
   const { socket } = React.useContext(CreateContexteGlobal);
   React.useEffect(() => {
     socket.on('renseigne', (donner) => {
-      if (!donner.error) {
+      if (donner.error === 'success') {
         setDataChange({ content: donner.content[0] });
-      } else {
-        setDataChange({ content: null, error: donner.content });
       }
       // new Notification('Action effectuee');
     });
@@ -237,7 +235,7 @@ function AllCustomer() {
       if (user?.role === 'ZBM' && content.shop_region === user?.region) {
         existe();
       }
-      if (user?.role === 'FIELD' || allpermissions(user?.role)) {
+      if (user?.role === 'FIELD' || addTeams(user?.role)) {
         existe();
       }
       if (user?.role === 'RS' && content.shop_name === user?.shop) {
@@ -245,10 +243,10 @@ function AllCustomer() {
       }
     }
   }, [content]);
-  const returnLastupdate = (action) => {
+  const returnLastupdate = (action, region) => {
     if (data && data.length > 0) {
-      let donner = _.filter(data, { actionEnCours: action });
-
+      let donner = _.orderBy(_.filter(data, { actionEnCours: action, shop_region: region }), 'updatedAt', 'asc');
+      console.log(donner[donner.length - 1]);
       return donner[donner.length - 1]['updatedAt'];
     } else {
       return '';
@@ -282,57 +280,57 @@ function AllCustomer() {
       <MainCard title="">
         {chargement && !data && <LoaderGif width={150} height={150} />}
         <Grid container>
-          {(analyseField && returnCategorie(user?.role) === 'field') ||
-            (allpermissions(user?.role) &&
-              analyseField?.region.map((index, key) => {
-                return (
-                  <Grid item key={key} lg={2} xs={12} sm={12} md={6}>
-                    <Grid
-                      onClick={() => affichageZbm(retournTotal(index), index)}
-                      sx={{
-                        padding: '5px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        backgroundColor: '#002d72',
-                        color: '#fff',
-                        margin: '3px'
-                      }}
-                    >
-                      <p>{index}</p>
-                      <p>{retournTotal(index).length}</p>
-                    </Grid>
-                    <Grid container>
-                      {analyseField.action.map((action) => {
-                        return (
-                          rechercheNombre(index, action, 'region').length > 0 && (
-                            <Grid
-                              item
-                              lg={12}
-                              md={6}
-                              xs={6}
-                              sm={4}
-                              key={action}
-                              sx={{ padding: '2px', cursor: 'pointer' }}
-                              onClick={() => functionListe(index, action, 'region')}
-                            >
-                              <ActionPending
-                                action={returnAction(action)}
-                                role={returnRole(action)}
-                                nombre={rechercheNombre(index, action, 'region').length}
-                                outsla={returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
-                                insla={returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
-                                lastupdate={returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
-                                bg={returnCOlor(action)}
-                              />
-                            </Grid>
-                          )
-                        );
-                      })}
-                    </Grid>
+          {analyseField &&
+            (returnCategorie(user?.role) === 'field' || allpermissions(user?.role)) &&
+            analyseField?.region.map((index, key) => {
+              return (
+                <Grid item key={key} lg={2} xs={12} sm={12} md={6}>
+                  <Grid
+                    onClick={() => affichageZbm(retournTotal(index), index)}
+                    sx={{
+                      padding: '5px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      backgroundColor: '#002d72',
+                      color: '#fff',
+                      margin: '3px'
+                    }}
+                  >
+                    <p>{index}</p>
+                    <p>{retournTotal(index).length}</p>
                   </Grid>
-                );
-              }))}
+                  <Grid container>
+                    {analyseField.action.map((action) => {
+                      return (
+                        rechercheNombre(index, action, 'region').length > 0 && (
+                          <Grid
+                            item
+                            lg={12}
+                            md={6}
+                            xs={6}
+                            sm={4}
+                            key={action}
+                            sx={{ padding: '2px', cursor: 'pointer' }}
+                            onClick={() => functionListe(index, action, 'region')}
+                          >
+                            <ActionPending
+                              action={returnAction(action)}
+                              role={returnRole(action)}
+                              nombre={rechercheNombre(index, action, 'region').length}
+                              outsla={returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
+                              insla={returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
+                              lastupdate={returnLastupdate(action, index) !== '' && moment(returnLastupdate(action, index)).fromNow()}
+                              bg={returnCOlor(action)}
+                            />
+                          </Grid>
+                        )
+                      );
+                    })}
+                  </Grid>
+                </Grid>
+              );
+            })}
         </Grid>
         <Grid container>
           {analyseZbm &&

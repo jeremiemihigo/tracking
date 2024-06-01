@@ -1,20 +1,21 @@
-.role >div >p{
+.role > div > p {
   padding: 0;
   margin: 0;
 }
-.role{
-  background-color: #B2BEE8;
+.role {
+  background-color: #b2bee8;
   padding: 5px;
-  border-radius: 20px;
+  border-radius: 5px;
   margin-bottom: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  position: relative;
 }
-.role  >div .leader{
-  font-size: 12px; 
+.role > div .leader {
+  font-size: 12px;
 }
-.option{
+.option {
   position: absolute;
   right: 40px;
 }

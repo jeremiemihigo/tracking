@@ -21,12 +21,13 @@ export const config = {
 };
 export const differenceDays = (date1, date2) => {
   if (date1 && date2) {
-    let resultat = (new Date(date1).getTime() - new Date(date2).getTime()) / 86400000;
-    return resultat.toFixed(0);
+    return ((date1 - date2) / 86400000).toFixed(0);
   }
 };
 export const sla = (index) => {
-  return index.delaiPrevu - (index.dateFin - index.dateDebut) < 0 ? 'OUTSLA' : 'INSLA';
+  let delai = index.delaiPrevu * 86400000;
+  let diff = index.dateFin - index.dateDebut;
+  return ((delai - diff) / 86400000).toFixed(0) < 0 ? 'OUTSLA' : 'INSLA';
 };
 
 export const allpermissions = (user) => {

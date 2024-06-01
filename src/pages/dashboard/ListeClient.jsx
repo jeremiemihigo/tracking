@@ -125,6 +125,10 @@ function ListeClient() {
           setOperation(false);
         }
       }
+      if (response.status === 201) {
+        success(response.data, 'error');
+        setOperation(false);
+      }
     } catch (error) {
       setOperation(false);
       success(error, 'error');

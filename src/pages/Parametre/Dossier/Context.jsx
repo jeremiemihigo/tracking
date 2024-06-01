@@ -11,7 +11,7 @@ const ContexteAnalyse = (props) => {
   const [open, setOpen] = React.useState(false);
   const [sending, setSending] = React.useState('');
   const readUploadFile = (e, setData) => {
-    e.preventDefault();
+    console.log(e);
     try {
       if (e.target.files) {
         setOpen(true);
@@ -35,6 +35,7 @@ const ContexteAnalyse = (props) => {
   const [track, setTrack] = React.useState([]);
   const [allAdresse, setAllAdresse] = React.useState();
   const [appelSortant, setAppelSortant] = React.useState();
+
   const sendData = async () => {
     setSending(true);
     if (track.length > 0) {

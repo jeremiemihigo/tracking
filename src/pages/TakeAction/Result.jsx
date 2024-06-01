@@ -7,6 +7,7 @@ import { differenceDays, sla } from 'static/Lien';
 import './action.css';
 
 function Result({ index }) {
+  console.log(index);
   const agent = useSelector((state) => state.agent.agent);
   const retournAgent = (id) => {
     return _.filter(agent, { codeAgent: id });

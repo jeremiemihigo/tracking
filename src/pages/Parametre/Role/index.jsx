@@ -1,16 +1,17 @@
-import MainCard from 'components/MainCard';
-import React from 'react';
-import { Typography, Tooltip } from '@mui/material';
-import Popup from 'static/Popup';
-import AddRole from './AddRole';
-import { useDispatch, useSelector } from 'react-redux';
+import { Add } from '@mui/icons-material';
 import ReplyIcon from '@mui/icons-material/Reply';
-import './style.css';
-import AjouterMember from './AjouterMember';
+import { Fab, Grid, Tooltip } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { AddMembre } from 'Redux/Role';
 import ConfirmDialog from 'components/ConfirmDialog';
+import MainCard from 'components/MainCard';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Popup from 'static/Popup';
+import AddRole from './AddRole';
+import AjouterMember from './AjouterMember';
+import './style.css';
 
 function Index() {
   const [open, setOpen] = React.useState(false);
@@ -34,18 +35,17 @@ function Index() {
     dispatch(AddMembre(d));
   };
   return (
-    <MainCard title="Role" sx={{ position: 'relative' }}>
+    <MainCard>
       <>
-        <div style={{ position: 'absolute', right: '50px', top: '10px' }}>
-          <Typography component="span" sx={{ cursor: 'pointer' }} className="warning" onClick={() => setOpen(true)}>
-            Ajoutez un role
-          </Typography>
-        </div>
-        <div>
+        <Fab size="small" onClick={() => setOpen(true)} color="primary" sx={{ marginBottom: '12px' }}>
+          <Add fontSize="small" />
+        </Fab>
+
+        <Grid container>
           {role ? (
             role.map((index) => {
               return (
-                <React.Fragment key={index._id}>
+                <Grid item lg={6} key={index._id} sx={{ paddingRight: '5px' }}>
                   <div className="role">
                     <div>
                       <p className="title">{index.title}</p>
@@ -77,13 +77,13 @@ function Index() {
                       );
                     })}
                   </Stack>
-                </React.Fragment>
+                </Grid>
               );
             })
           ) : (
             <p>Loading...</p>
           )}
-        </div>
+        </Grid>
         <Popup open={open} setOpen={setOpen} title="Ajoutez un role">
           <AddRole />
         </Popup>

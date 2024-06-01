@@ -34,7 +34,6 @@ function Detail({ clientSelect, step }) {
       customer_id: clientSelect?.unique_account_id,
       status: actionSelect?.status?.title,
       role: actionSelect?.roles[0].title,
-      dateDebut: clientSelect?.updatedAt,
       codeAgent: user?.codeAgent
     };
     if (clientSelect.action.idAction === 'SA89AF') {
