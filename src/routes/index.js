@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom';
 
 // project import
 import { useSelector } from 'react-redux';
+import { allpermissions } from 'static/Lien';
 import AdminRoute from './AdminRoute';
 import LoginRoutes from './LoginRoutes';
 import RouteNonAdmin from './NonAdmin';
@@ -16,7 +17,7 @@ export default function ThemeRoutes() {
   React.useEffect(() => {
     if (user) {
       let table = [];
-      if (user?.fonction === 'admin') {
+      if (allpermissions(user?.role)) {
         table = [AdminRoute, LoginRoutes];
       } else {
         table = [RouteNonAdmin, LoginRoutes];

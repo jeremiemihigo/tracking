@@ -7,7 +7,7 @@ import { Box, List, Typography } from '@mui/material';
 // project import
 import { CreateContexteGlobal } from 'GlobalContext';
 import React from 'react';
-import { returnCategorie } from 'static/Lien';
+import { allpermissions, returnCategorie } from 'static/Lien';
 import NavItem from './NavItem';
 
 // ==============================|| NAVIGATION - LIST GROUP ||============================== //
@@ -31,6 +31,9 @@ const NavGroup = ({ item }) => {
         }
         if (returnCategorie(user.user?.role) === 'team') {
           setOption(item.children.filter((x) => x.user === 'team' || x.user === 'all'));
+        }
+        if (allpermissions(user.user?.role)) {
+          setOption(item.children);
         }
       }
       if (user.readUser === 'rejected') {

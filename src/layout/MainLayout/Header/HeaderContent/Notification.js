@@ -1,7 +1,6 @@
 import { CoffeeMaker, DoNotStep, Engineering, Person, Settings } from '@mui/icons-material';
 import {
   Avatar,
-  Badge,
   Box,
   ClickAwayListener,
   Divider,
@@ -91,9 +90,7 @@ const Notification = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={4} color="primary">
-          <SettingOutlined />
-        </Badge>
+        <SettingOutlined />
       </IconButton>
       <Popper
         placement={matchesXs ? 'bottom' : 'bottom-end'}
