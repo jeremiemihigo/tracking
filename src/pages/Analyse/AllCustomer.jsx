@@ -246,7 +246,11 @@ function AllCustomer() {
   const returnLastupdate = (action, region) => {
     if (data && data.length > 0) {
       let donner = _.orderBy(_.filter(data, { actionEnCours: action, shop_region: region }), 'updatedAt', 'asc');
-      return donner[donner.length - 1]['updatedAt'];
+      if (donner.length > 0) {
+        return donner[donner.length - 1]['updatedAt'];
+      } else {
+        return '';
+      }
     } else {
       return '';
     }
@@ -336,7 +340,7 @@ function AllCustomer() {
             user?.role === 'ZBM' &&
             analyseZbm.shop.map((shop, key) => {
               return (
-                <Grid key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
+                <Grid item key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
                   <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff' }}>
                     <Typography component="p" noWrap>
                       {shop}
