@@ -12,7 +12,7 @@ function ClientToTrack() {
         <Typography component="p" noWrap>
           All Adresse
         </Typography>
-        <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setAllAdresse)} />
+        <Input type="file" accept=".xlsx" name="upload" id="upload" onChange={(e) => readUploadFile(e, setAllAdresse)} />
       </Grid>
     </div>
   );

@@ -246,7 +246,6 @@ function AllCustomer() {
   const returnLastupdate = (action, region) => {
     if (data && data.length > 0) {
       let donner = _.orderBy(_.filter(data, { actionEnCours: action, shop_region: region }), 'updatedAt', 'asc');
-      console.log(donner[donner.length - 1]);
       return donner[donner.length - 1]['updatedAt'];
     } else {
       return '';
@@ -414,7 +413,6 @@ function AllCustomer() {
                   <p>{index.title}</p>
                   <PositionMenu data={index.agent} />
                 </Grid>
-
                 <Grid container>
                   {index.actions.map((action) => {
                     return (

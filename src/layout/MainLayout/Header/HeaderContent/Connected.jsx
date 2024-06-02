@@ -77,13 +77,6 @@ const Connected = () => {
       return id;
     }
   };
-  const returnNom = (id, nom) => {
-    if (user && user.codeAgent === id) {
-      return 'vous';
-    } else {
-      return nom;
-    }
-  };
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
@@ -97,7 +90,7 @@ const Connected = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={dataChange.filter((x) => x.nom !== undefined).length} color="primary">
+        <Badge badgeContent={dataChange.filter((x) => x.nom !== undefined).length - 1} color="primary">
           <WifiTetheringIcon />
         </Badge>
       </IconButton>
@@ -158,7 +151,8 @@ const Connected = () => {
                   >
                     {dataChange.reverse().map((index, key) => {
                       return (
-                        index.nom !== undefined && (
+                        index.nom !== undefined &&
+                        index.codeAgent !== user?.codeAgent && (
                           <div
                             key={key}
                             style={{
@@ -174,9 +168,7 @@ const Connected = () => {
                               <Dot color="success" />
                             </div>
                             <div style={{ width: '90%', padding: 0 }}>
-                              <p style={{ padding: 0, margin: 0, fontSize: '10px', fontWeight: 'bolder' }}>
-                                {returnNom(index.codeAgent, index?.nom)}
-                              </p>
+                              <p style={{ padding: 0, margin: 0, fontSize: '10px', fontWeight: 'bolder' }}>{index?.nom}</p>
                               <p style={{ padding: 0, margin: 0, fontSize: '9px' }}>{returnAgent(index?.codeAgent)}</p>
                             </div>
                           </div>

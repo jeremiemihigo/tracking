@@ -13,11 +13,10 @@ import OnlyOne from './OnlyOne';
 import Profile from './Profile';
 
 // ==============================|| HEADER - CONTENT ||============================== //
-
+import FirstLogin from './FirstLogin';
 const HeaderContent = () => {
   const matchesXs = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const user = useSelector((state) => state.user.user);
-  console.log(user);
 
   const menu = useSelector((state) => state.menu);
 
@@ -33,6 +32,7 @@ const HeaderContent = () => {
           </Typography>
         </Box>
       )}
+      {user?.first && <FirstLogin />}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
       {(addTeams(user?.role) || allpermissions(user?.role)) && <OnlyOne />}
       {(addTeams(user?.role) || allpermissions(user?.role)) && <FolderComponent />}

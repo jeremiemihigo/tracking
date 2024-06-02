@@ -8,13 +8,12 @@ import * as xlsx from 'xlsx';
 export const CreateContexte = createContext();
 
 const ContexteAnalyse = (props) => {
-  const [open, setOpen] = React.useState(false);
   const [sending, setSending] = React.useState('');
   const readUploadFile = (e, setData) => {
-    console.log(e);
+    e.preventDefault();
+    setSending(true);
     try {
       if (e.target.files) {
-        setOpen(true);
         const reader = new FileReader();
         reader.onload = (e) => {
           const data = e.target.result;
@@ -23,7 +22,7 @@ const ContexteAnalyse = (props) => {
           const worksheet = workbook.Sheets[sheetName];
           const json = xlsx.utils.sheet_to_json(worksheet);
           setData(json);
-          setOpen(false);
+          setSending(false);
         };
         reader.readAsArrayBuffer(e.target.files[0]);
       }
@@ -37,17 +36,21 @@ const ContexteAnalyse = (props) => {
   const [appelSortant, setAppelSortant] = React.useState();
 
   const sendData = async () => {
-    setSending(true);
-    if (track.length > 0) {
-      const response = await axios.post(
-        lien_post + '/client',
-        {
-          data: track
-        },
-        config
-      );
-      console.log(response);
-    } else {
+    try {
+      setSending(true);
+      if (track.length > 0) {
+        const response = await axios.post(
+          lien_post + '/client',
+          {
+            data: track
+          },
+          config
+        );
+        console.log(response);
+        setSending(false);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -57,7 +60,7 @@ const ContexteAnalyse = (props) => {
         sendData,
         readUploadFile,
         sending,
-        setOpen,
+        setSending,
         //updated
         setVisited,
         visited,
@@ -70,7 +73,7 @@ const ContexteAnalyse = (props) => {
       }}
     >
       {props.children}
-      {open && <SimpleBackdrop open={open} />}
+      {sending && <SimpleBackdrop open={sending} />}
     </CreateContexte.Provider>
   );
 };

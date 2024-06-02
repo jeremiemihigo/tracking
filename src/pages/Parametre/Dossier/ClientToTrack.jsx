@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
 import React from 'react';
@@ -9,8 +9,17 @@ import { CreateContexte } from './Context';
 import Table from './Table';
 
 function ClientToTrack() {
-  const { readUploadFile, setVisited, visited, setTrack, sendData, appelSortant } = React.useContext(CreateContexte);
+  const { readUploadFile, setVisited, visited, setTrack, setSending, sendData, appelSortant } = React.useContext(CreateContexte);
   const [inputTrack, setInputTrack] = React.useState([]);
+
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = (texte, type) => {
+    messageApi.open({
+      type,
+      content: '' + texte,
+      duration: 3
+    });
+  };
 
   const loadingCode = async () => {
     try {
@@ -19,17 +28,21 @@ function ClientToTrack() {
         for (let i = 0; i < inputTrack.length; i++) {
           table.push(inputTrack[i].unique_account_id);
         }
+        setSending(true);
         const response = await axios.post(lienVisiteMenage + '/visited', { client: table });
         setVisited(response.data);
+        setSending(false);
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === 'ERR_NETWORK') {
+        success('Network Error', 'error');
+        setSending(false);
+      }
     }
   };
   React.useEffect(() => {
     loadingCode();
   }, [inputTrack]);
-
   const infoV = (id, property) => {
     let client = _.filter(visited, { codeclient: id });
     if (client.length > 0) {
@@ -53,13 +66,11 @@ function ClientToTrack() {
       return type === 'appel' ? 'nCalled' : 'nVisited';
     }
   };
-
   const initiale = useSelector((state) => state?.initiale.initiale);
   const retournAction = (visites, called) => {
     let actionFinish = _.filter(initiale, { visited: visites, called: called })[0]?.action;
     return actionFinish;
   };
-
   const loadingClientAndVisited = () => {
     try {
       let table = [];
@@ -94,6 +105,7 @@ function ClientToTrack() {
   }, [visited]);
   return (
     <Grid container>
+      {contextHolder}
       <Grid item lg={9} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
         <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setInputTrack)} />
       </Grid>
