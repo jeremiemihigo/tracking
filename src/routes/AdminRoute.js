@@ -40,7 +40,7 @@ const AdminRoute = {
     },
 
     {
-      path: 'details/:id',
+      path: 'details',
       element: <Details />
     },
     {

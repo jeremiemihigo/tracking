@@ -1,21 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import MainCard from 'components/MainCard';
 import { Edit } from '@mui/icons-material';
-import { Typography } from '@mui/material';
-import Process from './Process';
+import { Fab, Tooltip, Typography } from '@mui/material';
+import { CreateContexteGlobal } from 'GlobalContext';
+import MainCard from 'components/MainCard';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import Popup from 'static/Popup';
+import Process from './Process';
 import AddProcess from './Process/AddProcess';
 import './style.css';
 
 function Index() {
-  const params = useParams();
-  const { id } = params;
+  const location = useLocation();
+  const id = location.state.id;
   const main = useSelector((state) => state.main?.main);
   const [mainSelect, setMainSelect] = React.useState();
   const [open, setOpen] = React.useState(false);
+  const { handleLogout } = React.useContext(CreateContexteGlobal);
 
   React.useEffect(() => {
     if (main && main.length > 0) {
@@ -27,13 +29,19 @@ function Index() {
         window.location.replace('/tracker/login');
       }
     }
+    if (!id) {
+      handleLogout();
+    }
   }, [id]);
   return (
     <MainCard title={mainSelect ? mainSelect.title : ''}>
       <div>
-        <Typography component="h4">
-          process <Edit onClick={() => setOpen(true)} fontSize="small" color="primary" />
-        </Typography>
+        <Tooltip title="Add process">
+          <Fab onClick={() => setOpen(true)} size="small" color="primary" sx={{ marginBottom: '10px' }}>
+            <Edit fontSize="small" color="inherit" />
+          </Fab>
+        </Tooltip>
+        <Typography component="h4"></Typography>
         {mainSelect && <Process id={mainSelect.idMainProcess} />}
       </div>
       <Popup open={open} setOpen={setOpen} title="Add process">

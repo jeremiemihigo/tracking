@@ -3,17 +3,17 @@
 
 // project import
 // import ComponentSkeleton from './ComponentSkeleton';
-import React from 'react';
-import Popup from 'static/Popup';
-import { Fab, Grid, Typography } from '@mui/material';
 import { EditOutlined } from '@ant-design/icons';
-import AddProcess from './AddProcess';
-import { useSelector, useDispatch } from 'react-redux';
-import Table from 'react-bootstrap/Table';
+import { Fab, Grid, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
-import AddStatus from '../Status/AddStatus';
 import AddAction from 'pages/Parametre/Action/AddAction';
+import React from 'react';
+import Table from 'react-bootstrap/Table';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Popup from 'static/Popup';
+import AddStatus from '../Status/AddStatus';
+import AddProcess from './AddProcess';
 // styles
 
 // ============================|| ANT ICONS ||============================ //
@@ -24,8 +24,6 @@ const Process = ({ id }) => {
   const [processSelect, setProcessSelect] = React.useState();
   const [openAction, setOpenAction] = React.useState(false);
   const [openStatus, setOpenStatus] = React.useState(false);
-  const dispatch = useDispatch();
-
   const [openEdit, setOpenEdit] = React.useState(false);
   const [dataEdit, setDataEdit] = React.useState('');
   const functionEdit = (texte, id) => {
@@ -37,7 +35,7 @@ const Process = ({ id }) => {
       setProcessSelect(process.filter((x) => x.idMainProcess === id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, dispatch]);
+  }, [id, process]);
   const [status, setStatus] = React.useState();
   const [statusSelect, setStatusSelect] = React.useState('');
 
@@ -48,8 +46,6 @@ const Process = ({ id }) => {
   }
 
   function DetailAction(select) {
-    // setStatusSelect(select?.idStatus);
-    // setDetail(true);
     navigate(`/${select?.idStatus}`, { replace: true });
   }
 
@@ -57,7 +53,7 @@ const Process = ({ id }) => {
     <Grid container>
       <Grid item lg={7}>
         <MainCard>
-          {processSelect && processSelect.length > 0 ? (
+          {processSelect && processSelect.length > 0 && (
             <Table striped>
               <thead>
                 <tr>
@@ -88,8 +84,6 @@ const Process = ({ id }) => {
                 })}
               </tbody>
             </Table>
-          ) : (
-            <p style={{ textAlign: 'center', fontSize: '12px', color: 'blue', fontWeight: 'bolder' }}>Chargement...</p>
           )}
         </MainCard>
       </Grid>

@@ -1,7 +1,7 @@
 function NotFound() {
   return (
-    <div style={{ fontSize: '50px', textAlign: 'center', fontWeight: 'bolder' }}>
-      <p>Aucune acces sur cette page</p>
+    <div style={{ fontSize: '30px', textAlign: 'center', fontWeight: 'bolder' }}>
+      <p>No access to this page</p>
     </div>
   );
 }

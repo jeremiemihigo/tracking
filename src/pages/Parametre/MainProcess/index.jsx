@@ -2,16 +2,16 @@
 
 // project import
 // import ComponentSkeleton from './ComponentSkeleton';
-import React from 'react';
-import MainCard from 'components/MainCard';
-import Popup from 'static/Popup';
-import { Fab } from '@mui/material';
 import { AppstoreAddOutlined, EditOutlined } from '@ant-design/icons';
-import AddMainProcess from './AddMainProcess';
-import { Tooltip } from '../../../../node_modules/@mui/material/index';
-import { useSelector } from 'react-redux';
+import { Fab } from '@mui/material';
+import MainCard from 'components/MainCard';
+import React from 'react';
 import Table from 'react-bootstrap/Table';
+import { useSelector } from 'react-redux';
+import Popup from 'static/Popup';
+import { Tooltip } from '../../../../node_modules/@mui/material/index';
 import { useNavigate } from '../../../../node_modules/react-router-dom/dist/index';
+import AddMainProcess from './AddMainProcess';
 // styles
 
 // ============================|| ANT ICONS ||============================ //
@@ -26,10 +26,9 @@ const MainProcess = () => {
     setDataEdit({ texte, id });
     setOpenEdit(true);
   };
-  console.log(main);
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const Details = (id) => {
-    navigation(`/details/${id}`);
+    navigate('/details', { state: { id } });
   };
   return (
     <MainCard title="Main process">
