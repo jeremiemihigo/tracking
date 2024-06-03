@@ -1,21 +1,20 @@
+import { Add, Block, RestartAlt } from '@mui/icons-material';
+import { Badge, Fab, Grid, Tooltip } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Reset } from 'Redux/agent';
+import { message } from 'antd';
+import Dot from 'components/@extended/Dot';
 import MainCard from 'components/MainCard';
+import _ from 'lodash';
 import React from 'react';
-import { Add } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'static/Popup';
 import AddMember from './AddMember';
-import { useSelector, useDispatch } from 'react-redux';
-import { DataGrid } from '@mui/x-data-grid';
-import { Fab, Tooltip, Grid } from '@mui/material';
-import { Block, RestartAlt } from '@mui/icons-material';
-import _ from 'lodash';
 import './style.css';
-import { Badge } from '@mui/material';
-import { message } from 'antd';
-import { Reset } from 'Redux/agent';
 
 function Index() {
   const [open, setOpen] = React.useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const liste = useSelector((state) => state.agent);
   const [dataAnalyse, setDataAnalyse] = React.useState();
   const [messageApi, contextHolder] = message.useMessage();
@@ -31,18 +30,18 @@ function Index() {
   };
   React.useEffect(() => {
     analyse();
-    if(liste.resetPassword === "success"){
-      success('Mot de passe réinitialiser à 1234', "success")
+    if (liste.resetPassword === 'success') {
+      success('Mot de passe réinitialiser à 1234', 'success');
     }
-    if(liste.resetPassword === "rejected"){
-      success(liste.resetPasswordError, "error")
+    if (liste.resetPassword === 'rejected') {
+      success(liste.resetPasswordError, 'error');
     }
   }, [liste]);
 
   const resetPassword = async (id, e) => {
     e.preventDefault();
     try {
-      dispatch(Reset(id))
+      dispatch(Reset(id));
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +52,15 @@ function Index() {
       headerName: 'Code Agent',
       width: 100,
       editable: false
+    },
+    {
+      field: 'log',
+      headerName: 'First Log',
+      width: 30,
+      editable: false,
+      renderCell: (params) => {
+        return params.row.first ? <Dot color="warning" /> : <Dot color="success" />;
+      }
     },
     {
       field: 'nom',
@@ -157,7 +165,7 @@ function Index() {
           </Grid>
         </Grid>
       </div>
-      <Popup open={open} setOpen={setOpen} title="Ajoutez un agent">
+      <Popup open={open} setOpen={setOpen} title="Add an agent">
         <AddMember />
       </Popup>
     </MainCard>

@@ -1,7 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { Fab, Grid } from '@mui/material';
 import { message } from 'antd';
-import warning from 'assets/notification/warning.mp3';
 import axios from 'axios';
 import ConfirmDialog from 'components/ConfirmDialog';
 import MainCard from 'components/MainCard';
@@ -83,7 +82,7 @@ function Index() {
           <Grid className="gridAdd" sx={{ border: '2px dashed black' }} onClick={() => setOpen(true)}>
             <div style={{ textAlign: 'center', fontSize: '12px', fontWeight: 'bolder' }}>
               <Add />
-              <p>clic here to add a new team</p>
+              <p>click here to add a new team</p>
             </div>
           </Grid>
           {loadingTem && <p style={{ textAlign: 'center', fontSize: '11px', marginTop: '20px' }}>Loading...</p>}
@@ -115,8 +114,6 @@ function Index() {
                       <Delete
                         sx={{ cursor: 'pointer', marginLeft: '3px' }}
                         onClick={() => {
-                          let audio = new Audio(warning);
-                          audio.play();
                           setConfirmDialog({
                             isOpen: true,
                             title: 'Deleting an action',
@@ -146,8 +143,6 @@ function Index() {
                       {index.nom}
                       <Delete
                         onClick={() => {
-                          let audio = new Audio(warning);
-                          audio.play();
                           setConfirmDialog({
                             isOpen: true,
                             title: 'Deletion of an agent',

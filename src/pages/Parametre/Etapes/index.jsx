@@ -1,22 +1,26 @@
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import DoNotStepIcon from '@mui/icons-material/DoNotStep';
+import { Fab, Tooltip } from '@mui/material';
 import MainCard from 'components/MainCard';
 import React from 'react';
-import AddEtape from './AddEtape';
-import Popup from 'static/Popup';
-import { Typography } from '@mui/material';
-import './etape.css';
 import { useSelector } from 'react-redux';
+import Popup from 'static/Popup';
 import { Grid } from '../../../../node_modules/@mui/material/index';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AddEtape from './AddEtape';
+import './etape.css';
 
 function Index() {
   const [open, setOpen] = React.useState(false);
   const etape = useSelector((state) => state.etape?.etape);
 
   return (
-    <MainCard title="Processus">
-      <Typography component="p" onClick={() => setOpen(true)}>
-        Processus
-      </Typography>
+    <MainCard>
+      <Tooltip title="Next step">
+        <Fab color="primary" size="small" onClick={() => setOpen(true)}>
+          <DoNotStepIcon fontSize="small" />
+        </Fab>
+      </Tooltip>
+
       <Grid container>
         {etape &&
           etape.map((index) => {
@@ -40,7 +44,7 @@ function Index() {
             );
           })}
       </Grid>
-      <Popup open={open} setOpen={setOpen} title="Parametrer l'etape suivante">
+      <Popup open={open} setOpen={setOpen} title="Configure the next step">
         <AddEtape />
       </Popup>
     </MainCard>

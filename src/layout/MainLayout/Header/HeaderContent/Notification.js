@@ -66,16 +66,16 @@ const Notification = () => {
 
   const table = [
     { id: 1, title: 'Main process', secondary: 'default tracker', link: 'mainProcess', icon: <Engineering fontSize="small" /> },
-    { id: 3, title: 'Agents', secondary: 'Agents de tous les départements', link: 'agent', icon: <Person fontSize="small" /> },
+    { id: 3, title: 'Agents', secondary: 'agents from all departments', link: 'agent', icon: <Person fontSize="small" /> },
     { id: 4, title: 'Roles', secondary: 'All role', link: 'role', icon: <CoffeeMaker fontSize="small" /> },
     {
       id: 5,
-      title: 'Processus',
-      secondary: 'Comment les étapes vont se succeder',
+      title: 'Stage',
+      secondary: 'How the statuses will follow one another',
       icon: <DoNotStep fontSize="small" />,
       link: 'etapes'
     },
-    { id: 6, title: 'Parametre', secondary: 'Parametre', link: 'parametre', icon: <Settings fontSize="small" /> }
+    { id: 6, title: 'Setting', secondary: 'Setting', link: 'parametre', icon: <Settings fontSize="small" /> }
   ];
 
   return (

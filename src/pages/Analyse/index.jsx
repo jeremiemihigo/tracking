@@ -1,5 +1,5 @@
 // import { Input } from 'antd';
-import { Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { CreateContexteGlobal } from 'GlobalContext';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -42,7 +42,7 @@ function Index() {
   return (
     <Contexte>
       <Paper elevation={4} className={!menu ? 'papier_drawer' : 'papier_no_drawer'}>
-        <p id="leftContent"></p>
+        <Typography component="p" noWrap id="leftContent"></Typography>
         <div style={{ display: 'flex', marginLeft: '10px' }}>
           {option.map((index) => {
             return (

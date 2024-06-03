@@ -1,11 +1,10 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import AutoComplement from './Complement';
-import { Grid, Button } from '@mui/material';
-import AutoComplementent from 'components/AutoComplete';
 import { Save } from '@mui/icons-material';
+import { Button, Grid } from '@mui/material';
 import { Postetape } from 'Redux/etape';
-import Technique from './Technique';
+import AutoComplementent from 'components/AutoComplete';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import AutoComplement from './Complement';
 
 function AddEtape() {
   const action = useSelector((state) => state.action?.action);
@@ -60,22 +59,6 @@ function AddEtape() {
           </div>
         </Grid>
       </Grid>
-      <div>
-        <p
-          style={{
-            background: 'black',
-            marginTop: '10px',
-            color: 'white',
-            textAlign: 'center',
-            fontWeight: 'bolder',
-            padding: '5px',
-            borderRadius: '10px'
-          }}
-        >
-          Feedback
-        </p>
-        <Technique />
-      </div>
     </div>
   );
 }
