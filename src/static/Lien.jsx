@@ -5,7 +5,8 @@
 const server = 'localhost';
 // const serverhost = 'http://localhost:8000';
 // const serverhost = 'http://localhost:8000';
-const serverhost = 'https://backendtracking.onrender.com';
+// const serverhost = 'https://backendtracking.onrender.com';
+const serverhost = 'http://109.199.122.241:10000';
 
 // export const lien_post = `http://${server}:8000/tracker/post`;
 export const lien_socket = `http://${server}:800`;
