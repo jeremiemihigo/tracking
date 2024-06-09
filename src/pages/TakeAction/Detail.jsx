@@ -1,20 +1,19 @@
 import { Save } from '@mui/icons-material';
 import { Button, Grid, Stack, Typography } from '@mui/material';
+import { CreateContexteGlobal } from 'GlobalContext';
 // import { CreateContexteGlobal } from 'GlobalContext';
-import axios from 'axios';
 import AutoComplement from 'components/AutoComplete';
 import DirectionSnack from 'components/Direction';
 import TextArea from 'components/TextArea';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { config, lien_post } from 'static/Lien';
 
 function Detail({ clientSelect, step }) {
   const [value, setValue] = React.useState('');
   const [areaValue, setAreaValue] = React.useState('');
   const [open, setOpen] = React.useState(true);
-  // const { socket } = React.useContext(CreateContexteGlobal);
+  const { socket } = React.useContext(CreateContexteGlobal);
   const [actionSelect, setActionSelect] = React.useState();
   const action = useSelector((state) => state.action?.action);
   const [actionSelectFeedback, setActionSelectFeedback] = React.useState('');
@@ -59,9 +58,9 @@ function Detail({ clientSelect, step }) {
       data.type = post.type;
       data.action = post.action;
     }
-    const response = await axios.post(lien_post + '/postclient', data, config);
-    console.log(response);
-    // socket.emit('renseignefeedback', data);
+    // const response = await axios.post(lien_post + '/postclient', data, config);
+    // console.log(response);
+    socket.emit('renseignefeedback', data);
     setAreaValue('');
     setValue('');
     setActionSelectFeedback('');

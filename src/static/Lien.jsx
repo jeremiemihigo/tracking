@@ -6,10 +6,11 @@ const server = 'localhost';
 // const serverhost = 'http://localhost:8000';
 // const serverhost = 'http://localhost:8000';
 // const serverhost = 'https://backendtracking.onrender.com';
+// const serverhost = 'http://localhost:5000';
 const serverhost = 'https://server-default-tracker.bboxxvm.com';
 
 // export const lien_post = `http://${server}:8000/tracker/post`;
-export const lien_socket = `http://${server}:800`;
+export const lien_socket = serverhost;
 export const lien_post = `${serverhost}/tracker/post`;
 export const lien_read = `${serverhost}/tracker/read`;
 export const lien_update = `${serverhost}/tracker/update`;
