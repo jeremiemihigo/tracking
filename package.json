@@ -1,7 +1,7 @@
 {
   "name": "front",
   "version": "0.1.0",
-  "homepage": ".",
+  "homepage": "https://default-tracker.com",
   "private": true,
   "dependencies": {
     "@ant-design/colors": "^6.0.0",
