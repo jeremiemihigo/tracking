@@ -13,7 +13,7 @@ export const lien_socket = serverhost;
 export const lien_post = `${serverhost}/tracker/post`;
 export const lien_read = `${serverhost}/tracker/read`;
 export const lien_update = `${serverhost}/tracker/update`;
-export const lienVisiteMenage = `https://visite-menage.bboxxvm.com/bboxx/support`;
+export const lienVisiteMenage = `https://visite.bboxxvm.com/bboxx/support`;
 export const config = {
   headers: {
     'Content-Type': 'Application/json',
