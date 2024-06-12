@@ -67,7 +67,6 @@ function Index() {
         });
       }
     }
-    console.log(table);
     return table;
   };
 
@@ -75,10 +74,10 @@ function Index() {
     {
       field: 'dateFin',
       headerName: 'Date',
-      width: 50,
+      width: 30,
       editable: false,
       renderCell: (params) => {
-        return dayjs(params.row.dateFin).format('DD/MM');
+        return dayjs(params.row.dateFin).format('DD');
       }
     },
     {
@@ -88,7 +87,7 @@ function Index() {
       editable: false
     },
     {
-      field: 'action',
+      field: 'status',
       headerName: 'Statut',
       width: 140,
       editable: false
@@ -102,7 +101,7 @@ function Index() {
     {
       field: 'commentaire',
       headerName: 'Commentaire',
-      width: 200,
+      width: 250,
       editable: false
     },
     {

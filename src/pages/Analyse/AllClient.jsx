@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Delete } from '@mui/icons-material';
-import Result from 'pages/TakeAction/Result';
-import moment from 'moment';
 import { Grid, Paper, TextField } from '@mui/material';
-import dayjs from 'dayjs';
-import Selected from 'components/Selected';
 import MainCard from 'components/MainCard';
+import Selected from 'components/Selected';
+import dayjs from 'dayjs';
+import moment from 'moment';
+import Result from 'pages/TakeAction/Result';
+import React from 'react';
 
 function AllClient({ data }) {
   const [selected, setSelected] = React.useState('');
@@ -77,7 +76,6 @@ function AllClient({ data }) {
                               <div className="result">
                                 <Result index={item} />
                               </div>
-                              <div className="icon">{index.result.length - 1 === key && <Delete fontSize="small" />}</div>
                             </Grid>
                           );
                         })}

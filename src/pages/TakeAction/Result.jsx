@@ -34,9 +34,6 @@ function Result({ index }) {
       <p>
         <span>Role/Agent : </span> {index.role} ; {retournAgent(index.codeAgent)[0]?.nom}
       </p>
-      <p style={{ fontWeight: 'bolder', fontSize: '13px' }}>
-        <span>old status : </span> {index.action}
-      </p>
       <p>
         <span>feedback : </span> {index?.feedbackSelect}
       </p>

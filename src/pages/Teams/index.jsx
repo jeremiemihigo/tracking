@@ -91,7 +91,7 @@ function Index() {
               return (
                 <Grid key={index._id} className="team" onClick={(e) => laodingOneTeam(index._id, e)}>
                   <p className="titleTeam">{index.title}</p>
-                  <p className="actionTeam">{index.actions?.length > 0 ? 'Action : ' + index.actions?.length : 'Aucune action'}</p>
+                  <p className="actionTeam">{index.status?.length > 0 ? 'Statut : ' + index.status?.length : 'Aucun statut'}</p>
                 </Grid>
               );
             })}
@@ -101,13 +101,13 @@ function Index() {
           {dataTeam && dataTeam.length > 0 && (
             <>
               <div className="divTitle">
-                <p>Actions</p>
+                <p>Status</p>
                 <Fab size="small" sx={{ position: 'absolute', right: '10px' }} onClick={() => setOpenAction(true)}>
                   <Add fontSize="small" />
                 </Fab>
               </div>
               <ol style={{ marginLeft: '20px' }}>
-                {dataTeam[0]?.action.map((index) => {
+                {dataTeam[0]?.status.map((index) => {
                   return (
                     <li key={index._id}>
                       {index.title}
@@ -119,7 +119,7 @@ function Index() {
                             title: 'Deleting an action',
                             subTitle: `this operation will delete the action << ${index.title} >> in this team `,
                             onConfirm: () => {
-                              deleteAction(index.idAction, dataTeam[0]?._id);
+                              deleteAction(index.idStatus, dataTeam[0]?._id);
                             }
                           });
                         }}

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 import './etape.css';
 
 const filter = createFilterOptions();
@@ -49,8 +49,7 @@ function AutoComplement({ value, setValue, options, title }) {
       }}
       renderOption={(props, option) => (
         <div {...props} className="combobox">
-          <p className="paction">action : {option.title}</p>
-          <p className="pstatus">status : {option.status.title}</p>
+          <p className="pstatus">status : {option.title}</p>
           <p className="prole">role : {option.roles[0]?.title}</p>
         </div>
       )}

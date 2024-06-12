@@ -134,7 +134,7 @@ function Index() {
         person_in_charge: dataTotrack_state.datatotrack[i].person_in_charge,
         month: dataTotrack_state.datatotrack[i].month,
         sla: retournSla(dataTotrack_state.datatotrack[i]),
-        statut: returnLastStatus(dataTotrack_state.datatotrack[i], 'action'),
+        statut: returnLastStatus(dataTotrack_state.datatotrack[i], 'status'),
         date: returnLastStatus(dataTotrack_state.datatotrack[i], 'dateFin'),
         nom: returnLastStatus(dataTotrack_state.datatotrack[i], 'codeAgent'),
         feedbackSelect: returnLastStatus(dataTotrack_state.datatotrack[i], 'feedbackSelect'),

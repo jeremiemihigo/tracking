@@ -2,15 +2,24 @@
 import PropTypes from 'prop-types';
 // material-ui
 import { Grid, Paper, Typography } from '@mui/material';
-
+import DropDown from "pages/dashboard/DropDown"
+import { useSelector } from "react-redux"
+import React from "react"
+import _ from "lodash"
 // project import
 
 // assets
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
-const AnalyticEcommerce = ({ title, count, bg }) => (
-  <Paper sx={{ padding: '4px' }}>
+const AnalyticEcommerce = ({ title, data, count, bg }) =>{
+  const status = useSelector(state=>state.status?.status)
+  const [statutSelect, setStatusSelect] = React.useState()
+  React.useEffect(()=>{
+    setStatusSelect(_.filter(status, {idStatus : data}))
+  },[data])
+  return(
+    <Paper sx={{ padding: '4px' }}>
     <div style={{ minWidth: '5rem' }}>
       <Grid container>
         <Grid item lg={10} xs={10} sm={10} md={10}>
@@ -54,9 +63,17 @@ const AnalyticEcommerce = ({ title, count, bg }) => (
           </div>
         </Grid>
       </Grid>
+      <Grid container>
+        {
+          statutSelect && <DropDown title="Instruction" data={statutSelect}/>
+        }
+       
+      </Grid>
     </div>
+    
   </Paper>
-);
+  )
+}
 AnalyticEcommerce.propTypes = {
   title: PropTypes.string,
   bg: PropTypes.object

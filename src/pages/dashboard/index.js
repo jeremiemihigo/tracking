@@ -37,7 +37,6 @@ function TextMobileStepper() {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = steps.length;
-  const allaction = useSelector((state) => state?.action.action);
   const user = useSelector((state) => state.user?.user);
   const [dataChange, setDataChange] = React.useState();
 
@@ -61,7 +60,7 @@ function TextMobileStepper() {
       editable: false
     },
     {
-      field: 'nomclient',
+      field: 'customer_name',
       headerName: 'Name',
       width: 170,
       editable: false
@@ -87,8 +86,8 @@ function TextMobileStepper() {
     },
 
     {
-      field: 'actionTitle',
-      headerName: 'Action',
+      field: 'statusTitle',
+      headerName: 'Status',
       width: 180,
       editable: false
     },
@@ -122,7 +121,7 @@ function TextMobileStepper() {
       renderCell: (params) => {
         return (
           <>
-            {user && user.permission.includes(params.row.actionEnCours) ? (
+            {user && user.permission.includes(params.row.statusEnCours) ? (
               <Fab size="small" onClick={() => handleNext(params.row)} color="primary">
                 <StartIcon fontSize="small" />
               </Fab>
@@ -144,7 +143,6 @@ function TextMobileStepper() {
   const loadingClient = async () => {
     try {
       const response = await axios.get(lien_read + '/clientField', config);
-
       if (response.status === 200) {
         setData(response.data);
       }
@@ -158,7 +156,7 @@ function TextMobileStepper() {
   const [analyse, setAnalyse] = React.useState([]);
   const structuration = () => {
     if (data && data.length > 0) {
-      let groupe = _.groupBy(data, 'action.idAction');
+      let groupe = _.groupBy(data, 'status.idStatus');
       let key = Object.keys(groupe);
       let table = [];
       for (let i = 0; i < key.length; i++) {
@@ -173,9 +171,10 @@ function TextMobileStepper() {
   React.useEffect(() => {
     structuration();
   }, [data]);
+  const status = useSelector((state) => state.status?.status);
   const returnAction = (id) => {
-    if (allaction && allaction.length > 0) {
-      return _.filter(allaction, { idAction: id })[0]?.title;
+    if (status && status.length > 0) {
+      return _.filter(status, { idStatus: id })[0]?.title;
     }
   };
   const now = useSelector((state) => state.today?.today);
@@ -184,9 +183,7 @@ function TextMobileStepper() {
     let nombreOut = 0;
     let today = 0;
     for (let i = 0; i < allData.visites.length; i++) {
-      if (
-        sla({ delaiPrevu: allData.visites[i].action.delai, dateFin: now?.datetime, dateDebut: allData.visites[i].updatedAt }) === 'INSLA'
-      ) {
+      if (sla({ delaiPrevu: allData.visites[i].status.sla, dateFin: now?.datetime, dateDebut: allData.visites[i].updatedAt }) === 'INSLA') {
         nombreIn = nombreIn + 1;
       } else {
         nombreOut = nombreOut + 1;
@@ -203,7 +200,7 @@ function TextMobileStepper() {
           ...data[i],
           nomclient: data[i].client[0]?.customer_name,
           par: data[i].client[0]?.par,
-          sla: sla({ delaiPrevu: data[i].action.delai, dateFin: now?.datetime, dateDebut: data[i].updatedAt })
+          sla: sla({ delaiPrevu: data[i].status.sla, dateFin: now?.datetime, dateDebut: data[i].updatedAt })
         });
       }
       setDataStructure(tables);
@@ -245,7 +242,7 @@ function TextMobileStepper() {
   }, [socket]);
   React.useEffect(() => {
     if (datasubmit && datasubmit.error === 'success') {
-      if (user.permission.includes(datasubmit.content[0].actionEnCours)) {
+      if (user.permission.includes(datasubmit.content[0].statusEnCours)) {
         let exite = _.filter(data, { _id: datasubmit.content[0]._id });
         if (exite.length > 0) {
           const content = datasubmit.content[0];
@@ -257,18 +254,20 @@ function TextMobileStepper() {
           d.push(datasubmit.content[0]);
           setData(d);
           structreData();
+          structuration();
         }
       } else {
         let normal = data.filter((x) => x._id !== datasubmit.content[0]._id);
         setData(normal);
         structreData();
+        structuration();
       }
     }
   }, [datasubmit]);
   const productTemplate = (index) => {
     return (
       <div style={{ width: '95%', margin: '5px' }}>
-        <AnalyticEcommerce title={returnAction(index.action)} count={index.visites.length} bg={couleurAll(index)} />{' '}
+        <AnalyticEcommerce title={returnAction(index.action)} data={index.action} count={index.visites.length} bg={couleurAll(index)} />{' '}
       </div>
     );
   };

@@ -22,7 +22,7 @@ function AllCustomer() {
   const [analyseZbm, setAnalyseZbm] = React.useState();
   const allAnalyse = () => {
     const shop = Object.keys(_.groupBy(data, 'shop_name'));
-    const action = Object.keys(_.groupBy(data, 'action.idAction'));
+    const action = Object.keys(_.groupBy(data, 'status.idStatus'));
     setAnalyseZbm({ action, shop });
   };
   React.useEffect(() => {
@@ -35,23 +35,24 @@ function AllCustomer() {
 
   const rechercheNombre = (lieu, action, type) => {
     if (type === 'shop') {
-      return data.filter((x) => x.actionEnCours === action && x.shop_name === lieu);
+      return data.filter((x) => x.statusEnCours === action && x.shop_name === lieu);
     }
     if (type === 'region') {
-      return data.filter((x) => x.actionEnCours === action && x.shop_region === lieu);
+      return data.filter((x) => x.statusEnCours === action && x.shop_region === lieu);
     }
   };
   const action = useSelector((state) => state.action?.action);
+  const status = useSelector((state) => state.status?.status);
   const returnAction = (id) => {
-    if (action && action.length > 0) {
-      return _.filter(action, { idAction: id })[0]?.title;
+    if (status && status.length > 0) {
+      return _.filter(status, { idStatus: id })[0]?.title;
     }
   };
   const returnRole = (item) => {
     if (action) {
-      let roles = action.filter((x) => x.idAction === item)[0]?.roles;
+      let roles = status.filter((x) => x.idStatus === item)[0]?.roles;
       if (roles.length > 0) {
-        return action.filter((x) => x.idAction === item)[0]?.roles[0].title;
+        return status.filter((x) => x.idStatus === item)[0]?.roles[0].title;
       } else {
         return 'maybe a household visit';
       }
@@ -61,7 +62,7 @@ function AllCustomer() {
   };
   const returnLastupdate = (action) => {
     if (data && data.length > 0) {
-      let donner = _.filter(data, { actionEnCours: action });
+      let donner = _.filter(data, { statusEnCours: action });
 
       return donner[donner.length - 1]['updatedAt'];
     } else {
@@ -69,8 +70,8 @@ function AllCustomer() {
     }
   };
   const returnCOlor = (id) => {
-    if (action && action.length > 0) {
-      let a = _.filter(action, { idAction: id })[0];
+    if (status && status.length > 0) {
+      let a = _.filter(status, { idStatus: id })[0];
       return a.color ? a.color : '#fff';
     }
   };

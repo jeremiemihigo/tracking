@@ -1,16 +1,16 @@
+import { Save } from '@mui/icons-material';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup } from '@mui/material';
+import { message } from 'antd';
+import axios from 'axios';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Checkbox, Button, Box, FormControlLabel, FormGroup, FormControl } from '@mui/material';
-import { Save } from '@mui/icons-material';
-import axios from 'axios';
 import { config, lien_update } from 'static/Lien';
-import { message } from 'antd';
 
 function AffecterAction({ value }) {
-    console.log(value)
-  const action = useSelector((state) => state?.action.action);
-  const [actionSelect, setActionSelect] = React.useState([]);
-  const [actionData, setActionData] = React.useState();
+  console.log(value);
+  const status = useSelector((state) => state.status?.status);
+  const [statusSelect, setStatusSelect] = React.useState([]);
+  const [statusData, setStatusData] = React.useState();
 
   const [messageApi, contextHolder] = message.useMessage();
   const success = (texte, type) => {
@@ -21,22 +21,22 @@ function AffecterAction({ value }) {
     });
   };
 
-  React.useEffect(()=>{
-    setActionSelect(value.actions)
-  }, [value])
+  React.useEffect(() => {
+    setStatusSelect(value.status);
+  }, [value]);
 
   const handleChange = (item, e) => {
     e.preventDefault();
-    if (actionSelect.includes(item)) {
-      setActionSelect(actionSelect.filter((x) => x !== item));
+    if (statusSelect.includes(item)) {
+      setStatusSelect(statusSelect.filter((x) => x !== item));
     } else {
-      setActionSelect([...actionSelect, item]);
+      setStatusSelect([...statusSelect, item]);
     }
   };
   const loading = () => {
-    if (action && action.length > 0) {
-      let d = action.filter((x) => x.roles[0]?.title === value?.role.toUpperCase());
-      setActionData(d);
+    if (status && status.length > 0) {
+      let d = status.filter((x) => x.roles[0]?.title === value?.role.toUpperCase());
+      setStatusData(d);
     }
   };
 
@@ -47,11 +47,10 @@ function AffecterAction({ value }) {
   const updateAction = async (e) => {
     try {
       e.preventDefault();
-      const response = await axios.put(lien_update + '/addActionTeam', { data: actionSelect, id: value._id }, config);
-      if(response.status === 200){
-        success("Modification effectuée", "success")
+      const response = await axios.put(lien_update + '/addActionTeam', { data: statusSelect, id: value._id }, config);
+      if (response.status === 200) {
+        success('Modification effectuée', 'success');
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -60,17 +59,17 @@ function AffecterAction({ value }) {
 
   return (
     <div style={{ minWidth: '30rem' }}>
-        {contextHolder}
+      {contextHolder}
       <Box>
-        {actionData &&
-          actionData.length > 0 &&
-          actionData.map((index) => {
+        {statusData &&
+          statusData.length > 0 &&
+          statusData.map((index) => {
             return (
               <FormControl key={index._id} component="fieldset" variant="standard">
                 <FormGroup>
                   <FormControlLabel
-                    onClick={(e) => handleChange(index.idAction, e)}
-                    control={<Checkbox name={index._id} checked={actionSelect.includes(index.idAction)} />}
+                    onClick={(e) => handleChange(index.idStatus, e)}
+                    control={<Checkbox name={index._id} checked={statusSelect.includes(index.idStatus)} />}
                     label={index.title}
                   />
                 </FormGroup>

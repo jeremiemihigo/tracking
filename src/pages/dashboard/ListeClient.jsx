@@ -62,8 +62,8 @@ function ListeClient() {
       editable: false
     },
     {
-      field: 'actionTitle',
-      headerName: 'Action',
+      field: 'statusTitle',
+      headerName: 'Statut',
       width: 180,
       editable: false
     },
@@ -138,10 +138,7 @@ function ListeClient() {
     <div>
       {contextHolder}
       <SimpleBackdrop open={operation} title={texteMessage} taille="10rem" />
-      <PaperHead
-        functionExec={action === 'XZ445X' && sendListe}
-        texte={`list of clients with status ${'<< ' + returnAction(action) + ' >>'}`}
-      />
+      <PaperHead functionExec={action === 'XZ445X' && sendListe} texte={`list of clients with status ${`<< ${action} >>`}`} />
       {/* <p onClick={() => sendListe()}>send liste</p> */}
       <MainCard>
         <div style={{ width: '70vw' }}>

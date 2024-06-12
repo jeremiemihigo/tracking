@@ -8,11 +8,12 @@ import { CreateContexte } from './Contexte';
 
 function Action() {
   const { data } = React.useContext(CreateContexte);
+  console.log(data)
   const [action, setAction] = React.useState();
   const analyse = () => {
-    setAction(Object.keys(_.groupBy(data, 'action')));
+    setAction(Object.keys(_.groupBy(data, 'status')));
   };
-  const vraiAction = useSelector((state) => state.action?.action);
+  const status = useSelector(state=>state.status.status)
 
   React.useEffect(() => {
     if (data) {
@@ -22,13 +23,13 @@ function Action() {
 
   const returnSla = (item, type) => {
     if (data && data.length > 0) {
-      let dataStatu = _.filter(data, { action: item });
+      let dataStatu = _.filter(data, { status: item });
       return ((dataStatu.filter((x) => sla(x) === type).length * 100) / dataStatu.length).toFixed(0) + '%';
     }
   };
   const returnRole = (item) => {
-    if (_.filter(vraiAction, { title: item })[0]?.roles.length > 0) {
-      return _.filter(vraiAction, { title: item })[0]?.roles[0].title;
+    if (_.filter(status, { idStatus: item })[0]?.roles.length > 0) {
+      return _.filter(status, { idStatus: item })[0]?.roles[0].title;
     } else {
       return '';
     }
@@ -54,7 +55,7 @@ function Action() {
                   </Grid>
                   <Grid className="role">
                     <Typography component="p" noWrap>
-                      {returnRole(index)}
+                      {/* {returnRole(index)} */}
                     </Typography>
                   </Grid>
                 </Grid>

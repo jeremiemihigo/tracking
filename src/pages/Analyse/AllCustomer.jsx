@@ -22,6 +22,7 @@ function AllCustomer() {
   const user = useSelector((state) => state.user?.user);
   const [dataOpen, setDataOpen] = React.useState();
   const [chargement, setChargement] = React.useState(true);
+  const status = useSelector((state) => state.status?.status);
 
   function openResu(index) {
     setDataOpen(index);
@@ -57,13 +58,13 @@ function AllCustomer() {
 
   const allAnalyse = () => {
     if (returnCategorie(user?.role) === 'field' || allpermissions(user?.role)) {
-      const action = Object.keys(_.groupBy(data, 'action.idAction'));
+      const action = Object.keys(_.groupBy(data, 'status.idStatus'));
       const region = Object.keys(_.groupBy(data, 'shop_region'));
       setAnalyseField({ action, region });
     }
     if (user?.role === 'ZBM') {
       const shop = Object.keys(_.groupBy(data, 'shop_name'));
-      const action = Object.keys(_.groupBy(data, 'action.idAction'));
+      const action = Object.keys(_.groupBy(data, 'status.idStatus'));
       setAnalyseZbm({ action, shop });
     }
   };
@@ -149,12 +150,12 @@ function AllCustomer() {
     }
   ];
 
-  const rechercheNombre = (lieu, action, type) => {
+  const rechercheNombre = (lieu, stat, type) => {
     if (type === 'shop') {
-      return data.filter((x) => x.actionEnCours === action && x.shop_name === lieu);
+      return data.filter((x) => x.statusEnCours === stat && x.shop_name === lieu);
     }
     if (type === 'region') {
-      return data.filter((x) => x.actionEnCours === action && x.shop_region === lieu);
+      return data.filter((x) => x.statusEnCours === stat && x.shop_region === lieu);
     }
   };
   const retournTotal = (region) => {
@@ -162,20 +163,20 @@ function AllCustomer() {
   };
 
   const navigate = useNavigate();
-  const functionListe = (region, action, type) => {
-    let client = rechercheNombre(region, action, type);
+  const functionListe = (region, stat, type) => {
+    let client = rechercheNombre(region, stat, type);
     navigate('/liste', { state: { visites: client, action } });
   };
 
   const action = useSelector((state) => state.action?.action);
 
-  const retournForTeam = (action) => {
-    return data.filter((x) => x.actionEnCours === action);
+  const retournForTeam = (stat) => {
+    return data.filter((x) => x.statusEnCours === stat);
   };
 
   const returnAction = (id) => {
-    if (action && action.length > 0) {
-      return _.filter(action, { idAction: id })[0]?.title;
+    if (status && status.length > 0) {
+      return _.filter(status, { idStatus: id })[0]?.title;
     }
   };
   const [messageApi, contextHolder] = message.useMessage();
@@ -189,8 +190,9 @@ function AllCustomer() {
   const navigationManagment = (action) => {
     const datas = {
       actions: returnAction(action),
-      clients: _.filter(data, { actionEnCours: action })
+      clients: _.filter(data, { statusEnCours: action })
     };
+    console.log(datas);
     if (datas.clients.length > 0) {
       navigate('/liste', { state: { visites: datas.clients, action: datas.actions } });
     } else {
@@ -199,10 +201,10 @@ function AllCustomer() {
   };
 
   const returnRole = (item) => {
-    if (action) {
-      let roles = action.filter((x) => x.idAction === item)[0]?.roles;
+    if (status) {
+      let roles = status.filter((x) => x.idStatus === item)[0]?.roles;
       if (roles.length > 0) {
-        return action.filter((x) => x.idAction === item)[0]?.roles[0].title;
+        return status.filter((x) => x.idStatus === item)[0]?.roles[0].title;
       } else {
         return 'maybe a household visit';
       }
@@ -245,7 +247,7 @@ function AllCustomer() {
   }, [content]);
   const returnLastupdate = (action, region) => {
     if (data && data.length > 0) {
-      let donner = _.orderBy(_.filter(data, { actionEnCours: action, shop_region: region }), 'updatedAt', 'asc');
+      let donner = _.orderBy(_.filter(data, { statusEnCours: action, shop_region: region }), 'updatedAt', 'asc');
       if (donner.length > 0) {
         return donner[donner.length - 1]['updatedAt'];
       } else {
@@ -264,7 +266,7 @@ function AllCustomer() {
     let nombre = 0;
     for (let i = 0; i < data.length; i++) {
       if (
-        sla({ delaiPrevu: data[i].action.delai, dateFin: today?.unixtime || new Date().getTime(), dateDebut: data[i].updatedAt }) === type
+        sla({ delaiPrevu: data[i].status.sla, dateFin: today?.unixtime || new Date().getTime(), dateDebut: data[i].updatedAt }) === type
       ) {
         nombre = nombre + 1;
       }
@@ -272,8 +274,8 @@ function AllCustomer() {
     return nombre;
   };
   const returnCOlor = (id) => {
-    if (action && action.length > 0) {
-      let a = _.filter(action, { idAction: id })[0];
+    if (status && status.length > 0) {
+      let a = _.filter(status, { idStatus: id })[0];
       return a.color ? a.color : '#fff';
     }
   };
@@ -418,9 +420,18 @@ function AllCustomer() {
                   <PositionMenu data={index.agent} />
                 </Grid>
                 <Grid container>
-                  {index.actions.map((action) => {
+                  {index.status.map((action) => {
                     return (
-                      <Grid item lg={3} key={action} sx={{ padding: '2px', cursor: 'pointer' }} onClick={() => navigationManagment(action)}>
+                      <Grid
+                        item
+                        lg={3}
+                        md={6}
+                        xs={6}
+                        sm={4}
+                        key={action}
+                        sx={{ padding: '2px', cursor: 'pointer' }}
+                        onClick={() => navigationManagment(action)}
+                      >
                         <ActionPending
                           action={returnAction(action)}
                           role=""

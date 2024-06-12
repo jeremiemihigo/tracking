@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 import { Grid, Paper } from '@mui/material';
-import Result from 'pages/TakeAction/Result';
-import { Delete } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import Result from 'pages/TakeAction/Result';
+import React from 'react';
 import { differenceDays } from 'static/Lien';
 
 function Component_Client({ data }) {
@@ -13,6 +12,7 @@ function Component_Client({ data }) {
       <Grid sx={{ marginTop: '10px' }}>
         {data &&
           data.map((index) => {
+           
             return (
               <Paper
                 key={index._id}
@@ -24,19 +24,19 @@ function Component_Client({ data }) {
                     {index.unique_account_id}; {index.customer_name}
                   </p>
                   <p style={{ display: 'flex' }}>
-                    Statut : <p> {'  ' + index.action.title}</p>{' '}
+                    Statut : <p> {'  ' + index.status.title}</p>{' '}
                     <p
                       style={{
                         marginLeft: '10px',
-                        background: `${differenceDays(new Date(), index.updatedAt) - index.action.delai >= 0 ? '#dedede' : '#7B3030'}`,
-                        color: `${differenceDays(new Date(), index.updatedAt) - index.action.delai >= 0 ? '#000' : '#fff'}`,
+                        background: `${index.status.sla - differenceDays(new Date().getTime(), index.updatedAt) >= 0 ? '#dedede' : '#7B3030'}`,
+                        color: `${ index.status.sla - differenceDays(new Date().getTime(), index.updatedAt) >= 0 ? '#000' : '#fff'}`,
                         borderRadius: '10px',
                         fontSize: '10px',
                         fontWeight: 'bolder',
                         padding: '1px 10px'
                       }}
                     >
-                      {differenceDays(new Date(), index.updatedAt) - index.action.delai} jour(s)
+                      {index.status.sla - differenceDays(new Date().getTime(), index.updatedAt)} jour(s)
                     </p>
                   </p>
                 </div>
@@ -76,7 +76,6 @@ function Component_Client({ data }) {
                               <div className="result">
                                 <Result index={item} />
                               </div>
-                              <div className="icon">{index.result.length - 1 === key && <Delete fontSize="small" />}</div>
                             </Grid>
                           );
                         })}

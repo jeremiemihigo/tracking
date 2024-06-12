@@ -9,14 +9,14 @@ import './style.css';
 
 function Table() {
   const { track } = React.useContext(CreateContexte);
-  const action = useSelector((state) => state.action?.action);
-  let analyse = _.groupBy(track, 'beginAction');
+  const status = useSelector((state) => state.status?.status);
+  let analyse = _.groupBy(track, 'beginStatus');
   function getRowId(row) {
     return row.customer_name;
   }
 
-  const retournAction = (idAction) => {
-    return _.filter(action, { idAction });
+  const retournAction = (id) => {
+    return _.filter(status, { idStatus: id });
   };
 
   const columns = [
@@ -52,12 +52,12 @@ function Table() {
       editable: false
     },
     {
-      field: 'beginAction',
+      field: 'beginStatus',
       headerName: 'après Analyse',
       width: 200,
       editable: false,
       renderCell: (params) => {
-        return retournAction(params.row.beginAction)[0]?.title;
+        return retournAction(params.row.beginStatus)[0]?.title;
       }
     }
   ];
@@ -92,6 +92,7 @@ function Table() {
         </Grid>
         <Grid item lg={4}>
           {Object.keys(analyse).map((index, key) => {
+            console.log(index);
             return (
               <div key={key} className="actionAnalyse">
                 <div>

@@ -81,16 +81,16 @@ function AllAdresse() {
     if (track && track.length > 0) {
       setOpen(true);
       let table = [];
-      let actionss = '';
+      let status = '';
       for (let i = 0; i < track.length; i++) {
-        actionss = retournAction(
+        status = retournAction(
           _.filter(visited, { codeclient: track[i]['unique_account_id'] }),
           _.filter(appelSortant, { unique_account_id: track[i]['unique_account_id'] })
         );
         table.push({
           ...track[i],
-          actionEnCours: actionss,
-          beginAction: actionss,
+          statusEnCours: status,
+          beginStatus: status,
           visited: returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })),
           objectVisite: {
             codeAgent: infoV(returnVisiteInfo(_.filter(visited, { codeclient: track[i]['unique_account_id'] })), 'codeAgent'),

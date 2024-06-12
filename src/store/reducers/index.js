@@ -13,7 +13,6 @@ import agent from 'Redux/agent';
 import data_to_track from 'Redux/dataTotrack';
 import etape from 'Redux/etape';
 import initiale from 'Redux/initiale';
-import main from 'Redux/mainProcess';
 import status from 'Redux/status';
 import today from 'Redux/today';
 import user from 'Redux/user';
@@ -24,7 +23,6 @@ const reducers = combineReducers({
   data_to_track,
   today,
   initiale,
-  main,
   user,
   etape,
   process,

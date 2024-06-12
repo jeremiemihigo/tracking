@@ -83,11 +83,11 @@ function ClientToTrack() {
             raison: infoV(inputTrack[i].unique_account_id, 'raison'),
             dateSave: infoV(inputTrack[i].unique_account_id, 'dateSave')
           },
-          actionEnCours: retournAction(
+          statusEnCours: retournAction(
             calledOrNo(_.filter(visited, { codeclient: inputTrack[i].unique_account_id }), 'visite'),
             calledOrNo(_.filter(appelSortant, { unique_account_id: inputTrack[i].unique_account_id }), 'appel')
           ),
-          beginAction: retournAction(
+          beginStatus: retournAction(
             calledOrNo(_.filter(visited, { codeclient: inputTrack[i].unique_account_id }), 'visite'),
             calledOrNo(_.filter(appelSortant, { unique_account_id: inputTrack[i].unique_account_id }), 'appel')
           ),

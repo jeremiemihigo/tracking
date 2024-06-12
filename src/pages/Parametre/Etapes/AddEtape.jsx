@@ -7,22 +7,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import AutoComplement from './Complement';
 
 function AddEtape() {
-  const action = useSelector((state) => state.action?.action);
-  const [actionOne, setActionSelectOne] = React.useState('');
-  const [actionTwo, setActionSelectTwo] = React.useState('');
+  const status = useSelector((state) => state.status?.status);
+  const [statusOne, setStatusSelectOne] = React.useState('');
+  const [statusTwo, setStatusSelectTwo] = React.useState('');
   const [labelOne, setLabelOne] = React.useState('');
   const dispatch = useDispatch();
 
   const send = (e) => {
     e.preventDefault();
     try {
-      if (labelOne === '' || actionTwo === '') {
+      if (labelOne === '' || statusTwo === '') {
         alert('Veuillez renseigner les champs');
       } else {
-        let data = { label: labelOne?.idLabel, nexte: actionTwo?.idAction };
+        let data = { label: labelOne?.idLabel, nexte: statusTwo?.idStatus };
         dispatch(Postetape(data));
-        setActionSelectOne('');
-        setActionSelectTwo('');
+        setStatusSelectOne('');
+        setStatusSelectTwo('');
         setLabelOne('');
       }
     } catch (error) {
@@ -34,23 +34,17 @@ function AddEtape() {
     <div style={{ minWidth: '35rem', marginTop: '10px' }}>
       <Grid container>
         <Grid item lg={6}>
-          {action && (
+          {status && (
             <div style={{ marginBottom: '10px' }}>
-              <AutoComplement value={actionOne} setValue={setActionSelectOne} options={action} title="action" />
+              <AutoComplement value={statusOne} setValue={setStatusSelectOne} options={status} title="Status" />
             </div>
           )}
-          {actionOne !== '' && (
-            <AutoComplementent
-              value={labelOne}
-              setValue={setLabelOne}
-              options={actionOne?.statusAction}
-              title="Status label"
-              propr="title"
-            />
+          {statusOne !== '' && (
+            <AutoComplementent value={labelOne} setValue={setLabelOne} options={statusOne?.label} title="Label" propr="title" />
           )}
         </Grid>
         <Grid item lg={6} sx={{ paddingLeft: '5px' }}>
-          {action && <AutoComplement value={actionTwo} setValue={setActionSelectTwo} options={action} title="action" />}
+          {status && <AutoComplement value={statusTwo} setValue={setStatusSelectTwo} options={status} title="title" />}
 
           <div style={{ marginTop: '10px' }}>
             <Button variant="contained" color="primary" onClick={(e) => send(e)}>

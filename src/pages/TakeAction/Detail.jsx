@@ -15,14 +15,14 @@ function Detail({ clientSelect, step }) {
   const [open, setOpen] = React.useState(true);
   const { socket } = React.useContext(CreateContexteGlobal);
   const [actionSelect, setActionSelect] = React.useState();
-  const action = useSelector((state) => state.action?.action);
+  const status = useSelector((state) => state.status?.status);
   const [actionSelectFeedback, setActionSelectFeedback] = React.useState('');
 
   const returnAction = () => {
-    setActionSelect(_.filter(action, { idAction: clientSelect.action.idAction })[0]);
+    setActionSelect(_.filter(status, { idStatus: clientSelect.status.idStatus })[0]);
   };
   React.useEffect(() => {
-    if (action && clientSelect) {
+    if (status && clientSelect) {
       returnAction();
     }
   }, [clientSelect]);
@@ -33,30 +33,28 @@ function Detail({ clientSelect, step }) {
     let data = {
       commentaire: areaValue,
       customer_id: clientSelect?.unique_account_id,
-      status: actionSelect?.status?.title,
+      status: clientSelect?.status,
       role: actionSelect?.roles[0].title,
       codeAgent: user?.codeAgent
     };
-    if (clientSelect.action.idAction === 'SA89AF') {
+    if (clientSelect.status.idStatus === 'SA89AF') {
       let feedback = {
         _idClient: clientSelect._id,
-        ancienAction: clientSelect.action,
+        ancienStatus: clientSelect.status,
         type: 'feedback',
-        action: actionSelectFeedback
+        newStatus: actionSelectFeedback
       };
       data._idClient = feedback._idClient;
-      data.ancienAction = feedback.ancienAction;
+      data.ancienStatus = feedback.ancienStatus;
       data.type = 'feedback';
-      data.action = feedback.action;
+      data.newStatus = feedback.newStatus;
     } else {
       let post = {
         feedbackSelect: value,
-        type: 'post',
-        action: clientSelect?.action
+        type: 'post'
       };
       data.feedbackSelect = post.feedbackSelect;
       data.type = post.type;
-      data.action = post.action;
     }
     // const response = await axios.post(lien_post + '/postclient', data, config);
     // console.log(response);
@@ -72,7 +70,7 @@ function Detail({ clientSelect, step }) {
         component="p"
         style={{ backgroundColor: '#002d72', padding: '5px', margin: '0px', fontSize: '12px', color: 'white', textAlign: 'center' }}
       >
-        {clientSelect.action.title}
+        {clientSelect.status.title}
       </Typography>
       <DirectionSnack open={open} setOpen={setOpen} message="error" />
       {clientSelect && (
@@ -80,7 +78,7 @@ function Detail({ clientSelect, step }) {
           <p style={{ padding: '0px', margin: '0px' }}>{clientSelect?.unique_account_id + ' ; ' + clientSelect?.customer_name}</p>
           {clientSelect.action?.objectif && (
             <Typography variant="h6" color="primary">
-              But : {clientSelect.action?.objectif}
+              {clientSelect.status?.instruction}
             </Typography>
           )}
           <ol>
@@ -104,20 +102,20 @@ function Detail({ clientSelect, step }) {
               clientSelect?.called
             )}{' '}
           </p>
-          {action && clientSelect.action.idAction === 'SA89AF' && (
+          {status && clientSelect.status.idStatus === 'SA89AF' && (
             <Grid item lg={12} sx={{ marginTop: '10px' }}>
               <AutoComplement
                 value={actionSelectFeedback}
                 setValue={setActionSelectFeedback}
-                options={action}
-                title="Action"
+                options={status}
+                title="Statut"
                 propr="title"
               />
             </Grid>
           )}
-          {clientSelect.action.idAction !== 'SA89AF' && (
+          {clientSelect.status.idStatus !== 'SA89AF' && (
             <div>
-              <AutoComplement value={value} setValue={setValue} options={clientSelect?.statutaction} title="Feedback" propr="title" />
+              <AutoComplement value={value} setValue={setValue} options={clientSelect?.statusLabel} title="Feedback" propr="title" />
             </div>
           )}
 

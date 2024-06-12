@@ -1,4 +1,4 @@
-import { CoffeeMaker, DoNotStep, Engineering, Person, Settings } from '@mui/icons-material';
+import { CoffeeMaker, DoNotStep, Engineering, Person } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -74,8 +74,8 @@ const Notification = () => {
       secondary: 'How the statuses will follow one another',
       icon: <DoNotStep fontSize="small" />,
       link: 'etapes'
-    },
-    { id: 6, title: 'Setting', secondary: 'Setting', link: 'parametre', icon: <Settings fontSize="small" /> }
+    }
+    // { id: 6, title: 'Setting', secondary: 'Setting', link: 'parametre', icon: <Settings fontSize="small" /> }
   ];
 
   return (
