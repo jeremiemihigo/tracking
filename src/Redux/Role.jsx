@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {  config, lien_read, lien_post, lien_update } from 'static/Lien';
+import { config, lien_post, lien_read, lien_update } from 'static/Lien';
 
 const initialState = {
   role: [],
@@ -32,8 +32,7 @@ export const Postrole = createAsyncThunk('role/Postrole', async (data, { rejectW
 });
 export const putrole = createAsyncThunk('role/putrole', async (data, { rejectWithValue }) => {
   try {
-    const { title, _id } = data;
-    const response = await axios.put(lien_update + '/role', { title, _id }, config);
+    const response = await axios.put(lien_update + '/role', data, config);
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response.data);

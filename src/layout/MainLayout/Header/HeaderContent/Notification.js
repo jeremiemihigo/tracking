@@ -75,6 +75,7 @@ const Notification = () => {
       icon: <DoNotStep fontSize="small" />,
       link: 'etapes'
     }
+
     // { id: 6, title: 'Setting', secondary: 'Setting', link: 'parametre', icon: <Settings fontSize="small" /> }
   ];
 

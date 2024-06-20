@@ -1,22 +1,24 @@
 import { Add, Block, RestartAlt } from '@mui/icons-material';
-import { Badge, Fab, Grid, Tooltip } from '@mui/material';
+import { Fab, Grid, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Reset } from 'Redux/agent';
 import { message } from 'antd';
 import Dot from 'components/@extended/Dot';
 import MainCard from 'components/MainCard';
-import _ from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'static/Popup';
 import AddMember from './AddMember';
+import AddRegion from './AddRegion';
+import AddShop from './Shop';
 import './style.css';
 
 function Index() {
   const [open, setOpen] = React.useState(false);
+  const [openregion, setOpenregion] = React.useState(false);
+  const [openshop, setOpenshop] = React.useState(false);
   const dispatch = useDispatch();
   const liste = useSelector((state) => state.agent);
-  const [dataAnalyse, setDataAnalyse] = React.useState();
   const [messageApi, contextHolder] = message.useMessage();
   const success = (texte, type) => {
     messageApi.open({
@@ -25,11 +27,8 @@ function Index() {
       duration: 3
     });
   };
-  const analyse = () => {
-    setDataAnalyse(_.groupBy(liste?.agent, 'role'));
-  };
+
   React.useEffect(() => {
-    analyse();
     if (liste.resetPassword === 'success') {
       success('Mot de passe réinitialiser à 1234', 'success');
     }
@@ -45,6 +44,17 @@ function Index() {
     } catch (error) {
       console.log(error);
     }
+  };
+  const [agentselect, setagentselect] = React.useState('');
+  const functionagentadd = (d, e) => {
+    e.preventDefault();
+    setOpenregion(true);
+    setagentselect(d);
+  };
+  const functionshop = (d, e) => {
+    e.preventDefault();
+    setOpenshop(true);
+    setagentselect(d);
   };
   const columns = [
     {
@@ -95,16 +105,30 @@ function Index() {
     {
       field: 'options',
       headerName: 'Options',
-      width: 100,
+      width: 200,
       editable: false,
       renderCell: (params) => {
         return (
           <>
-            <Tooltip onClick={(e) => resetPassword(params.row._id, e)} title="Réinitialisez ses accès" sx={{ margin: '10px' }}>
-              <RestartAlt fontSize="small" />
+            <Tooltip onClick={(e) => resetPassword(params.row._id, e)} title="Réinitialisez ses accès">
+              <Fab size="small">
+                <RestartAlt fontSize="small" />
+              </Fab>
             </Tooltip>
-            <Tooltip title={params.row.active ? 'Bloquer' : 'Débloquer'}>
-              <Block fontSize="small" />
+            <Tooltip title={params.row.active ? 'Bloquer' : 'Débloquer'} sx={{ margin: '0px 10px' }}>
+              <Fab size="small">
+                <Block fontSize="small" />
+              </Fab>
+            </Tooltip>
+            <Tooltip title="Add Region" onClick={(e) => functionagentadd(params.row, e)}>
+              <Fab size="small">
+                <Add fontSize="small" />
+              </Fab>
+            </Tooltip>
+            <Tooltip title="Add shop" sx={{ marginLeft: '10px' }} onClick={(e) => functionshop(params.row, e)}>
+              <Fab size="small">
+                <Add fontSize="small" />
+              </Fab>
             </Tooltip>
           </>
         );
@@ -122,7 +146,7 @@ function Index() {
       </div>
       <div>
         <Grid container>
-          <Grid item lg={8}>
+          <Grid item lg={12}>
             {liste && liste?.agent.length > 0 && (
               <DataGrid
                 rows={liste.agent}
@@ -139,35 +163,21 @@ function Index() {
               />
             )}
           </Grid>
-          <Grid item lg={4}>
-            <div className="analyse">
-              {dataAnalyse &&
-                Object.keys(dataAnalyse).map((index, key) => {
-                  return (
-                    <div key={key}>
-                      <div className="role">
-                        <Badge badgeContent={dataAnalyse['' + index].length} color="primary">
-                          {index}
-                        </Badge>
-                      </div>
-                      {dataAnalyse['' + index].map((item, cle) => {
-                        return (
-                          <p className="name" key={item._id}>
-                            {cle + 1}. {item.nom}
-                          </p>
-                        );
-                      })}
-                      <div></div>
-                    </div>
-                  );
-                })}
-            </div>
-          </Grid>
         </Grid>
       </div>
       <Popup open={open} setOpen={setOpen} title="Add an agent">
         <AddMember />
       </Popup>
+      {agentselect && (
+        <Popup open={openregion} setOpen={setOpenregion} title="Add Region">
+          <AddRegion donner={agentselect} />
+        </Popup>
+      )}
+      {agentselect && (
+        <Popup open={openshop} setOpen={setOpenshop} title="Add Shop">
+          <AddShop donner={agentselect} />
+        </Popup>
+      )}
     </MainCard>
   );
 }

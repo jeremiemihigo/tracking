@@ -5,7 +5,6 @@ import { combineReducers } from 'redux';
 import menu from './menu';
 
 // ==============================|| COMBINE REDUCERS ||============================== //
-import departement from 'Redux/Departement';
 import process from 'Redux/Process';
 import role from 'Redux/Role';
 import action from 'Redux/action';
@@ -29,8 +28,7 @@ const reducers = combineReducers({
   status,
   action,
   role,
-  agent,
-  departement
+  agent
 });
 
 export default reducers;

@@ -5,9 +5,6 @@ import { useSelector } from 'react-redux';
 import { Box, List, Typography } from '@mui/material';
 
 // project import
-import { CreateContexteGlobal } from 'GlobalContext';
-import React from 'react';
-import { allpermissions, returnCategorie } from 'static/Lien';
 import NavItem from './NavItem';
 
 // ==============================|| NAVIGATION - LIST GROUP ||============================== //
@@ -15,39 +12,8 @@ import NavItem from './NavItem';
 const NavGroup = ({ item }) => {
   const menu = useSelector((state) => state.menu);
   const { drawerOpen } = menu;
-  const [option, setOption] = React.useState();
 
-  const user = useSelector((state) => state.user);
-  const { handleLogout } = React.useContext(CreateContexteGlobal);
-  const returnItems = () => {
-    try {
-      if (user.readUser === 'success') {
-        if (
-          returnCategorie(user.user?.role) === 'managment' ||
-          returnCategorie(user.user?.role) === 'field' ||
-          returnCategorie(user.user?.role) === 'ZBM'
-        ) {
-          setOption(item.children.filter((x) => x.user === 'managment' || x.user === 'all'));
-        }
-        if (returnCategorie(user.user?.role) === 'team') {
-          setOption(item.children.filter((x) => x.user === 'team' || x.user === 'all'));
-        }
-        if (allpermissions(user.user?.role)) {
-          setOption(item.children);
-        }
-      }
-      if (user.readUser === 'rejected') {
-        handleLogout();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  React.useEffect(() => {
-    returnItems();
-  }, [user]);
-
-  const navCollapse = option?.map((menuItem) => {
+  const navCollapse = item.children?.map((menuItem) => {
     switch (menuItem.type) {
       case 'collapse':
         return (

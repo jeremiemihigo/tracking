@@ -1,18 +1,17 @@
 // assets
-import { BarChartOutlined, DatabaseOutlined, FileOutlined, HistoryOutlined, UserOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, FileOutlined, HistoryOutlined, UserOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
   DatabaseOutlined,
   HistoryOutlined,
-  BarChartOutlined,
   FileOutlined,
   UserOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
-const dashboard = {
+const operation = {
   id: 'group-dashboard',
   title: 'Tracker defaulted',
   type: 'group',
@@ -23,14 +22,6 @@ const dashboard = {
       type: 'item',
       url: '/',
       icon: icons.DatabaseOutlined,
-      breadcrumbs: false
-    },
-    {
-      id: 'Monitoring',
-      title: 'Monitoring',
-      type: 'item',
-      url: '/analyse',
-      icon: icons.BarChartOutlined,
       breadcrumbs: false
     },
     {
@@ -60,4 +51,4 @@ const dashboard = {
   ]
 };
 
-export default dashboard;
+export default operation;

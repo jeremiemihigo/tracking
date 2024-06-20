@@ -25,7 +25,7 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
-import { allpermissions, lien_post, returnCategorie } from 'static/Lien';
+import { lien_post } from 'static/Lien';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -54,14 +54,9 @@ const AuthLogin = () => {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             const response = await axios.post(lien_post + '/login', { username: values.username, password: values.password });
-            if (response.data.token) {
+            if (response.status === 200) {
               localStorage.setItem('auth', response.data.token);
-              if (['managment', 'field', 'ZBM'].includes(returnCategorie(response.data?.role)) || allpermissions(response.data?.role)) {
-                window.location.replace('/analyse');
-              }
-              if (returnCategorie(response.data?.role) === 'team') {
-                window.location.replace('/');
-              }
+              window.location.replace('/');
             } else {
               setErrors({ submit: response.data });
               setStatus({ success: false });

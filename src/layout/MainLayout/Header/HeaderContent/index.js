@@ -27,14 +27,11 @@ const HeaderContent = () => {
           <Typography variant="h6" color="default" sx={{ fontWeight: 'bolder' }}>
             {menu.openItem[0]}
           </Typography>
-          <Typography variant="body2" color="textSecondary">
-            fonction : {user?.role}
-          </Typography>
         </Box>
       )}
       {user?.first && <FirstLogin />}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {(addTeams(user?.role) || allpermissions(user?.role)) && <OnlyOne />}
+      {user && user.operation === 'suivi' && <OnlyOne />}
       {(addTeams(user?.role) || allpermissions(user?.role)) && <FolderComponent />}
       <Connected />
 

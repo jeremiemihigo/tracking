@@ -119,16 +119,6 @@ const Profile = () => {
                               <Typography variant="body2" color="textSecondary">
                                 {user?.role}
                               </Typography>
-                              {user.shop !== 'false' && (
-                                <Typography variant="body2" color="textSecondary">
-                                  Shop : {user?.shop}
-                                </Typography>
-                              )}
-                              {user.region !== 'false' && (
-                                <Typography variant="body2" color="textSecondary">
-                                  region : {user?.region}
-                                </Typography>
-                              )}
                             </Stack>
                           </Stack>
                         </Grid>

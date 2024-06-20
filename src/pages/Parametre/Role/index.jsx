@@ -1,11 +1,11 @@
-import { Add } from '@mui/icons-material';
-import ReplyIcon from '@mui/icons-material/Reply';
+import { Add, Edit } from '@mui/icons-material';
 import { Fab, Grid, Tooltip } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { AddMembre } from 'Redux/Role';
 import ConfirmDialog from 'components/ConfirmDialog';
 import MainCard from 'components/MainCard';
+import AddLink from 'pages/Departement/AddLink';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'static/Popup';
@@ -34,6 +34,13 @@ function Index() {
     let d = { code: membre, id: role, object: 'delete' };
     dispatch(AddMembre(d));
   };
+  const [dataEdit, setDataEdit] = React.useState('');
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const editing = (e, d) => {
+    e.preventDefault();
+    setDataEdit(d);
+    setOpenEdit(true);
+  };
   return (
     <MainCard>
       <>
@@ -46,13 +53,20 @@ function Index() {
             role.map((index) => {
               return (
                 <Grid item lg={6} key={index._id} sx={{ paddingRight: '5px' }}>
-                  <div className="role">
+                  <div className="role" style={{ backgroundColor: index.color || '#b2bee8' }}>
                     <div>
                       <p className="title">{index.title}</p>
                     </div>
                     <div className="option">
+                      <Tooltip title="Modifiez" onClick={(e) => editing(e, index)}>
+                        <Fab size="small">
+                          <Edit fontSize="small" />
+                        </Fab>
+                      </Tooltip>
                       <Tooltip title="Ajoutez les membres" onClick={(e) => functionMembre(e, index)}>
-                        <ReplyIcon fontSize="small" />
+                        <Fab size="small">
+                          <Add fontSize="small" />
+                        </Fab>
                       </Tooltip>
                     </div>
                   </div>
@@ -84,6 +98,12 @@ function Index() {
             <p>Loading...</p>
           )}
         </Grid>
+        <Grid>
+          <AddLink />
+        </Grid>
+        <Popup open={openEdit} setOpen={setOpenEdit} title="Edit Role">
+          <AddRole edit={dataEdit} />
+        </Popup>
         <Popup open={open} setOpen={setOpen} title="Ajoutez un role">
           <AddRole />
         </Popup>

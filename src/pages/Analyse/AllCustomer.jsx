@@ -1,5 +1,4 @@
 import { Fab, Grid, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
@@ -7,11 +6,10 @@ import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
 import ActionPending from 'pages/Component/ActionPending';
-import PositionMenu from 'pages/Component/ListePopup';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addTeams, allpermissions, config, lien_read, returnCategorie, sla } from 'static/Lien';
+import { config, lien_readclient, sla } from 'static/Lien';
 import Popup from 'static/Popup';
 import moment from '../../../node_modules/moment/moment';
 import OpenResult from './OpenResult';
@@ -23,30 +21,26 @@ function AllCustomer() {
   const [dataOpen, setDataOpen] = React.useState();
   const [chargement, setChargement] = React.useState(true);
   const status = useSelector((state) => state.status?.status);
+  const navigate = useNavigate();
+
+  React.useLayoutEffect(() => {
+    if (user && user?.operation !== 'suivi') {
+      navigate('/');
+    }
+  }, [user]);
 
   function openResu(index) {
     setDataOpen(index);
     setOpen(true);
   }
-  const [team, setTeam] = React.useState();
   const loading = async () => {
     try {
-      if (returnCategorie(user?.role) === 'managment') {
-        setChargement(true);
-        const response = await axios.get(lien_read + '/readManagment', config);
-        const team = await axios.get(`${lien_read}/teamrole/${user?.role}`, config);
-        setChargement(false);
-        document.getElementById('leftContent').textContent = `${response.data.length} customers are waiting`;
-        setData(response.data);
-        setTeam(team.data);
-      }
-      if (returnCategorie(user?.role) !== 'managment' || allpermissions(user?.role)) {
-        setChargement(true);
-        const response = await axios.get(lien_read + '/clientField', config);
-        setChargement(false);
-        setData(response.data);
-        document.getElementById('leftContent').textContent = `${response.data.length} customers are waiting`;
-      }
+      const link = user.fonctio[0]?.link;
+      setChargement(true);
+      const response = await axios.get(`${lien_readclient}/${link}`, config);
+      setChargement(false);
+      document.getElementById('leftContent').textContent = `${response.data.length} customers are waiting`;
+      setData(response.data);
     } catch (error) {
       setChargement(false);
       console.log(error);
@@ -55,17 +49,22 @@ function AllCustomer() {
 
   const [analyseField, setAnalyseField] = React.useState();
   const [analyseZbm, setAnalyseZbm] = React.useState();
+  const [analyseAction, setAnalyseAction] = React.useState();
 
   const allAnalyse = () => {
-    if (returnCategorie(user?.role) === 'field' || allpermissions(user?.role)) {
+    if (user && user.monitoring === 'region') {
       const action = Object.keys(_.groupBy(data, 'status.idStatus'));
       const region = Object.keys(_.groupBy(data, 'shop_region'));
       setAnalyseField({ action, region });
     }
-    if (user?.role === 'ZBM') {
+    if (user && user.monitoring === 'shop') {
       const shop = Object.keys(_.groupBy(data, 'shop_name'));
       const action = Object.keys(_.groupBy(data, 'status.idStatus'));
       setAnalyseZbm({ action, shop });
+    }
+    if (user && user.monitoring === 'status') {
+      const action = Object.keys(_.groupBy(data, 'status.idStatus'));
+      setAnalyseAction(action);
     }
   };
   React.useEffect(() => {
@@ -162,7 +161,6 @@ function AllCustomer() {
     return data.filter((x) => x.shop_region === region);
   };
 
-  const navigate = useNavigate();
   const functionListe = (region, stat, type) => {
     let client = rechercheNombre(region, stat, type);
     navigate('/liste', { state: { visites: client, action } });
@@ -192,7 +190,6 @@ function AllCustomer() {
       actions: returnAction(action),
       clients: _.filter(data, { statusEnCours: action })
     };
-    console.log(datas);
     if (datas.clients.length > 0) {
       navigate('/liste', { state: { visites: datas.clients, action: datas.actions } });
     } else {
@@ -234,24 +231,36 @@ function AllCustomer() {
       }
     }
     if (content && data) {
-      if (user?.role === 'ZBM' && content.shop_region === user?.region) {
+      if (user?.fonctio[0]?.title === 'ZBM' && user?.region.includes(content.shop_region)) {
         existe();
       }
-      if (user?.role === 'FIELD' || addTeams(user?.role)) {
+      if (user?.fonctio[0]?.title === 'FIELD') {
         existe();
       }
-      if (user?.role === 'RS' && content.shop_name === user?.shop) {
+      if (user?.fonctio[0]?.title === 'RS' && user?.region.includes(content.shop_name)) {
+        existe();
+      }
+      if (user?.fonction?.includes(content.role[0]?.id)) {
         existe();
       }
     }
   }, [content]);
   const returnLastupdate = (action, region) => {
     if (data && data.length > 0) {
-      let donner = _.orderBy(_.filter(data, { statusEnCours: action, shop_region: region }), 'updatedAt', 'asc');
-      if (donner.length > 0) {
-        return donner[donner.length - 1]['updatedAt'];
+      if (region) {
+        let donner = _.orderBy(_.filter(data, { statusEnCours: action, shop_region: region }), 'updatedAt', 'asc');
+        if (donner.length > 0) {
+          return donner[donner.length - 1]['updatedAt'];
+        } else {
+          return '';
+        }
       } else {
-        return '';
+        let donner = _.orderBy(_.filter(data, { statusEnCours: action }), 'updatedAt', 'asc');
+        if (donner.length > 0) {
+          return donner[donner.length - 1]['updatedAt'];
+        } else {
+          return '';
+        }
       }
     } else {
       return '';
@@ -276,17 +285,18 @@ function AllCustomer() {
   const returnCOlor = (id) => {
     if (status && status.length > 0) {
       let a = _.filter(status, { idStatus: id })[0];
-      return a.color ? a.color : '#fff';
+      return a.roles[0]?.color || '#fff';
     }
   };
   return (
     <div>
       {contextHolder}
       <MainCard title="">
-        {chargement && !data && <LoaderGif width={150} height={150} />}
+        {chargement && !data && <LoaderGif width={300} height={300} />}
         <Grid container>
           {analyseField &&
-            (returnCategorie(user?.role) === 'field' || allpermissions(user?.role)) &&
+            user &&
+            user.monitoring === 'region' &&
             analyseField?.region.map((index, key) => {
               return (
                 <Grid item key={key} lg={2} xs={12} sm={12} md={6}>
@@ -339,7 +349,7 @@ function AllCustomer() {
         </Grid>
         <Grid container>
           {analyseZbm &&
-            user?.role === 'ZBM' &&
+            user?.monitoring === 'shop' &&
             analyseZbm.shop.map((shop, key) => {
               return (
                 <Grid item key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
@@ -380,74 +390,36 @@ function AllCustomer() {
               );
             })}
         </Grid>
+        {user && user.monitoring === 'status' && <Grid container></Grid>}
 
-        {data && data.length > 0 && returnCategorie(user?.role) === 'team' && (
-          <DataGrid
-            rows={data}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 15
-                }
-              }
-            }}
-            pageSizeOptions={[15]}
-            disableRowSelectionOnClick
-          />
-        )}
-        {data &&
-          data.length > 0 &&
-          returnCategorie(user?.role) === 'managment' &&
-          team &&
-          team.length > 0 &&
-          team.map((index) => {
-            return (
-              <div key={index._id}>
+        {user && user.monitoring === 'status' && analyseAction && (
+          <Grid container>
+            {analyseAction.map((index) => {
+              return (
                 <Grid
-                  sx={{
-                    padding: '5px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    backgroundColor: '#002d72',
-                    color: '#fff',
-                    margin: '3px',
-                    borderRadius: '5px'
-                  }}
+                  item
+                  lg={3}
+                  md={6}
+                  xs={6}
+                  sm={4}
+                  key={index}
+                  sx={{ padding: '2px', cursor: 'pointer' }}
+                  onClick={() => navigationManagment(index)}
                 >
-                  <p>{index.title}</p>
-                  <PositionMenu data={index.agent} />
+                  <ActionPending
+                    action={returnAction(index)}
+                    role={returnRole(index)}
+                    nombre={retournForTeam(index).length}
+                    outsla={returnSLANumber(retournForTeam(index), 'OUTSLA')}
+                    insla={returnSLANumber(retournForTeam(index), 'INSLA')}
+                    lastupdate={returnLastupdate(index) !== '' && moment(returnLastupdate(index)).fromNow()}
+                    bg="#fff"
+                  />
                 </Grid>
-                <Grid container>
-                  {index.status.map((action) => {
-                    return (
-                      <Grid
-                        item
-                        lg={3}
-                        md={6}
-                        xs={6}
-                        sm={4}
-                        key={action}
-                        sx={{ padding: '2px', cursor: 'pointer' }}
-                        onClick={() => navigationManagment(action)}
-                      >
-                        <ActionPending
-                          action={returnAction(action)}
-                          role=""
-                          nombre={retournForTeam(action).length}
-                          outsla={returnSLANumber(retournForTeam(action), 'OUTSLA')}
-                          insla={returnSLANumber(retournForTeam(action), 'INSLA')}
-                          lastupdate=""
-                          bg={returnCOlor(action)}
-                        />
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </div>
-            );
-          })}
+              );
+            })}
+          </Grid>
+        )}
       </MainCard>
       {dataOpen && (
         <Popup open={open} setOpen={setOpen} title="Result">

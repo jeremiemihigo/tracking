@@ -2,7 +2,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 // project import
-import { Readdepartement } from 'Redux/Departement';
 import { ReadProcess } from 'Redux/Process';
 import { Readrole } from 'Redux/Role';
 import { Readaction } from 'Redux/action';
@@ -28,7 +27,6 @@ dispatch(Readinitiale());
 dispatch(ReadProcess());
 dispatch(ReadStatus());
 dispatch(Readaction());
-dispatch(Readdepartement());
 dispatch(Readrole());
 dispatch(Readagent());
 dispatch(Readetape());

@@ -18,7 +18,7 @@ function TextArea({ setValue, value, placeholder }) {
         fullWidth
         label={placeholder}
         multiline
-        rows={4}
+        rows={3}
       />
     </Box>
   );

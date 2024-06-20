@@ -28,7 +28,7 @@ const ContexteGlobal = (props) => {
     <CreateContexteGlobal.Provider
       value={{
         socket,
-        handleLogout
+        handleLogou: handleLogout
       }}
     >
       {props.children}

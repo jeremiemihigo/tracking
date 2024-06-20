@@ -1,4 +1,3 @@
-import MainCard from 'components/MainCard';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Popup from 'static/Popup';
@@ -14,7 +13,7 @@ const MainProcess = () => {
   const [openaction, setOpenaction] = React.useState(false);
 
   return (
-    <MainCard>
+    <>
       <Table status={status} openProcess={setOpen} addstatus={setOpenStatus} addaction={setOpenaction} />
       <Popup open={open} setOpen={setOpen} title="Process">
         <Process />
@@ -25,7 +24,7 @@ const MainProcess = () => {
       <Popup open={openaction} setOpen={setOpenaction} title="Status Label">
         <AddAction />
       </Popup>
-    </MainCard>
+    </>
   );
 };
 

@@ -38,7 +38,6 @@ const AdminRoute = {
       path: 'mainProcess',
       element: <MainProcess />
     },
-
     {
       path: 'details',
       element: <Details />

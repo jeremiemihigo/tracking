@@ -1,19 +1,18 @@
 import { Save } from '@mui/icons-material';
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import { CreateContexteGlobal } from 'GlobalContext';
-// import { CreateContexteGlobal } from 'GlobalContext';
+import axios from 'axios';
 import AutoComplement from 'components/AutoComplete';
-import DirectionSnack from 'components/Direction';
+import { default as DirectionSnack, default as DirectionSnackbar } from 'components/Direction';
 import TextArea from 'components/TextArea';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { config, lien_post } from 'static/Lien';
 
 function Detail({ clientSelect, step }) {
   const [value, setValue] = React.useState('');
   const [areaValue, setAreaValue] = React.useState('');
   const [open, setOpen] = React.useState(true);
-  const { socket } = React.useContext(CreateContexteGlobal);
   const [actionSelect, setActionSelect] = React.useState();
   const status = useSelector((state) => state.status?.status);
   const [actionSelectFeedback, setActionSelectFeedback] = React.useState('');
@@ -27,9 +26,19 @@ function Detail({ clientSelect, step }) {
     }
   }, [clientSelect]);
   const user = useSelector((state) => state.user?.user);
+  const [erreur, setErreur] = React.useState('');
+  const [openErreur, setOpenErreur] = React.useState(true);
+
+  const reset = () => {
+    setAreaValue('');
+    setValue('');
+    setActionSelectFeedback('');
+    step(0);
+  };
 
   const send = async (e) => {
     e.preventDefault();
+    setErreur('');
     let data = {
       commentaire: areaValue,
       customer_id: clientSelect?.unique_account_id,
@@ -41,31 +50,35 @@ function Detail({ clientSelect, step }) {
       let feedback = {
         _idClient: clientSelect._id,
         ancienStatus: clientSelect.status,
-        type: 'feedback',
         newStatus: actionSelectFeedback
       };
       data._idClient = feedback._idClient;
       data.ancienStatus = feedback.ancienStatus;
-      data.type = 'feedback';
       data.newStatus = feedback.newStatus;
+      const response = await axios.post(lien_post + '/postfeedback', data, config);
+
+      if (response.status === 201) {
+        setErreur(response.data);
+      }
+      if (response.status === 200) {
+        setErreur(response.data);
+        reset();
+      }
     } else {
-      let post = {
-        feedbackSelect: value,
-        type: 'post'
-      };
-      data.feedbackSelect = post.feedbackSelect;
-      data.type = post.type;
+      data.feedbackSelect = value;
+      const response = await axios.post(lien_post + '/postclient', data, config);
+      if (response.status === 200) {
+        setErreur(response.data);
+        reset();
+      }
+      if (response.status === 201) {
+        setErreur(response.data);
+      }
     }
-    // const response = await axios.post(lien_post + '/postclient', data, config);
-    // console.log(response);
-    socket.emit('renseignefeedback', data);
-    setAreaValue('');
-    setValue('');
-    setActionSelectFeedback('');
-    step();
   };
   return (
     <Stack>
+      {erreur !== '' && <DirectionSnackbar open={openErreur} setOpen={setOpenErreur} message={erreur} />}
       <Typography
         component="p"
         style={{ backgroundColor: '#002d72', padding: '5px', margin: '0px', fontSize: '12px', color: 'white', textAlign: 'center' }}
