@@ -41,6 +41,7 @@ function Index() {
     setDataEdit(d);
     setOpenEdit(true);
   };
+  const user = useSelector((state) => state.user.user);
   return (
     <MainCard>
       <>
@@ -87,7 +88,6 @@ function Index() {
                             });
                           }}
                         />
-                        // <Chip label="Deletable" variant="outlined" onDelete={handleDelete} />
                       );
                     })}
                   </Stack>
@@ -98,9 +98,7 @@ function Index() {
             <p>Loading...</p>
           )}
         </Grid>
-        <Grid>
-          <AddLink />
-        </Grid>
+        <Grid>{user && user.role === 'SUPER USER' && <AddLink />}</Grid>
         <Popup open={openEdit} setOpen={setOpenEdit} title="Edit Role">
           <AddRole edit={dataEdit} />
         </Popup>
