@@ -97,8 +97,8 @@ function Table({ status, openProcess, addstatus, addaction }) {
                   <td>
                     {index?.actions.length > 0 ? (
                       <ol>
-                        {index?.actions.map((item) => {
-                          return <li key={item}>{item}</li>;
+                        {index?.actions?.map((item) => {
+                          return <li key={item}>{item?.title}</li>;
                         })}
                       </ol>
                     ) : (

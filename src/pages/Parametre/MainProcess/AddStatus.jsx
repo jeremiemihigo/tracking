@@ -94,7 +94,7 @@ function AddStatus({ edit }) {
         <TextField fullWidth onChange={(e) => setDelai(e.target.value)} type="number" value={delai} placeholder="Délai" />
       </div>
       <div style={{ margin: '10px 0px' }}>
-        <TextArea setValue={setObjectif} value={objectif} placeholder="Objectif" />
+        <TextArea setValue={setObjectif} value={objectif} placeholder="Instruction" />
       </div>
 
       <div>
