@@ -3,7 +3,9 @@ import { Edit } from '@mui/icons-material';
 import { Fab, FormControl, Grid, InputAdornment, OutlinedInput, Paper, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import Popup from 'static/Popup';
+import AddAction from './AddAction';
 import AddStatus from './AddStatus';
+import Process from './Process';
 import './styles.css';
 
 function Table({ status, openProcess, addstatus, addaction }) {
@@ -31,7 +33,18 @@ function Table({ status, openProcess, addstatus, addaction }) {
     setDonner(donner);
     setOpen(true);
   };
-
+  const [openprocess, setopenprocess] = React.useState(false);
+  const [dataprocess, setDataprocess] = React.useState();
+  const processfunction = (data, statut) => {
+    setDataprocess({ data, statut });
+    setopenprocess(true);
+  };
+  const [openaction, setopenaction] = React.useState(false);
+  const [dataaction, setDataaction] = React.useState();
+  const actionfunction = (data, statut) => {
+    setDataaction({ data, statut });
+    setopenaction(true);
+  };
   return (
     <Grid>
       <Paper
@@ -82,9 +95,9 @@ function Table({ status, openProcess, addstatus, addaction }) {
             <th style={{ textAlign: 'center' }}>Status</th>
             <th>Actions</th>
             <th>Instruction</th>
-            <th>Departement</th>
+            <th>Role</th>
             <th>SLA</th>
-            <th>option</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -92,13 +105,19 @@ function Table({ status, openProcess, addstatus, addaction }) {
             filterFn.fn(status).map((index, key) => {
               return (
                 <tr key={key}>
-                  <td>{index?.process?.title}</td>
+                  <td className="tdProcess" onClick={() => processfunction(index.process, index.idStatus)}>
+                    {index?.process?.title}
+                  </td>
                   <td>{index?.title}</td>
                   <td>
                     {index?.actions.length > 0 ? (
                       <ol>
                         {index?.actions?.map((item) => {
-                          return <li key={item}>{item?.title}</li>;
+                          return (
+                            <li className="liAction" onClick={() => actionfunction(item, index.idStatus)} key={item}>
+                              {item?.title}{' '}
+                            </li>
+                          );
                         })}
                       </ol>
                     ) : (
@@ -106,7 +125,12 @@ function Table({ status, openProcess, addstatus, addaction }) {
                     )}
                   </td>
                   <td>{index?.instruction}</td>
-                  <td> {index?.roles[0]?.title}</td>
+                  <td>
+                    {' '}
+                    <Typography noWrap sx={{ fontSize: '12px' }}>
+                      {index?.roles[0]?.title}
+                    </Typography>
+                  </td>
                   <td>{index?.sla}j</td>
                   <td>
                     <Tooltip title="Edit" onClick={(e) => dataEdit(index, e)}>
@@ -122,6 +146,12 @@ function Table({ status, openProcess, addstatus, addaction }) {
       </table>
       <Popup open={open} setOpen={setOpen} title="Edit status">
         <AddStatus edit={donner} />
+      </Popup>
+      <Popup open={openprocess} setOpen={setopenprocess} title="Edit process">
+        <Process donner={dataprocess} />
+      </Popup>
+      <Popup open={openaction} setOpen={setopenaction} title="Edit Action">
+        <AddAction donner={dataaction} />
       </Popup>
     </Grid>
   );

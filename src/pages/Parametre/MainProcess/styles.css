@@ -24,7 +24,11 @@ table tbody td {
   border-bottom: 1px solid var(--color-light);
   color: var(--color-dark-variant);
   padding-left: 5px;
+  font-size: 12px;
 }
-/* table tbody tr:last-child td {
-  border: none;
-} */
+.tdProcess,
+.liAction {
+  text-decoration: underline;
+  color: rgb(58, 58, 172);
+  cursor: pointer;
+}

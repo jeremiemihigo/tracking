@@ -89,10 +89,10 @@ const AnalyticEcommerce = ({ title, data, count, bg }) => {
               </div>
               <div style={{ marginLeft: '10px' }}>
                 <ol>
-                  {statutSelect[0].actions.map((index, key) => {
+                  {statutSelect[0].actions?.map((index, key) => {
                     return (
                       <li style={{ fontSize: '12px' }} key={key}>
-                        {index}
+                        {index.title}
                       </li>
                     );
                   })}
