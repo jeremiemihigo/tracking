@@ -4,7 +4,6 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 // import { GithubOutlined } from '@ant-design/icons';
 // project import
 import { useSelector } from 'react-redux';
-import { addTeams, allpermissions } from 'static/Lien';
 import Connected from './Connected';
 import FolderComponent from './Folder';
 import MobileSection from './MobileSection';
@@ -31,11 +30,11 @@ const HeaderContent = () => {
       )}
       {user?.first && <FirstLogin />}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {user && user.operation === 'suivi' && <OnlyOne />}
-      {(addTeams(user?.role) || allpermissions(user?.role)) && <FolderComponent />}
+      {(user && user.operation === 'suivi') || (user && user.role === 'SUPER USER' && <OnlyOne />)}
+      {user && user.role === 'SUPER USER' && <FolderComponent />}
       <Connected />
 
-      {allpermissions(user?.role) && <Notification />}
+      {user && user.role === 'SUPER USER' && <Notification />}
 
       {!matchesXs && <Profile />}
       {matchesXs && <MobileSection />}

@@ -117,7 +117,7 @@ function TextMobileStepper() {
       renderCell: (params) => {
         return (
           <>
-            {(user && user.mystatus.includes(params.row.statusEnCours)) || user.fonction.includes(params.row.statusEnCours) ? (
+            {(user && user.mystatus?.includes(params.row.statusEnCours)) || user.fonction?.includes(params.row.statusEnCours) ? (
               <Fab size="small" onClick={() => handleNext(params.row)} color="primary">
                 <StartIcon fontSize="small" />
               </Fab>
@@ -161,7 +161,7 @@ function TextMobileStepper() {
           ...data[i],
           nomclient: data[i].client[0]?.customer_name,
           par: data[i].client[0]?.par,
-          sla: sla({ delaiPrevu: data[i].status.sla, dateFin: now?.datetime, dateDebut: data[i].updatedAt })
+          sla: sla({ delaiPrevu: data[i].status.sla, dateFin: now?.datetime || new Date(), dateDebut: data[i].updatedAt })
         });
       }
       setDataStructure(tables);

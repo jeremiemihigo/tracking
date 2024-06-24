@@ -17,7 +17,7 @@ function TextMobileStepper() {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
       <Tabs titres={titres} components={component} />
     </Box>
   );

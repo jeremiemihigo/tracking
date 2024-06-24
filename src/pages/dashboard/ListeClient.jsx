@@ -1,6 +1,7 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
+import axios from 'axios';
 import SimpleBackdrop from 'components/Backdrop';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
@@ -10,19 +11,17 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { lienVisiteMenage, lien_post } from 'static/Lien';
-import axios from '../../../node_modules/axios/index';
 
 function ListeClient() {
   const location = useLocation();
   const { handleLogout } = React.useContext(CreateContexteGlobal);
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (!location.state?.action) {
       handleLogout();
     }
   }, []);
   const visites = location.state?.visites;
   const action = location.state?.action;
-  const allaction = useSelector((state) => state.action?.action);
 
   const columns = [
     {
@@ -77,12 +76,12 @@ function ListeClient() {
       }
     }
   ];
+  const [actions, setActions] = React.useState([]);
+  const status = useSelector((state) => state.status?.status);
 
-  const returnAction = (id) => {
-    if (allaction && allaction.length > 0) {
-      return _.filter(allaction, { idAction: id })[0]?.title;
-    }
-  };
+  React.useEffect(() => {
+    setActions(_.filter(status, { idStatus: action }));
+  }, [action]);
 
   const [messageApi, contextHolder] = message.useMessage();
   const success = (texte, type) => {
@@ -138,8 +137,10 @@ function ListeClient() {
     <div>
       {contextHolder}
       <SimpleBackdrop open={operation} title={texteMessage} taille="10rem" />
-      <PaperHead functionExec={action === 'XZ445X' && sendListe} texte={`list of clients with status ${`<< ${action} >>`}`} />
-      {/* <p onClick={() => sendListe()}>send liste</p> */}
+      <PaperHead
+        functionExec={action === 'XZ445X' && sendListe}
+        texte={`list of clients with status ${`<< ${actions.length > 0 && actions[0].title} >>`}`}
+      />
       <MainCard>
         <div style={{ width: '70vw' }}>
           {visites && visites.length > 0 && (

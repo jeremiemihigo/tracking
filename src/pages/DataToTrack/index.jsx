@@ -7,7 +7,7 @@ import MainCard from 'components/MainCard';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { allpermissions, differenceDays } from 'static/Lien';
+import { differenceDays } from 'static/Lien';
 import AddData from './AddData';
 import './style.css';
 
@@ -183,7 +183,7 @@ function Index() {
               </div>
             )}
           </Grid>
-          {allpermissions(user?.role) && <AddData />}
+          {user && user.role === 'SUPER USER' && <AddData />}
         </Grid>
         <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
       </MainCard>

@@ -1,11 +1,11 @@
 import { Grid, Paper, Typography } from '@mui/material';
 import { CreateContexteGlobal } from 'GlobalContext';
 import _ from 'lodash';
+import moment from 'moment';
 import PaperHead from 'pages/Component/PaperHead';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import moment from '../../../node_modules/moment/moment';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function AllCustomer() {
   const location = useLocation();
@@ -75,6 +75,10 @@ function AllCustomer() {
       return a.color ? a.color : '#fff';
     }
   };
+  const navigate = useNavigate();
+  const functionListe = (client, action) => {
+    navigate('/liste', { state: { visites: client, action } });
+  };
 
   return (
     <div>
@@ -93,7 +97,16 @@ function AllCustomer() {
                   {analyseZbm.action.map((action) => {
                     return (
                       rechercheNombre(shop, action, 'shop').length > 0 && (
-                        <Grid item lg={12} md={6} xs={6} sm={12} key={action} sx={{ padding: '2px' }}>
+                        <Grid
+                          onClick={() => functionListe(rechercheNombre(shop, action, 'shop'), action)}
+                          item
+                          lg={12}
+                          md={6}
+                          xs={6}
+                          sm={12}
+                          key={action}
+                          sx={{ padding: '2px', cursor: 'pointer' }}
+                        >
                           <Paper elevation={2} sx={{ padding: '5px', backgroundColor: returnCOlor(action) }}>
                             <p style={{ fontSize: '11px', textAlign: 'center' }}>{returnAction(action)}</p>
                             <Typography component="p" sx={{ fontSize: '9px', textAlign: 'center', padding: '0px', margin: '0px' }}>

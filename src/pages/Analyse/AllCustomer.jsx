@@ -160,23 +160,20 @@ function AllCustomer() {
   const retournTotal = (region) => {
     return data.filter((x) => x.shop_region === region);
   };
-
-  const functionListe = (region, stat, type) => {
-    let client = rechercheNombre(region, stat, type);
-    navigate('/liste', { state: { visites: client, action } });
-  };
-
-  const action = useSelector((state) => state.action?.action);
-
-  const retournForTeam = (stat) => {
-    return data.filter((x) => x.statusEnCours === stat);
-  };
-
   const returnAction = (id) => {
     if (status && status.length > 0) {
       return _.filter(status, { idStatus: id })[0]?.title;
     }
   };
+  const functionListe = (region, stat, type) => {
+    let client = rechercheNombre(region, stat, type);
+    navigate('/liste', { state: { visites: client, action: stat } });
+  };
+
+  const retournForTeam = (stat) => {
+    return data.filter((x) => x.statusEnCours === stat);
+  };
+
   const [messageApi, contextHolder] = message.useMessage();
   const success = (texte, type) => {
     messageApi.open({
@@ -186,12 +183,9 @@ function AllCustomer() {
     });
   };
   const navigationManagment = (action) => {
-    const datas = {
-      actions: returnAction(action),
-      clients: _.filter(data, { statusEnCours: action })
-    };
-    if (datas.clients.length > 0) {
-      navigate('/liste', { state: { visites: datas.clients, action: datas.actions } });
+    const clients = _.filter(data, { statusEnCours: action });
+    if (clients.length > 0) {
+      navigate('/liste', { state: { visites: clients, action } });
     } else {
       success('no customers for this status', 'error');
     }

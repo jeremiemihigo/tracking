@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 
 // project import
 import menuItem from 'menu-items';
-
 import { useSelector } from 'react-redux';
 import NavGroup from './NavGroup';
 

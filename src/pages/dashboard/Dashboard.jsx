@@ -9,19 +9,11 @@ import { useSelector } from 'react-redux';
 // import 'slick-carousel/slick/slick.css';
 import { CreateContexteGlobal } from 'GlobalContext';
 import AnalyticEcommerce from 'components/AnalyticEcommerce';
-import { Carousel } from 'primereact/carousel';
-import { config, lien_readclient, sla } from 'static/Lien';
+import { config, differenceDays, lien_readclient, sla } from 'static/Lien';
+import { Paper } from '../../../node_modules/@mui/material/index';
 import axios from '../../../node_modules/axios/index';
+import DetailAction from './DetailAction';
 import './style.css';
-
-const steps = [
-  {
-    id: 1
-  },
-  {
-    id: 2
-  }
-];
 
 function TextMobileStepper() {
   const user = useSelector((state) => state.user?.user);
@@ -73,10 +65,21 @@ function TextMobileStepper() {
     let nombreOut = 0;
     let today = 0;
     for (let i = 0; i < allData.visites.length; i++) {
-      if (sla({ delaiPrevu: allData.visites[i].status.sla, dateFin: now?.datetime, dateDebut: allData.visites[i].updatedAt }) === 'INSLA') {
+      if (differenceDays(now?.datetime || new Date(), allData.visites[i].updatedAt) === 0) {
+        today = today + 1;
         nombreIn = nombreIn + 1;
       } else {
-        nombreOut = nombreOut + 1;
+        if (
+          sla({
+            delaiPrevu: allData.visites[i].status.sla,
+            dateFin: now?.datetime || new Date(),
+            dateDebut: allData.visites[i].updatedAt
+          }) === 'INSLA'
+        ) {
+          nombreIn = nombreIn + 1;
+        } else {
+          nombreOut = nombreOut + 1;
+        }
       }
     }
     return { today, nombreIn, nombreOut };
@@ -133,12 +136,13 @@ function TextMobileStepper() {
       }
     }
   }, [datasubmit]);
-  const productTemplate = (index) => {
-    return (
-      <div style={{ width: '95%', margin: '5px' }}>
-        <AnalyticEcommerce title={returnAction(index.action)} data={index.action} count={index.visites.length} bg={couleurAll(index)} />{' '}
-      </div>
-    );
+
+  const [selectedAction, setSelected] = React.useState();
+  const [show, setShow] = React.useState(false);
+
+  const funct = (info) => {
+    setSelected(info);
+    setShow(true);
   };
 
   return (
@@ -146,20 +150,30 @@ function TextMobileStepper() {
       {!data && <LoaderGif width={300} height={300} />}
       {data && data.length > 0 && (
         <>
-          <Grid className="itemes">
-            {analyse.length > 0 && (
-              <Carousel
-                value={analyse}
-                numVisible={3}
-                numScroll={1}
-                responsiveOptions={responsiveOptions}
-                className="custom-carousel"
-                circular
-                autoplayInterval={10000}
-                itemTemplate={productTemplate}
-              />
-            )}
+          <Grid container>
+            {analyse.length > 0 &&
+              analyse.map((index, key) => {
+                return (
+                  <Grid key={key} item lg={4} xs={12} sm={6} md={4}>
+                    <div style={{ margin: '3px' }}>
+                      <AnalyticEcommerce
+                        title={returnAction(index.action)}
+                        data={index.action}
+                        count={index.visites.length}
+                        bg={couleurAll(index)}
+                      />
+                      <Paper
+                        style={{ color: 'blue', cursor: 'pointer', padding: '0px 10px', fontSize: '12px', textAlign: 'right' }}
+                        onClick={() => funct(index.action)}
+                      >
+                        show more details
+                      </Paper>
+                    </div>
+                  </Grid>
+                );
+              })}
           </Grid>
+          <DetailAction data={selectedAction} show={show} setShow={setShow} />
         </>
       )}
       {data && data.length === 0 && (
