@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { lien_socket } from 'static/Lien';
-import { useSelector } from '../node_modules/react-redux/es/exports';
 export const CreateContexteGlobal = createContext();
 
 const ContexteGlobal = (props) => {
@@ -19,10 +20,11 @@ const ContexteGlobal = (props) => {
       socket.emit('newUser', data);
     }
   }, [socket, user]);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     localStorage.removeItem('auth');
-    window.location.replace('/login');
+    navigate('/login');
   };
   return (
     <CreateContexteGlobal.Provider

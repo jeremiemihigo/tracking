@@ -8,9 +8,10 @@ import { useTheme } from '@mui/material/styles';
 // project import
 import Transitions from 'components/@extended/Transitions';
 import MainCard from 'components/MainCard';
-
+import React from 'react';
 // assets
 import { LogoutOutlined } from '@ant-design/icons';
+import { CreateContexteGlobal } from 'GlobalContext';
 import avatar1 from 'assets/images/users/avatar-1.png';
 import { useSelector } from 'react-redux';
 
@@ -33,11 +34,7 @@ TabPanel.propTypes = {
 
 const Profile = () => {
   const theme = useTheme();
-
-  const handleLogout = async () => {
-    localStorage.removeItem('auth');
-    window.location.replace('/login');
-  };
+  const { handleLogout } = React.useContext(CreateContexteGlobal);
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);

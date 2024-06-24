@@ -85,11 +85,11 @@ moment.locale('fr', {
 });
 root.render(
   <ReduxProvider store={store}>
-    <ContexteGlobal>
-      <BrowserRouter basename="/">
+    <BrowserRouter basename="/">
+      <ContexteGlobal>
         <App />
-      </BrowserRouter>
-    </ContexteGlobal>
+      </ContexteGlobal>
+    </BrowserRouter>
   </ReduxProvider>
 );
 

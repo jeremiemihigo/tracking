@@ -38,7 +38,6 @@ const AuthLogin = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
   return (
     <>
       <Formik

@@ -8,15 +8,13 @@ import Button from '@mui/material/Button';
 import MobileStepper from '@mui/material/MobileStepper';
 import { useTheme } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import Images from 'assets/images/icons/attente.png';
 import LoaderGif from 'components/LoaderGif';
-import _ from 'lodash';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { config, lien_readclient, sla } from 'static/Lien';
-import axios from '../../../node_modules/axios/index';
+import { sla } from 'static/Lien';
+import { CreateContextDashboard } from './Context';
 import TakeAction from './TakeAction';
 import './style.css';
 
@@ -131,24 +129,10 @@ function TextMobileStepper() {
       }
     }
   ];
-  const [data, setData] = React.useState();
+  const { data } = React.useContext(CreateContextDashboard);
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-  const loadingClient = async () => {
-    try {
-      const link = user.fonctio[0]?.link;
-      const response = await axios.get(`${lien_readclient}/${link}`, config);
-      if (response.status === 200) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  React.useEffect(() => {
-    loadingClient();
-  }, []);
 
   const now = useSelector((state) => state.today?.today);
 
@@ -170,36 +154,6 @@ function TextMobileStepper() {
   React.useEffect(() => {
     structreData();
   }, [data]);
-
-  const [datasubmit, setDataSubmit] = React.useState();
-  const { socket } = React.useContext(CreateContexteGlobal);
-  React.useEffect(() => {
-    socket.on('renseigne', (donner) => {
-      setDataSubmit(donner);
-    });
-  }, [socket]);
-  React.useEffect(() => {
-    if (datasubmit && datasubmit.error === 'success') {
-      if (user && user.fonction.includes(datasubmit.content[0].statusEnCours)) {
-        let exite = _.filter(data, { _id: datasubmit.content[0]._id });
-        if (exite.length > 0) {
-          const content = datasubmit.content[0];
-          let normal = data.map((x) => (x._id === datasubmit.content[0]._id ? content : x));
-          setData(normal);
-          structreData();
-        } else {
-          let d = data;
-          d.push(datasubmit.content[0]);
-          setData(d);
-          structreData();
-        }
-      } else {
-        let normal = data.filter((x) => x._id !== datasubmit.content[0]._id);
-        setData(normal);
-        structreData();
-      }
-    }
-  }, [datasubmit]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
