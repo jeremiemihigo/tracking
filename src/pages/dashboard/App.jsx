@@ -22,21 +22,26 @@ function TextMobileStepper() {
     { id: 0, component: <Dashoard /> },
     { id: 1, component: <TakeAction /> }
   ];
-  const user = useSelector((state) => state.user?.user);
+  const user = useSelector((state) => state.user);
   const { setAnalyse, setData, data } = React.useContext(CreateContextDashboard);
   const { socket, handleLogout } = React.useContext(CreateContexteGlobal);
 
   const loadingClient = async () => {
     try {
-      const link = user.fonctio[0]?.link;
-      const response = await axios.get(`${lien_readclient}/${link}`, config);
-      if (response.status === 200) {
-        setData(response.data);
-      } else {
-        if (response.data === 'token expired') {
-          handleLogout();
+      if (user && user.readUser === 'success') {
+        const link = user.user?.fonctio[0]?.link;
+        const response = await axios.get(`${lien_readclient}/${link}`, config);
+        if (response.status === 200) {
+          setData(response.data);
+        } else {
+          if (response.data === 'token expired') {
+            handleLogout();
+          }
+          setData([]);
         }
-        setData([]);
+      }
+      if (user && user.readUser === 'rejected') {
+        handleLogout();
       }
     } catch (error) {
       console.log(error);
@@ -44,7 +49,7 @@ function TextMobileStepper() {
   };
   React.useEffect(() => {
     loadingClient();
-  }, []);
+  }, [user]);
 
   const [datasubmit, setDataSubmit] = React.useState();
 
