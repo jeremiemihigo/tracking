@@ -30,7 +30,7 @@ const HeaderContent = () => {
       )}
       {user?.first && <FirstLogin />}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {(user && user.operation === 'suivi') || (user && user.role === 'SUPER USER' && <OnlyOne />)}
+      {user && (user.operation === 'suivi' || user.role === 'SUPER USER') && <OnlyOne />}
       {user && user.role === 'SUPER USER' && <FolderComponent />}
       <Connected />
 
