@@ -82,7 +82,7 @@ function Index() {
     },
     {
       field: 'codeAgent',
-      headerName: 'Nom',
+      headerName: 'Name',
       width: 100,
       editable: false
     },
@@ -94,33 +94,33 @@ function Index() {
     },
     {
       field: 'feedbackSelect',
-      headerName: 'Action select',
+      headerName: 'Status selected',
       width: 140,
       editable: false
     },
     {
       field: 'commentaire',
-      headerName: 'Commentaire',
+      headerName: 'Comment',
       width: 250,
       editable: false
     },
     {
       field: 'sla',
       headerName: 'SLA',
-      width: 50,
+      width: 80,
       editable: false,
       renderCell: (params) => {
         if (params.row.sla === 'INSLA') {
-          return <p style={{ background: '#619f62', color: '#fff', fontSize: '9px', padding: '2px', borderRadius: '5px' }}>INSLA</p>;
+          return <p style={{ background: '#619f62', color: '#fff', fontSize: '9px', padding: '2px 5px', borderRadius: '5px' }}>INSLA</p>;
         } else {
-          return <p style={{ background: '#971a0b', color: '#fff', fontSize: '10px', padding: '2px', borderRadius: '5px' }}>OUTSLA</p>;
+          return <p style={{ background: '#971a0b', color: '#fff', fontSize: '10px', padding: '2px 5px', borderRadius: '5px' }}>OUTSLA</p>;
         }
       }
     },
     {
       field: 'day',
       headerName: 'Day',
-      width: 50,
+      width: 60,
       editable: false,
       renderCell: (params) => {
         return (
@@ -131,7 +131,7 @@ function Index() {
               width: '100%',
               textAlign: 'center',
               fontSize: '10px',
-              padding: '2px',
+              padding: '2px 5px',
               borderRadius: '5px'
             }}
           >{`${differenceDays(params.row.dateFin, params.row.dateDebut)}/${params.row.delaiPrevu}`}</p>
