@@ -115,7 +115,7 @@ function TextMobileStepper() {
       renderCell: (params) => {
         return (
           <>
-            {(user && user.mystatus?.includes(params.row.statusEnCours)) || user.fonction?.includes(params.row.statusEnCours) ? (
+            {user && user.fonction?.includes(params.row.role[0].id) ? (
               <Fab size="small" onClick={() => handleNext(params.row)} color="primary">
                 <StartIcon fontSize="small" />
               </Fab>

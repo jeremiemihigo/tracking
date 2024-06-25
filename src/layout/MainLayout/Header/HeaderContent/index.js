@@ -8,7 +8,6 @@ import Connected from './Connected';
 import FolderComponent from './Folder';
 import MobileSection from './MobileSection';
 import Notification from './Notification';
-import OnlyOne from './OnlyOne';
 import Profile from './Profile';
 
 // ==============================|| HEADER - CONTENT ||============================== //
@@ -30,7 +29,7 @@ const HeaderContent = () => {
       )}
       {user?.first && <FirstLogin />}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {user && (user.operation === 'suivi' || user.role === 'SUPER USER') && <OnlyOne />}
+      {/* {user && (user.operation === 'suivi' || user.role === 'SUPER USER') && <OnlyOne />} */}
       {user && user.role === 'SUPER USER' && <FolderComponent />}
       <Connected />
 

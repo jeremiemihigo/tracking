@@ -209,6 +209,7 @@ function AllCustomer() {
   const { socket } = React.useContext(CreateContexteGlobal);
   React.useEffect(() => {
     socket.on('renseigne', (donner) => {
+      console.log(donner);
       if (donner.error === 'success') {
         setDataChange({ content: donner.content[0] });
       }
@@ -221,14 +222,14 @@ function AllCustomer() {
         let nouvel = data.map((x) => (x._id === content._id ? content : x));
         setData(nouvel);
       } else {
-        setData({ ...data, content });
+        setData([...data, content]);
       }
     }
     if (content && data) {
       if (user?.fonctio[0]?.title === 'ZBM' && user?.region.includes(content.shop_region)) {
         existe();
       }
-      if (user?.fonctio[0]?.title === 'FIELD') {
+      if (['SUPER USER', 'FIELD'].includes(user?.fonctio[0]?.title)) {
         existe();
       }
       if (user?.fonctio[0]?.title === 'RS' && user?.region.includes(content.shop_name)) {

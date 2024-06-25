@@ -47,6 +47,7 @@ function TextMobileStepper() {
       console.log(error);
     }
   };
+  console.log(data);
   React.useEffect(() => {
     loadingClient();
   }, [user]);
