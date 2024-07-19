@@ -1,4 +1,4 @@
-import { CoffeeMaker, DoNotStep, Engineering, Person } from '@mui/icons-material';
+import { CoffeeMaker, Engineering, Person } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 // project import
 import Transitions from 'components/@extended/Transitions';
@@ -24,6 +23,9 @@ import MainCard from 'components/MainCard';
 
 // assets
 import { CloseOutlined, SettingOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { activeItem } from 'store/reducers/menu';
 
 // sx styles
 const avatarSX = {
@@ -65,19 +67,22 @@ const Notification = () => {
   const iconBackColor = 'grey.100';
 
   const table = [
-    { id: 1, title: 'Main process', secondary: 'default tracker', link: 'mainProcess', icon: <Engineering fontSize="small" /> },
-    { id: 3, title: 'Agents', secondary: 'agents from all departments', link: 'agent', icon: <Person fontSize="small" /> },
-    { id: 4, title: 'Roles', secondary: 'All role', link: 'role', icon: <CoffeeMaker fontSize="small" /> },
-    {
-      id: 5,
-      title: 'Stage',
-      secondary: 'How the statuses will follow one another',
-      icon: <DoNotStep fontSize="small" />,
-      link: 'etapes'
-    }
-
-    // { id: 6, title: 'Setting', secondary: 'Setting', link: 'parametre', icon: <Settings fontSize="small" /> }
+    { id: 1, title: 'Main process', secondary: 'default tracker', link: '/mainProcess', icon: <Engineering fontSize="small" /> },
+    { id: 3, title: 'Agents', secondary: 'agents from all departments', link: '/agent', icon: <Person fontSize="small" /> },
+    { id: 4, title: 'Roles', secondary: 'All role', link: '/role', icon: <CoffeeMaker fontSize="small" /> }
   ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const changeI = (id) => {
+    dispatch(activeItem({ openItem: [id] }));
+    return;
+  };
+  const lien = (e, titre, link) => {
+    e.preventDefault();
+    changeI(titre);
+    changeI(titre);
+    navigate(link, { replace: true });
+  };
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
@@ -149,7 +154,7 @@ const Notification = () => {
                   >
                     {table.map((index) => {
                       return (
-                        <ListItemButton key={index.id}>
+                        <ListItemButton key={index.id} onClick={(e) => lien(e, '' + index.title, index.link)}>
                           <ListItemAvatar>
                             <Avatar
                               sx={{
@@ -159,18 +164,17 @@ const Notification = () => {
                               {index.icon}
                             </Avatar>
                           </ListItemAvatar>
-                          <Link to={index.link} style={{ textDecoration: 'none', color: 'black' }}>
-                            <ListItemText
-                              primary={
-                                <Typography variant="h6">
-                                  <Typography component="span" variant="subtitle1">
-                                    {index.title}
-                                  </Typography>{' '}
-                                </Typography>
-                              }
-                              secondary={index.secondary}
-                            />
-                          </Link>
+
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                <Typography component="span" variant="subtitle1">
+                                  {index.title}
+                                </Typography>{' '}
+                              </Typography>
+                            }
+                            secondary={index.secondary}
+                          />
                         </ListItemButton>
                       );
                     })}

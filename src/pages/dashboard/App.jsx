@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
-// import 'slick-carousel/slick/slick-theme.css';
-// import 'slick-carousel/slick/slick.css';
 import { CreateContexteGlobal } from 'GlobalContext';
 import axios from 'axios';
+import LoaderGif from 'components/LoaderGif';
+import NoCustomer from 'components/NoCustomer';
 import Tabs from 'components/Tabs';
 import _ from 'lodash';
 import React from 'react';
@@ -11,33 +11,42 @@ import { config, lien_readclient } from 'static/Lien';
 import { CreateContextDashboard } from './Context';
 import Dashoard from './Dashboard';
 import TakeAction from './TabAction';
+import UploadFile from './UploadFile';
+import Visited from './Visited';
 import './style.css';
 
 function TextMobileStepper() {
   const titres = [
     { id: 0, label: 'Dashboard' },
-    { id: 1, label: 'Status' }
+    { id: 1, label: 'change status' },
+    { id: 2, label: 'Visited' },
+    { id: 3, label: 'Upload' }
   ];
   const component = [
     { id: 0, component: <Dashoard /> },
-    { id: 1, component: <TakeAction /> }
+    { id: 1, component: <TakeAction /> },
+    { id: 2, component: <Visited /> },
+    { id: 3, component: <UploadFile /> }
   ];
   const user = useSelector((state) => state.user);
   const { setAnalyse, setData, data } = React.useContext(CreateContextDashboard);
   const { socket, handleLogout } = React.useContext(CreateContexteGlobal);
-
+  const [chargement, setChargement] = React.useState(false);
   const loadingClient = async () => {
+    setChargement(true);
     try {
       if (user && user.readUser === 'success') {
         const link = user.user?.fonctio[0]?.link;
         const response = await axios.get(`${lien_readclient}/${link}`, config);
         if (response.status === 200) {
           setData(response.data);
+          setChargement(false);
         } else {
           if (response.data === 'token expired') {
             handleLogout();
           }
           setData([]);
+          setChargement(false);
         }
       }
       if (user && user.readUser === 'rejected') {
@@ -47,7 +56,6 @@ function TextMobileStepper() {
       console.log(error);
     }
   };
-  console.log(data);
   React.useEffect(() => {
     loadingClient();
   }, [user]);
@@ -100,9 +108,15 @@ function TextMobileStepper() {
   }, [datasubmit]);
 
   return (
-    <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
-      <Tabs titres={titres} components={component} />
-    </Box>
+    <>
+      {chargement && !data && <LoaderGif width={300} height={300} />}
+      {data && data.length === 0 && <NoCustomer texte="No waiting customers on your dashboard" />}
+      {data && data.length > 0 && (
+        <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
+          <Tabs titres={titres} components={component} />
+        </Box>
+      )}
+    </>
   );
 }
 export default TextMobileStepper;

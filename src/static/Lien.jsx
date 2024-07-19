@@ -1,15 +1,10 @@
 // eslint-disable-next-line no-undef
-// export const lien = 'http://109.199.122.241:5000/bboxx/support';
 
-// export const lien = 'http://trackingback-m9iu.onrender.com/tracker';
-// const serverhost = 'http://localhost:8000';
-// const serverhost = 'http://localhost:8000';
-// const serverhost = 'https://backendtracking.onrender.com';
 // const serverhost = 'http://localhost:4000';
 // const serverhostvm = 'http://localhost:40002';
 const serverhost = 'https://backendtracker.bboxxvm.com';
-
 // export const lien_post = `http://${server}:8000/tracker/post`;
+
 export const lien_socket = serverhost;
 export const lien_post = `${serverhost}/tracker/post`;
 export const lien_read = `${serverhost}/tracker/read`;

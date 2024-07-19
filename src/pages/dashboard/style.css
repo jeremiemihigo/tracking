@@ -50,3 +50,11 @@
 .content {
   cursor: pointer;
 }
+
+.dataGrid {
+  width: 60%;
+}
+.containerGrid {
+  display: flex;
+  justify-content: center;
+}

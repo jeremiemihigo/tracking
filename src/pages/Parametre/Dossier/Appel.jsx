@@ -1,5 +1,4 @@
-import { Grid, Typography } from '@mui/material';
-import { Input } from 'antd';
+import { Grid } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { CreateContexte } from './Context';
@@ -63,8 +62,10 @@ function Appel() {
   return (
     <div>
       <Grid item lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
-        <Typography>Appel</Typography>
-        <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setAppel)} />
+        <input type="file" id="actual-btn" accept=".xlsx" hidden onChange={(e) => readUploadFile(e, setAppel)} />
+        <label className="label" htmlFor="actual-btn">
+          Clic here to choose file (call)
+        </label>
       </Grid>
     </div>
   );

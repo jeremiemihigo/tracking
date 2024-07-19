@@ -12,7 +12,6 @@ const Details = Loadable(lazy(() => import('pages/Parametre')));
 const Agent = Loadable(lazy(() => import('pages/Parametre/Agent')));
 const Role = Loadable(lazy(() => import('pages/Parametre/Role')));
 const Action = Loadable(lazy(() => import('pages/Parametre/Action')));
-const Etape = Loadable(lazy(() => import('pages/Parametre/Etapes')));
 const Folder = Loadable(lazy(() => import('pages/Parametre/Dossier')));
 const Analyse = Loadable(lazy(() => import('pages/Analyse')));
 const Params = Loadable(lazy(() => import('pages/Param')));
@@ -54,10 +53,6 @@ const AdminRoute = {
     {
       path: '/:status',
       element: <Action />
-    },
-    {
-      path: 'etapes',
-      element: <Etape />
     },
     {
       path: 'folder',

@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { Input, message } from 'antd';
+import { message } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
 import React from 'react';
@@ -106,10 +106,13 @@ function ClientToTrack() {
   return (
     <Grid container>
       {contextHolder}
-      <Grid item lg={9} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
-        <Input type="file" name="upload" id="upload" onChange={(e) => readUploadFile(e, setInputTrack)} />
+      <Grid item lg={9} xs={12} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
+        <input type="file" id="actual-btn" accept=".xlsx" hidden onChange={(e) => readUploadFile(e, setInputTrack)} />
+        <label className="label" htmlFor="actual-btn">
+          Clic here to choose file (customer to track)
+        </label>
       </Grid>
-      <Grid item lg={3} sm={6} md={6} sx={{ paddingLeft: '10px' }}>
+      <Grid item lg={3} sm={6} md={6} sx={{ paddingLeft: '10px', display: 'flex', alignItems: 'center' }}>
         <Button color="primary" variant="contained" onClick={(e) => sendData(e)}>
           send
         </Button>

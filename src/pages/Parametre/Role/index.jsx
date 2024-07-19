@@ -1,11 +1,10 @@
 import { Add, Edit } from '@mui/icons-material';
 import { Fab, Grid, Tooltip } from '@mui/material';
 import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
 import { AddMembre } from 'Redux/Role';
 import ConfirmDialog from 'components/ConfirmDialog';
 import MainCard from 'components/MainCard';
-import AddLink from 'pages/Departement/AddLink';
+// import AddLink from 'pages/Departement/AddLink';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'static/Popup';
@@ -53,35 +52,34 @@ function Index() {
           {role ? (
             role.map((index) => {
               return (
-                <Grid item lg={6} key={index._id} sx={{ paddingRight: '5px' }}>
+                <Grid item lg={6} xs={12} sm={6} md={6} key={index._id} sx={{ paddingRight: '5px' }}>
                   <div className="role" style={{ backgroundColor: index.color || '#b2bee8' }}>
                     <div>
                       <p className="title">{index.title}</p>
+                      <p style={{ padding: '0px', margin: '0px', fontSize: '10px' }}>{index.link && `/${index.link}`}</p>
                     </div>
                     <div className="option">
                       <Tooltip title="Modifiez" onClick={(e) => editing(e, index)}>
-                        <Fab size="small">
-                          <Edit fontSize="small" />
-                        </Fab>
+                        <Edit fontSize="small" />
                       </Tooltip>
-                      <Tooltip title="Ajoutez les membres" onClick={(e) => functionMembre(e, index)}>
-                        <Fab size="small">
-                          <Add fontSize="small" />
-                        </Fab>
+                      <Tooltip title="Ajoutez un agent" onClick={(e) => functionMembre(e, index)}>
+                        <Add fontSize="small" />
                       </Tooltip>
                     </div>
                   </div>
-                  <Stack direction="row" spacing={1}>
+
+                  <div style={{ width: '100%' }}>
                     {index.agents.map((item) => {
                       return (
                         <Chip
+                          sx={{ margin: '2px' }}
                           key={item._id}
-                          label={item.nom}
+                          label={item.codeAgent}
                           onDelete={() => {
                             setConfirmDialog({
                               isOpen: true,
-                              title: 'Confirmer la suppression de cet agent',
-                              subTitle: 'Supprimer',
+                              title: `si vous confirmez, ${item.codeAgent.toUpperCase()} ne verra plus les clients en attente dans ce departement`,
+                              subTitle: '',
                               onConfirm: () => {
                                 handleDelete(index._id, item.codeAgent);
                               }
@@ -90,7 +88,7 @@ function Index() {
                         />
                       );
                     })}
-                  </Stack>
+                  </div>
                 </Grid>
               );
             })
@@ -98,7 +96,7 @@ function Index() {
             <p>Loading...</p>
           )}
         </Grid>
-        <Grid>{user && user.role === 'SUPER USER' && <AddLink />}</Grid>
+        {/* <Grid>{user && user.role === 'SUPER USER' && <AddLink />}</Grid> */}
         <Popup open={openEdit} setOpen={setOpenEdit} title="Edit Role">
           <AddRole edit={dataEdit} />
         </Popup>

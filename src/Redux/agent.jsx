@@ -191,7 +191,7 @@ const agent = createSlice({
         getagentError: '',
         postagent: '',
         postagentError: '',
-        resetPassword: 'success',
+        resetPassword: '',
         resetPasswordError: '',
         putagent: 'success',
         putagentError: ''

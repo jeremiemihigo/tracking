@@ -9,8 +9,12 @@ import { lienVisiteMenage } from 'static/Lien';
 function AddRegion({ donner }) {
   const [region, setRegion] = React.useState();
   const loadingregion = async () => {
-    const response = await axios.get(lienVisiteMenage + '/zone');
-    setRegion(response.data);
+    try {
+      const response = await axios.get(lienVisiteMenage + '/zone');
+      setRegion(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
   React.useEffect(() => {
     loadingregion();
@@ -33,9 +37,13 @@ function AddRegion({ donner }) {
     <div style={{ minWidth: '20rem', paddingTop: '10px' }}>
       {region && <AutoComplement value={value} setValue={setValue} title="Region" options={region} propr="denomination" />}
       <div style={{ marginTop: '10px' }}>
-        <Button variant="contained" fullWidth color="primary" onClick={(e) => sendData(e)}>
-          Send
-        </Button>
+        {!region ? (
+          <p style={{ textAlign: 'center' }}>Loading...</p>
+        ) : (
+          <Button variant="contained" fullWidth color="primary" onClick={(e) => sendData(e)}>
+            Send
+          </Button>
+        )}
       </div>
     </div>
   );

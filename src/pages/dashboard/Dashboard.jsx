@@ -1,17 +1,14 @@
-import { Grid } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 import Box from '@mui/material/Box';
 import Images from 'assets/images/icons/attente.png';
+import AnalyticEcommerce from 'components/AnalyticEcommerce';
 import LoaderGif from 'components/LoaderGif';
 import _ from 'lodash';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-// import 'slick-carousel/slick/slick-theme.css';
-// import 'slick-carousel/slick/slick.css';
-import AnalyticEcommerce from 'components/AnalyticEcommerce';
 import { differenceDays, sla } from 'static/Lien';
-import { Paper } from '../../../node_modules/@mui/material/index';
 import { CreateContextDashboard } from './Context';
-import DetailAction from './DetailAction';
+import ShowDetails from './ShowDetail';
 import './style.css';
 
 function TextMobileStepper() {
@@ -48,14 +45,6 @@ function TextMobileStepper() {
     return { today, nombreIn, nombreOut };
   };
 
-  const [selectedAction, setSelected] = React.useState();
-  const [show, setShow] = React.useState(false);
-
-  const funct = (info) => {
-    setSelected(info);
-    setShow(true);
-  };
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       {!data && <LoaderGif width={300} height={300} />}
@@ -75,16 +64,15 @@ function TextMobileStepper() {
                       />
                       <Paper
                         style={{ color: '#052c65', cursor: 'pointer', padding: '0px 10px', fontSize: '12px', textAlign: 'right' }}
-                        onClick={() => funct(index.action)}
+                        color="secondary"
                       >
-                        show more details
+                        <ShowDetails idStatus={index.action} />
                       </Paper>
                     </div>
                   </Grid>
                 );
               })}
           </Grid>
-          <DetailAction data={selectedAction} show={show} setShow={setShow} />
         </>
       )}
       {data && data.length === 0 && (

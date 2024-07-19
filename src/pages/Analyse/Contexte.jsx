@@ -5,16 +5,19 @@ import React, { createContext } from 'react';
 export const CreateContexte = createContext();
 
 const ContexteAnalyse = (props) => {
-  const [optionSelect, setOptionSelect] = React.useState({ id: 24, title: 'All customer' });
+  const [optionSelect, setOptionSelect] = React.useState({ id: 24, title: 'Monitoring' });
 
   const handleOption = (texte) => {
     setOptionSelect(texte);
   };
+  const [title, setTitle] = React.useState('');
   return (
     <CreateContexte.Provider
       value={{
-        handleSelect: handleOption, 
+        handleSelect: handleOption,
         optionSelect,
+        title,
+        setTitle
       }}
     >
       {props.children}

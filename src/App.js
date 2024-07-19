@@ -4,21 +4,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ScrollTop from 'components/ScrollTop';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Routes from 'routes';
 import ThemeCustomization from 'themes';
-import { useNavigate } from '../node_modules/react-router-dom/dist/index';
+import './App.css';
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 
 const App = () => {
   const navigation = useNavigate();
 
-  const main = useSelector((state) => state.main?.main);
+  const user = useSelector((state) => state.user?.user);
   React.useEffect(() => {
-    if (main === 'token expired') {
+    if (user && user === 'token expired') {
       localStorage.removeItem('auth');
       navigation('/login', { replace: true });
     }
-  }, [main]);
+  }, [user]);
 
   return (
     <ThemeCustomization>

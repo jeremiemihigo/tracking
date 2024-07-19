@@ -10,6 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { message } from 'antd';
 import Images from 'assets/images/icons/attente.png';
+import ExcelButton from 'components/Excel';
 import LoaderGif from 'components/LoaderGif';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -56,45 +57,58 @@ function TextMobileStepper() {
     {
       field: 'customer_name',
       headerName: 'Name',
-      width: 170,
+      width: 100,
       editable: false
     },
 
     {
       field: 'shop_name',
       headerName: 'Shop',
-      width: 120,
+      width: 100,
       editable: false
     },
     {
       field: 'shop_region',
       headerName: 'Region',
-      width: 100,
+      width: 80,
       editable: false
     },
     {
-      field: 'par',
+      field: 'par_to_date',
       headerName: 'PAR',
       width: 70,
+      editable: false
+    },
+    {
+      field: 'lastStatusDetail',
+      headerName: 'Last status',
+      width: 180,
+      editable: false
+    },
+    {
+      field: 'lastAgent',
+      headerName: 'Last agent',
+      width: 100,
       editable: false
     },
 
     {
       field: 'statusTitle',
-      headerName: 'Status',
+      headerName: 'Next Status',
       width: 180,
       editable: false
     },
+
     {
       field: 'sla',
       headerName: 'SLA',
-      width: 80,
+      width: 70,
       editable: false,
       renderCell: (params) => {
         return (
           <p
             style={{
-              fontSize: '10px',
+              fontSize: '9px',
               padding: '3px',
               borderRadius: '5px',
               color: 'white',
@@ -110,7 +124,7 @@ function TextMobileStepper() {
     {
       field: 'takeAction',
       headerName: 'Option',
-      width: 100,
+      width: 80,
       editable: false,
       renderCell: (params) => {
         return (
@@ -133,9 +147,14 @@ function TextMobileStepper() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
   const now = useSelector((state) => state.today?.today);
-
+  const returnLastStatus = (row, title) => {
+    if (row.length > 0) {
+      return row[row.length - 1]['' + title];
+    } else {
+      return row;
+    }
+  };
   const [dataStructure, setDataStructure] = React.useState();
   const structreData = () => {
     if (data && data.length > 0) {
@@ -143,8 +162,8 @@ function TextMobileStepper() {
       for (let i = 0; i < data.length; i++) {
         tables.push({
           ...data[i],
-          nomclient: data[i].client[0]?.customer_name,
-          par: data[i].client[0]?.par,
+          lastStatusDetail: returnLastStatus(data[i].result, 'status'),
+          lastAgent: returnLastStatus(data[i].result, 'codeAgent'),
           sla: sla({ delaiPrevu: data[i].status.sla, dateFin: now?.datetime || new Date(), dateDebut: data[i].updatedAt })
         });
       }
@@ -154,11 +173,42 @@ function TextMobileStepper() {
   React.useEffect(() => {
     structreData();
   }, [data]);
+  const [excel, setExcel] = React.useState();
+  const ExportToExcel = () => {
+    try {
+      const table = [];
+      for (let i = 0; i < dataStructure.length; i++) {
+        table.push({
+          unique_account_id: dataStructure[i].unique_account_id,
+          customer_name: dataStructure[i].customer_name,
+          lastAgent: dataStructure[i].lastAgent,
+          'Last status': dataStructure[i].lastStatusDetail,
+          par_to_date: dataStructure[i].par_to_date,
+          'ID VISITE': dataStructure[i].objectVisite.idDemande,
+          'VISITED BY': dataStructure[i].objectVisite.codeAgent,
+          'FEEDBACK VISIT': dataStructure[i].objectVisite.raison,
+          shop_name: dataStructure[i].shop_name,
+          shop_region: dataStructure[i].shop_region,
+          sla: dataStructure[i].sla,
+          Status: dataStructure[i].statusTitle
+        });
+      }
+      setExcel(table);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  React.useEffect(() => {
+    ExportToExcel();
+  }, [dataStructure]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
+      {excel && excel.length > 0 && steps[activeStep].id === 1 && <ExcelButton data={excel} fileName="tracking" sheetName="Clients" />}
+
       {contextHolder}
       {!data && <LoaderGif width={300} height={300} />}
+      {data && data.length === 0 && <p>Aucun client en attente chez vous</p>}
       {data && data.length > 0 && (
         <>
           <MobileStepper

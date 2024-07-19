@@ -9,8 +9,12 @@ import { lienVisiteMenage } from 'static/Lien';
 function AddShop({ donner }) {
   const [shop, setShop] = React.useState();
   const loadingshop = async () => {
-    const response = await axios.get(lienVisiteMenage + '/shop');
-    setShop(response.data);
+    try {
+      const response = await axios.get(lienVisiteMenage + '/shop');
+      setShop(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
   React.useEffect(() => {
     loadingshop();
@@ -33,9 +37,13 @@ function AddShop({ donner }) {
     <div style={{ minWidth: '20rem', paddingTop: '10px' }}>
       {shop && <AutoComplement value={value} setValue={setValue} title="Shop" options={shop} propr="shop" />}
       <div style={{ marginTop: '10px' }}>
-        <Button variant="contained" fullWidth color="primary" onClick={(e) => sendData(e)}>
-          Send
-        </Button>
+        {!shop ? (
+          <p style={{ textAlign: 'center' }}>Loading...</p>
+        ) : (
+          <Button variant="contained" fullWidth color="primary" onClick={(e) => sendData(e)}>
+            Send
+          </Button>
+        )}
       </div>
     </div>
   );

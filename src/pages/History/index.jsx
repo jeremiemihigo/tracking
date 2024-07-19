@@ -1,6 +1,6 @@
 import { FileCopy } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { Button, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import { DataGrid } from '@mui/x-data-grid';
 import { message } from 'antd';
@@ -10,7 +10,6 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 import React from 'react';
 import { config, differenceDays, lien_post, sla } from 'static/Lien';
-import { Button } from '../../../node_modules/@mui/material/index';
 import './history.css';
 
 function Index() {

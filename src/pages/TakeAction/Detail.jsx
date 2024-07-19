@@ -1,22 +1,19 @@
 import { Save } from '@mui/icons-material';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import axios from 'axios';
-import AutoComplement from 'components/AutoComplete';
-import { default as DirectionSnack, default as DirectionSnackbar } from 'components/Direction';
+import { default as DirectionSnackbar } from 'components/Direction';
 import TextArea from 'components/TextArea';
 import _ from 'lodash';
+import AutoComplement from 'pages/Parametre/Etapes/Complement';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { config, lien_post } from 'static/Lien';
 
 function Detail({ clientSelect, step }) {
-  const [value, setValue] = React.useState('');
+  const [statusOne, setStatusSelectOne] = React.useState('');
   const [areaValue, setAreaValue] = React.useState('');
-  const [open, setOpen] = React.useState(true);
   const [actionSelect, setActionSelect] = React.useState();
   const status = useSelector((state) => state.status?.status);
-  const [actionSelectFeedback, setActionSelectFeedback] = React.useState('');
-
   const returnAction = () => {
     setActionSelect(_.filter(status, { idStatus: clientSelect.status.idStatus })[0]);
   };
@@ -25,48 +22,34 @@ function Detail({ clientSelect, step }) {
       returnAction();
     }
   }, [clientSelect]);
+
   const user = useSelector((state) => state.user?.user);
   const [erreur, setErreur] = React.useState('');
   const [openErreur, setOpenErreur] = React.useState(true);
 
   const reset = () => {
     setAreaValue('');
-    setValue('');
-    setActionSelectFeedback('');
     step(0);
   };
+  const [sending, setSending] = React.useState(false);
 
   const send = async (e) => {
     e.preventDefault();
-    setErreur('');
-    let data = {
-      commentaire: areaValue,
-      customer_id: clientSelect?.unique_account_id,
-      status: clientSelect?.status,
-      role: actionSelect?.roles[0].title,
-      codeAgent: user?.codeAgent
-    };
-    if (clientSelect.status.idStatus === 'SA89AF') {
-      let feedback = {
-        _idClient: clientSelect._id,
-        ancienStatus: clientSelect.status,
-        newStatus: actionSelectFeedback
+    try {
+      setSending(true);
+      setErreur('');
+      let data = {
+        commentaire: areaValue,
+        customer_id: clientSelect?.unique_account_id,
+        status: clientSelect?.status,
+        role: actionSelect?.roles[0].title,
+        codeAgent: user?.codeAgent,
+        feedbackSelect: statusOne?.idStatus,
+        titleFeedback: statusOne?.title
       };
-      data._idClient = feedback._idClient;
-      data.ancienStatus = feedback.ancienStatus;
-      data.newStatus = feedback.newStatus;
-      const response = await axios.post(lien_post + '/postfeedback', data, config);
 
-      if (response.status === 201) {
-        setErreur(response.data);
-      }
-      if (response.status === 200) {
-        setErreur(response.data);
-        reset();
-      }
-    } else {
-      data.feedbackSelect = value;
       const response = await axios.post(lien_post + '/postclient', data, config);
+      setSending(false);
       if (response.status === 200) {
         setErreur(response.data);
         reset();
@@ -74,6 +57,8 @@ function Detail({ clientSelect, step }) {
       if (response.status === 201) {
         setErreur(response.data);
       }
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -85,7 +70,6 @@ function Detail({ clientSelect, step }) {
       >
         {clientSelect.status.title}
       </Typography>
-      <DirectionSnack open={open} setOpen={setOpen} message="error" />
       {clientSelect && (
         <div style={{ padding: '10px' }}>
           <p style={{ padding: '0px', margin: '0px' }}>{clientSelect?.unique_account_id + ' ; ' + clientSelect?.customer_name}</p>
@@ -115,27 +99,16 @@ function Detail({ clientSelect, step }) {
               clientSelect?.called
             )}{' '}
           </p>
-          {status && clientSelect.status.idStatus === 'SA89AF' && (
+
+          {status && (
             <Grid item lg={12} sx={{ marginTop: '10px' }}>
-              <AutoComplement
-                value={actionSelectFeedback}
-                setValue={setActionSelectFeedback}
-                options={status}
-                title="Statut"
-                propr="title"
-              />
+              <AutoComplement value={statusOne} setValue={setStatusSelectOne} options={status} title="Status" />
             </Grid>
           )}
-          {clientSelect.status.idStatus !== 'SA89AF' && (
-            <div>
-              <AutoComplement value={value} setValue={setValue} options={clientSelect?.statusLabel} title="Feedback" propr="title" />
-            </div>
-          )}
-
           <div style={{ marginTop: '10px' }}>
             <TextArea setValue={setAreaValue} value={areaValue} placeholder="Commentaire" />
           </div>
-          <Button onClick={(e) => send(e)} variant="contained" fullWidth sx={{ marginTop: '10px' }} color="primary">
+          <Button disabled={sending} onClick={(e) => send(e)} variant="contained" fullWidth sx={{ marginTop: '10px' }} color="primary">
             <Save fontSize="small" /> <span style={{ marginLeft: '10px' }}>Valier</span>
           </Button>
         </div>

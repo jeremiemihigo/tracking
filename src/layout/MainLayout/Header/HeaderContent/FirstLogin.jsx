@@ -3,16 +3,12 @@ import { Button, Flex } from 'antd';
 import * as React from 'react';
 // third party
 
-import { Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
+import { Edit } from '@mui/icons-material';
+import { Dialog, DialogContent, DialogTitle, Slide, Typography } from '@mui/material';
 import { Input } from 'antd';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { lien_post } from 'static/Lien';
-import { Edit } from '../../../../../node_modules/@mui/icons-material/index';
 
 // project import
 

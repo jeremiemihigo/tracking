@@ -5,6 +5,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 // project import
 import { useSelector } from 'react-redux';
 import Connected from './Connected';
+import Corbeille from './Corbeille';
 import FolderComponent from './Folder';
 import MobileSection from './MobileSection';
 import Notification from './Notification';
@@ -23,7 +24,7 @@ const HeaderContent = () => {
       {!matchesXs && (
         <Box sx={{ width: '100%', ml: { xs: 0, md: 1 } }}>
           <Typography variant="h6" color="default" sx={{ fontWeight: 'bolder' }}>
-            {menu.openItem[0]}
+            {menu && menu.openItem.length > 0 && menu.openItem[0]}
           </Typography>
         </Box>
       )}
@@ -32,6 +33,7 @@ const HeaderContent = () => {
       {/* {user && (user.operation === 'suivi' || user.role === 'SUPER USER') && <OnlyOne />} */}
       {user && user.role === 'SUPER USER' && <FolderComponent />}
       <Connected />
+      <Corbeille />
 
       {user && user.role === 'SUPER USER' && <Notification />}
 

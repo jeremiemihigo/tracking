@@ -18,8 +18,8 @@ const dashboard = {
   type: 'group',
   children: [
     {
-      id: 'Pending action',
-      title: 'Pending action',
+      id: 'Pending status',
+      title: 'Pending status',
       type: 'item',
       url: '/',
       icon: icons.DatabaseOutlined,

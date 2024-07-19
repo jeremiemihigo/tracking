@@ -4,146 +4,120 @@ import ConfirmDialog from 'components/ConfirmDialog';
 import ExcelButton from 'components/Excel';
 import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
-import dayjs from 'dayjs';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { differenceDays } from 'static/Lien';
-import AddData from './AddData';
+import { sla } from 'static/Lien';
 import './style.css';
 
 function Index() {
   const dataTotrack_state = useSelector((state) => state.data_to_track);
   const [liste, setListe] = React.useState();
-  const user = useSelector((state) => state.user?.user);
-
-  const loadingSla = (index) => {
-    return index.delaiPrevu - differenceDays(index.dateFin, index.dateDebut);
-  };
-
-  const retournSla = (data) => {
-    if (data.client.length > 0 && data.client[0].result.length > 0) {
-      return loadingSla(data.client[0].result[data.client[0].result.length - 1]) >= 0 ? 'INSLA' : 'OUTSLA';
-    } else {
-      return '';
-    }
-  };
-  const returnLastStatus = (data, property) => {
-    if (data.client.length === 0) {
-      return 'No result';
-    }
-    if (data.client[0]?.result.length === 0) {
-      return 'No result';
-    }
-    if (data.client[0]?.result.length > 0) {
-      return data.client[0].result[data.client[0].result.length - 1]['' + property];
-    }
-  };
+  const now = useSelector((state) => state.today?.today);
 
   const columns = [
     {
       field: 'unique_account_id',
       headerName: 'code client',
-      width: 115,
-      editable: false
-    },
-    {
-      field: 'customer_name',
-      headerName: 'NOMS',
-      width: 100,
-      editable: false
-    },
-    {
-      field: 'statut',
-      headerName: 'statut',
-      width: 150,
-      editable: false
-    },
-    {
-      field: 'date',
-      headerName: 'Date',
-      width: 50,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.date === 'No result' ? 'No result' : dayjs(params.row.date).format('DD/MM');
-      }
-    },
-    {
-      field: 'nom',
-      headerName: 'Nom',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'feedbackSelect',
-      headerName: 'Action select',
       width: 120,
       editable: false
     },
     {
-      field: 'commentaire',
-      headerName: 'Commentaire',
+      field: 'customer_name',
+      headerName: 'Name',
       width: 150,
-      editable: false
-    },
-    {
-      field: 'shop',
-      headerName: 'Shop',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'region',
-      headerName: 'Region',
-      width: 80,
       editable: false
     },
 
     {
-      field: 'par',
-      headerName: 'PAR',
+      field: 'shop_name',
+      headerName: 'Shop',
+      width: 100,
+      editable: false
+    },
+    {
+      field: 'shop_region',
+      headerName: 'Region',
       width: 80,
       editable: false
     },
     {
+      field: 'par',
+      headerName: 'PAR',
+      width: 70,
+      editable: false
+    },
+    {
+      field: 'lastStatusDetail',
+      headerName: 'Last status',
+      width: 180,
+      editable: false
+    },
+    {
+      field: 'lastAgent',
+      headerName: 'Last agent',
+      width: 100,
+      editable: false
+    },
+
+    {
+      field: 'statusTitle',
+      headerName: 'Next Status',
+      width: 180,
+      editable: false
+    },
+
+    {
       field: 'sla',
       headerName: 'SLA',
-      width: 70,
+      width: 80,
       editable: false,
       renderCell: (params) => {
-        if (params.row.sla === 'INSLA') {
-          return <p style={{ background: '#619f62', color: '#fff', fontSize: '9px', padding: '2px', borderRadius: '5px' }}>INSLA</p>;
-        } else {
-          return <p style={{ background: '#971a0b', color: '#fff', fontSize: '10px', padding: '2px', borderRadius: '5px' }}>OUTSLA</p>;
-        }
+        return (
+          <p
+            style={{
+              fontSize: '10px',
+              padding: '3px',
+              borderRadius: '5px',
+              color: 'white',
+              margin: '0px',
+              backgroundColor: `${params.row.sla === 'OUTSLA' ? 'red' : 'green'}`
+            }}
+          >
+            {params.row.sla}
+          </p>
+        );
       }
     }
   ];
 
   const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
 
+  const returnLastStatus = (row, title) => {
+    if (row.length > 0) {
+      return row[row.length - 1]['' + title];
+    } else {
+      return row;
+    }
+  };
+  console.log(dataTotrack_state);
   const generatePdf = () => {
     let table = [];
     for (let i = 0; i < dataTotrack_state.datatotrack.length; i++) {
       table.push({
-        unique_account_id: dataTotrack_state.datatotrack[i].unique_account_id,
-        customer_name: dataTotrack_state.datatotrack[i].customer_name,
-        region: dataTotrack_state.datatotrack[i].region,
-        shop: dataTotrack_state.datatotrack[i].shop,
-        par: dataTotrack_state.datatotrack[i].par,
-        last_status: dataTotrack_state.datatotrack[i].last_status,
-        person_in_charge: dataTotrack_state.datatotrack[i].person_in_charge,
-        month: dataTotrack_state.datatotrack[i].month,
-        sla: retournSla(dataTotrack_state.datatotrack[i]),
-        statut: returnLastStatus(dataTotrack_state.datatotrack[i], 'status'),
-        date: returnLastStatus(dataTotrack_state.datatotrack[i], 'dateFin'),
-        nom: returnLastStatus(dataTotrack_state.datatotrack[i], 'codeAgent'),
-        feedbackSelect: returnLastStatus(dataTotrack_state.datatotrack[i], 'feedbackSelect'),
-        commentaire: returnLastStatus(dataTotrack_state.datatotrack[i], 'commentaire'),
-
-        id: dataTotrack_state.datatotrack[i]._id
+        ...dataTotrack_state.datatotrack[i],
+        id: i,
+        nomclient: dataTotrack_state.datatotrack[i].customer_name,
+        statusTitle: dataTotrack_state.datatotrack[i].status.title,
+        lastStatusDetail: returnLastStatus(dataTotrack_state.datatotrack[i].result, 'status'),
+        lastAgent: returnLastStatus(dataTotrack_state.datatotrack[i].result, 'codeAgent'),
+        par: dataTotrack_state.datatotrack[i].par_to_date,
+        sla: sla({
+          delaiPrevu: dataTotrack_state.datatotrack[i].status.sla,
+          dateFin: now?.datetime || new Date(),
+          dateDebut: dataTotrack_state.datatotrack[i].updatedAt
+        })
       });
     }
-    console.log(table);
     setListe(table);
   };
   React.useEffect(() => {
@@ -183,7 +157,6 @@ function Index() {
               </div>
             )}
           </Grid>
-          {user && user.role === 'SUPER USER' && <AddData />}
         </Grid>
         <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
       </MainCard>

@@ -1,27 +1,26 @@
-import { Fab, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
 import LoaderGif from 'components/LoaderGif';
 import MainCard from 'components/MainCard';
+import NoCustomer from 'components/NoCustomer';
 import _ from 'lodash';
+import moment from 'moment';
 import ActionPending from 'pages/Component/ActionPending';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { config, lien_readclient, sla } from 'static/Lien';
-import Popup from 'static/Popup';
-import moment from '../../../node_modules/moment/moment';
-import OpenResult from './OpenResult';
+import { CreateContexte } from './Contexte';
 
 function AllCustomer() {
-  const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState();
   const user = useSelector((state) => state.user?.user);
-  const [dataOpen, setDataOpen] = React.useState();
   const [chargement, setChargement] = React.useState(true);
   const status = useSelector((state) => state.status?.status);
   const navigate = useNavigate();
+  const { setTitle } = React.useContext(CreateContexte);
 
   React.useLayoutEffect(() => {
     if (user && user?.operation !== 'suivi') {
@@ -29,17 +28,13 @@ function AllCustomer() {
     }
   }, [user]);
 
-  function openResu(index) {
-    setDataOpen(index);
-    setOpen(true);
-  }
   const loading = async () => {
     try {
       const link = user.fonctio[0]?.link;
       setChargement(true);
       const response = await axios.get(`${lien_readclient}/${link}`, config);
       setChargement(false);
-      document.getElementById('leftContent').textContent = `${response.data.length} customers are waiting`;
+      setTitle(`${response.data.length} customers are waiting`);
       setData(response.data);
     } catch (error) {
       setChargement(false);
@@ -77,77 +72,6 @@ function AllCustomer() {
       loading();
     }
   }, [user]);
-
-  const columns = [
-    {
-      field: 'unique_account_id',
-      headerName: 'code client',
-      width: 120,
-      editable: false
-    },
-    {
-      field: 'customer_name',
-      headerName: 'NOMS',
-      width: 150,
-      editable: false
-    },
-    {
-      field: 'shop_name',
-      headerName: 'Shop',
-      width: 100,
-      editable: false
-    },
-    {
-      field: 'shop_region',
-      headerName: 'Region',
-      width: 100,
-      editable: false
-    },
-    {
-      field: 'payment_status',
-      headerName: 'Payment status',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'par_to_date',
-      headerName: 'PAR',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'actionTitle',
-      headerName: 'Action',
-      width: 180,
-      editable: false
-    },
-    {
-      field: 'In',
-      headerName: 'In charge',
-      width: 130,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.client.length > 0 ? (
-          params.row.client[0]?.person_in_charge
-        ) : (
-          <p style={{ color: 'red' }}>does not exist in data to track</p>
-        );
-      }
-    },
-    {
-      field: 'a',
-      headerName: '',
-      width: 30,
-      editable: false,
-      renderCell: (params) => {
-        return (
-          <Fab size="small" color="primary" onClick={() => openResu(params.row.result)}>
-            {params.row.result.length}
-          </Fab>
-        );
-      }
-    }
-  ];
 
   const rechercheNombre = (lieu, stat, type) => {
     if (type === 'shop') {
@@ -209,7 +133,6 @@ function AllCustomer() {
   const { socket } = React.useContext(CreateContexteGlobal);
   React.useEffect(() => {
     socket.on('renseigne', (donner) => {
-      console.log(donner);
       if (donner.error === 'success') {
         setDataChange({ content: donner.content[0] });
       }
@@ -283,143 +206,202 @@ function AllCustomer() {
       return a.roles[0]?.color || '#fff';
     }
   };
+
+  const responsive = (taille, type, title) => {
+    if (taille === 1) {
+      if (title === 'title') return 12;
+      if (type === 'lg') {
+        if (title === 'subtitle') return 3;
+      }
+      if (type === 'md') {
+        if (title === 'subtitle') return 4;
+      }
+    }
+    if (taille === 2) {
+      if (title === 'title') return 6;
+      if (type === 'lg') {
+        if (title === 'subtitle') return 6;
+      }
+      if (type === 'md') {
+        if (title === 'subtitle') return 6;
+      }
+    }
+    if (taille === 3) {
+      if (title === 'title') return 4;
+      if (type === 'lg') {
+        if (title === 'subtitle') return 6;
+      }
+      if (type === 'md') {
+        if (title === 'subtitle') return 6;
+      }
+    }
+    if (taille === 4) {
+      if (title === 'title') return 3;
+      if (type === 'lg') {
+        if (title === 'subtitle') return 12;
+      }
+      if (type === 'md') {
+        if (title === 'subtitle') return 12;
+      }
+    }
+    if (taille >= 5) {
+      if (title === 'title') return 2;
+      if (type === 'lg') {
+        if (title === 'subtitle') return 12;
+      }
+      if (type === 'md') {
+        if (title === 'subtitle') return 12;
+      }
+    }
+  };
   return (
     <div>
+      {data && data.length === 0 && <NoCustomer texte="No waiting customers on your dashboard" />}
       {contextHolder}
-      <MainCard title="">
-        {chargement && !data && <LoaderGif width={300} height={300} />}
-        <Grid container>
-          {analyseField &&
-            user &&
-            user.monitoring === 'region' &&
-            analyseField?.region.map((index, key) => {
-              return (
-                <Grid item key={key} lg={2} xs={12} sm={12} md={6}>
-                  <Grid
-                    onClick={() => affichageZbm(retournTotal(index), index)}
-                    sx={{
-                      padding: '5px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      backgroundColor: '#002d72',
-                      color: '#fff',
-                      margin: '3px'
-                    }}
-                  >
-                    <p>{index}</p>
-                    <p>{retournTotal(index).length}</p>
-                  </Grid>
-                  <Grid container>
-                    {analyseField.action.map((action) => {
-                      return (
-                        rechercheNombre(index, action, 'region').length > 0 && (
-                          <Grid
-                            item
-                            lg={12}
-                            md={6}
-                            xs={6}
-                            sm={4}
-                            key={action}
-                            sx={{ padding: '2px', cursor: 'pointer' }}
-                            onClick={() => functionListe(index, action, 'region')}
-                          >
-                            <ActionPending
-                              action={returnAction(action)}
-                              role={returnRole(action)}
-                              nombre={rechercheNombre(index, action, 'region').length}
-                              outsla={returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
-                              insla={returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
-                              lastupdate={returnLastupdate(action, index) !== '' && moment(returnLastupdate(action, index)).fromNow()}
-                              bg={returnCOlor(action)}
-                            />
-                          </Grid>
-                        )
-                      );
-                    })}
-                  </Grid>
-                </Grid>
-              );
-            })}
-        </Grid>
-        <Grid container>
-          {analyseZbm &&
-            user?.monitoring === 'shop' &&
-            analyseZbm.shop.map((shop, key) => {
-              return (
-                <Grid item key={key} lg={3} xs={12} sm={6} md={6} sx={{ paddingLeft: '1px' }}>
-                  <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff' }}>
-                    <Typography component="p" noWrap>
-                      {shop}
-                    </Typography>
-                  </Grid>
-                  <Grid container>
-                    {analyseZbm.action.map((action) => {
-                      return (
-                        rechercheNombre(shop, action, 'shop').length > 0 && (
-                          <Grid
-                            item
-                            lg={12}
-                            md={6}
-                            xs={6}
-                            sm={12}
-                            key={action}
-                            sx={{ padding: '2px', cursor: 'pointer' }}
-                            onClick={() => functionListe(shop, action, 'shop')}
-                          >
-                            <ActionPending
-                              action={returnAction(action)}
-                              role={returnRole(action)}
-                              nombre={rechercheNombre(shop, action, 'shop').length}
-                              outsla={returnSLANumber(rechercheNombre(shop, action, 'shop'), 'OUTSLA')}
-                              insla={returnSLANumber(rechercheNombre(shop, action, 'shop'), 'INSLA')}
-                              lastupdate={returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
-                              bg={returnCOlor(action)}
-                            />
-                          </Grid>
-                        )
-                      );
-                    })}
-                  </Grid>
-                </Grid>
-              );
-            })}
-        </Grid>
-        {user && user.monitoring === 'status' && <Grid container></Grid>}
-
-        {user && user.monitoring === 'status' && analyseAction && (
+      {chargement && !data && <LoaderGif width={300} height={300} />}
+      {data && data.length > 0 && (
+        <MainCard title="">
           <Grid container>
-            {analyseAction.map((index) => {
-              return (
-                <Grid
-                  item
-                  lg={3}
-                  md={6}
-                  xs={6}
-                  sm={4}
-                  key={index}
-                  sx={{ padding: '2px', cursor: 'pointer' }}
-                  onClick={() => navigationManagment(index)}
-                >
-                  <ActionPending
-                    action={returnAction(index)}
-                    role={returnRole(index)}
-                    nombre={retournForTeam(index).length}
-                    outsla={returnSLANumber(retournForTeam(index), 'OUTSLA')}
-                    insla={returnSLANumber(retournForTeam(index), 'INSLA')}
-                    lastupdate={returnLastupdate(index) !== '' && moment(returnLastupdate(index)).fromNow()}
-                    bg="#fff"
-                  />
-                </Grid>
-              );
-            })}
+            {analyseField &&
+              user &&
+              user.monitoring === 'region' &&
+              analyseField?.region.map((index, key) => {
+                return (
+                  <Grid
+                    item
+                    key={key}
+                    lg={responsive(analyseField?.region.length, 'lg', 'title')}
+                    xs={12}
+                    sm={12}
+                    md={responsive(analyseField?.region.length, 'md', 'title')}
+                  >
+                    <Grid
+                      onClick={() => affichageZbm(retournTotal(index), index)}
+                      sx={{
+                        padding: '5px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        backgroundColor: '#002d72',
+                        color: '#fff',
+                        margin: '3px'
+                      }}
+                    >
+                      <p>{index}</p>
+                      <p>{retournTotal(index).length}</p>
+                    </Grid>
+                    <Grid container>
+                      {analyseField.action.map((action) => {
+                        return (
+                          rechercheNombre(index, action, 'region').length > 0 && (
+                            <Grid
+                              item
+                              lg={responsive(analyseField?.region.length, 'lg', 'subtitle')}
+                              md={responsive(analyseField?.region.length, 'md', 'subtitle')}
+                              xs={12}
+                              sm={4}
+                              key={action}
+                              sx={{ padding: '2px', cursor: 'pointer' }}
+                              onClick={() => functionListe(index, action, 'region')}
+                            >
+                              <ActionPending
+                                action={returnAction(action)}
+                                role={returnRole(action)}
+                                nombre={rechercheNombre(index, action, 'region').length}
+                                outsla={returnSLANumber(rechercheNombre(index, action, 'region'), 'OUTSLA')}
+                                insla={returnSLANumber(rechercheNombre(index, action, 'region'), 'INSLA')}
+                                lastupdate={returnLastupdate(action, index) !== '' && moment(returnLastupdate(action, index)).fromNow()}
+                                bg={returnCOlor(action)}
+                              />
+                            </Grid>
+                          )
+                        );
+                      })}
+                    </Grid>
+                  </Grid>
+                );
+              })}
           </Grid>
-        )}
-      </MainCard>
-      {dataOpen && (
-        <Popup open={open} setOpen={setOpen} title="Result">
-          <OpenResult data={dataOpen} />
-        </Popup>
+          <Grid container>
+            {analyseZbm &&
+              user?.monitoring === 'shop' &&
+              analyseZbm.shop.map((shop, key) => {
+                return (
+                  <Grid
+                    item
+                    key={key}
+                    lg={responsive(analyseZbm?.shop.length, 'lg', 'title')}
+                    xs={12}
+                    sm={6}
+                    md={responsive(analyseZbm?.shop.length, 'md', 'title')}
+                    sx={{ paddingLeft: '1px' }}
+                  >
+                    <Grid sx={{ backgroundColor: '#002d72', borderRadius: '2px', textAlign: 'center', color: '#fff' }}>
+                      <Typography component="p" noWrap>
+                        {shop}
+                      </Typography>
+                    </Grid>
+                    <Grid container>
+                      {analyseZbm.action.map((action) => {
+                        return (
+                          rechercheNombre(shop, action, 'shop').length > 0 && (
+                            <Grid
+                              item
+                              lg={responsive(analyseZbm?.shop.length, 'lg', 'subtitle')}
+                              md={responsive(analyseZbm?.shop.length, 'md', 'subtitle')}
+                              xs={12}
+                              sm={12}
+                              key={action}
+                              sx={{ padding: '2px', cursor: 'pointer' }}
+                              onClick={() => functionListe(shop, action, 'shop')}
+                            >
+                              <ActionPending
+                                action={returnAction(action)}
+                                role={returnRole(action)}
+                                nombre={rechercheNombre(shop, action, 'shop').length}
+                                outsla={returnSLANumber(rechercheNombre(shop, action, 'shop'), 'OUTSLA')}
+                                insla={returnSLANumber(rechercheNombre(shop, action, 'shop'), 'INSLA')}
+                                lastupdate={returnLastupdate(action) !== '' && moment(returnLastupdate(action)).fromNow()}
+                                bg={returnCOlor(action)}
+                              />
+                            </Grid>
+                          )
+                        );
+                      })}
+                    </Grid>
+                  </Grid>
+                );
+              })}
+          </Grid>
+          {user && user.monitoring === 'status' && analyseAction && (
+            <Grid container>
+              {analyseAction.map((index) => {
+                return (
+                  <Grid
+                    item
+                    lg={3}
+                    md={6}
+                    xs={12}
+                    sm={4}
+                    key={index}
+                    sx={{ padding: '2px', cursor: 'pointer' }}
+                    onClick={() => navigationManagment(index)}
+                  >
+                    <ActionPending
+                      action={returnAction(index)}
+                      role={returnRole(index)}
+                      nombre={retournForTeam(index).length}
+                      outsla={returnSLANumber(retournForTeam(index), 'OUTSLA')}
+                      insla={returnSLANumber(retournForTeam(index), 'INSLA')}
+                      lastupdate={returnLastupdate(index) !== '' && moment(returnLastupdate(index)).fromNow()}
+                      bg="#fff"
+                    />
+                  </Grid>
+                );
+              })}
+            </Grid>
+          )}
+        </MainCard>
       )}
     </div>
   );

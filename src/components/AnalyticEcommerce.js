@@ -10,7 +10,7 @@ import { Grid, Paper, Typography } from '@mui/material';
 
 const AnalyticEcommerce = ({ title, count, bg }) => {
   return (
-    <Paper sx={{ padding: '4px' }}>
+    <Paper sx={{ padding: '4px', marginBottom: '2px' }}>
       <div style={{ minWidth: '5rem' }}>
         <Grid container>
           <Grid item lg={10} xs={10} sm={10} md={10}>
@@ -24,7 +24,7 @@ const AnalyticEcommerce = ({ title, count, bg }) => {
         </Grid>
         <Grid container alignItems="center">
           <Grid item lg={4} xs={4} sx={{ padding: '4px' }}>
-            <div style={{ background: '#068E14', color: '#fff', padding: '5px', borderRadius: '10px' }}>
+            <div style={{ background: '#DCF5D0', color: '#000', padding: '5px', borderRadius: '10px' }}>
               <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '6px', margin: '0px', padding: '0px' }} color="inherit">
                 IN SLA
               </Typography>
@@ -34,7 +34,7 @@ const AnalyticEcommerce = ({ title, count, bg }) => {
             </div>
           </Grid>
           <Grid item lg={4} xs={4} sx={{ padding: '4px' }}>
-            <div style={{ background: '#EE1912', color: '#fff', padding: '5px', borderRadius: '10px' }}>
+            <div style={{ background: '#F6B0AA', color: '#000', padding: '5px', borderRadius: '10px' }}>
               <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '6px' }} color="inherit">
                 OUT SLA
               </Typography>
