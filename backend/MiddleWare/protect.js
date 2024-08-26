@@ -48,12 +48,12 @@ module.exports = {
         token = req.headers.authorization.split(" ")[1];
       }
       if (token === "null") {
-        return res.status(404).json("token expired");
+        return res.status(201).json("token expired");
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       if (!decoded) {
-        return res.status(404).json("token expired");
+        return res.status(201).json("token expired");
       }
 
       ModelAgentAdmin.aggregate([
@@ -66,7 +66,15 @@ module.exports = {
             as: "fonctio",
           },
         },
-
+        {
+          $lookup: {
+            from: "roles",
+            localField: "fonction",
+            foreignField: "id",
+            as: "roleAgent",
+          },
+        },
+        { $unwind: "$roleAgent" },
         { $project: { password: 0 } },
       ])
         .then((response) => {
@@ -76,14 +84,15 @@ module.exports = {
               table.push(response[0].fonctio[i].id);
             }
             let donner = response[0];
+            donner.role = response[0].fonction;
             donner.fonction = table;
             return res.status(200).json(donner);
           } else {
-            return res.status(404).json("token expired");
+            return res.status(201).json("token expired");
           }
         })
         .catch(function (err) {
-          return res.status(404).json("token expired");
+          return res.status(201).json("token expired");
         });
     } catch (error) {}
   },

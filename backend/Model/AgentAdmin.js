@@ -19,7 +19,7 @@ const schema = new mongoose.Schema(
     savedBy: { type: String, required: true },
     region: { type: [], required: false }, //pour les ZBM
     team: { type: String, required: false },
-    fonction: { type: Array, required: true },
+    fonction: { type: String, required: true },
     mystatus: { type: Array, required: false },
     operation: { type: String, required: true, enum: ["suivi", "operation"] },
   },

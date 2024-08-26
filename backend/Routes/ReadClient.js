@@ -7,8 +7,8 @@ const {
   ReadCallOperator,
   ReadShopManager,
   ReadRS,
-  Rs_SM,
   ReadManagment,
+  ReadClientDepartement,
 } = require("../Controller/ReadClient");
 const { protect } = require("../MiddleWare/protect");
 const router = express.Router();
@@ -23,5 +23,7 @@ router.get("/rs", protect, ReadAction, ReadRS, Read);
 router.get("/field", protect, Read);
 //CALL CENTER MANAGMENT, PORTOFOLIO MANAGMENT, FRAUD MANAGMENT
 router.get("/managment_suivi", protect, ReadAction, ReadManagment, Read);
+
+router.get("/departmentOne", protect, ReadClientDepartement, Read);
 
 module.exports = router;

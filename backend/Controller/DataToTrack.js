@@ -1,13 +1,11 @@
 const modelClient = require("../Model/Tracker/Client");
-const { periode } = require("../Static/fonction");
 
 module.exports = {
   ReadData: (req, res) => {
     try {
-      const periodes = periode();
       modelClient
         .aggregate([
-          { $match: { month: periodes } },
+          { $match: { active: true } },
           {
             $lookup: {
               from: "status",

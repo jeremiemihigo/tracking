@@ -25,6 +25,109 @@ module.exports = {
       console.log(error);
     }
   },
+  AddOneClient: (req, res) => {
+    try {
+      const { codeAgent } = req.user;
+      const {
+        unique_account_id,
+        customer_name,
+        shop_name,
+        shop_region,
+        par_to_date,
+        statusEnCours,
+        commentaire,
+        role,
+      } = req.body;
+      if (
+        !unique_account_id ||
+        !customer_name ||
+        !commentaire ||
+        !role ||
+        !shop_name ||
+        !shop_region ||
+        !par_to_date ||
+        !statusEnCours
+      ) {
+        return res.status(404).json("Veuillez renseigner les champs");
+      }
+      asyncLab.waterfall(
+        [
+          function (done) {
+            modelClient
+              .findOne({ unique_account_id, active: true })
+              .lean()
+              .then((client) => {
+                if (client) {
+                  return res
+                    .status(404)
+                    .json("Le client est en cours de processus");
+                } else {
+                  done(null, true);
+                }
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
+          },
+          function (client, done) {
+            modelClient
+              .create({
+                unique_account_id,
+                customer_name,
+                shop_name,
+                shop_region,
+                par_to_date,
+                beginStatus: statusEnCours,
+                statusEnCours,
+                updatedAt: new Date().toISOString().split("T")[0],
+                provenance: {
+                  codeAgent,
+                  commentaire,
+                  role,
+                },
+              })
+              .then((result) => {
+                if (result) {
+                  done(result);
+                } else {
+                  return res.status(404).json("Error");
+                }
+              })
+              .catch(function (err) {
+                return res.status(404).json("Erreur " + err);
+              });
+          },
+        ],
+        function (client) {
+          modelClient
+            .aggregate([
+              { $match: { _id: new ObjectId(client?._id) } },
+              {
+                $lookup: {
+                  from: "status",
+                  localField: "statusEnCours",
+                  foreignField: "idStatus",
+                  as: "status",
+                },
+              },
+              { $unwind: "$status" },
+            ])
+            .then((result) => {
+              if (result.length > 0) {
+                return res.status(200).json(result[0]);
+              } else {
+                return res.status(404).json("");
+              }
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  },
   PostStatus: (req, res) => {
     try {
       const {
@@ -184,7 +287,7 @@ module.exports = {
                       feedbackSelect: data[i].feedbackSelect,
                       dateDebut: data[i].datedebut,
                       delaiPrevu: data[i].delaiPrevu,
-                      dateFin: data[i].dateFin,
+                      dateFin: new Date().toISOString().split("T")[0],
                       commentaire: data[i].commentaire,
                       status: data[i].status,
                       role: data[i].role,

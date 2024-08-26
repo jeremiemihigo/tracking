@@ -32,12 +32,12 @@ const UserSchema = new mongoose.Schema({
     uppercase: true,
   },
   month: { type: String, required: true, default: periode },
-  Destination: { type: String, required: false, default: "" },
-  typeFeedback: { type: String, required: false },
-  feedbackSelect: { type: String, required: false },
+  // Destination: { type: String, required: false, default: "" },
+  // typeFeedback: { type: String, required: false },
+  // feedbackSelect: { type: String, required: false },
   codeAgent: { type: String, required: false },
   customer_name: { type: String, required: false, trim: true },
-  enable_status: { type: String, required: false, trim: true },
+  // enable_status: { type: String, required: false, trim: true },
   date_timestamp: {
     type: String,
     required: false,
@@ -98,7 +98,12 @@ const UserSchema = new mongoose.Schema({
   result: { type: [label], required: false },
   active: { type: Boolean, default: true, required: true },
   updatedAt: { type: Date, required: true },
-  person_in_charge: { type: String, required: true },
+  provenance: {
+    codeAgent: String,
+    commentaire: String,
+    role: String,
+  },
+  // person_in_charge: { type: String, required: true },
 });
 UserSchema.index({ unique_account_id: 1, active: 1 }, { unique: true });
 UserSchema.index({ visited: 1 });

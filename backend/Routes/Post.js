@@ -9,7 +9,12 @@ const { AddStatus, ReadStatus } = require("../Controller/Status");
 
 const { AddAdminAgent, ReadAgent } = require("../Controller/AgentAdmin");
 const { AddRole, ReadRole } = require("../Controller/Role");
-const { Clients, PostStatus, ChangeByFile } = require("../Controller/Client");
+const {
+  Clients,
+  PostStatus,
+  ChangeByFile,
+  AddOneClient,
+} = require("../Controller/Client");
 const { Historique } = require("../Controller/History");
 const { Initiale, ReadInitiale } = require("../Controller/Initiale");
 const {
@@ -46,6 +51,8 @@ router.post("/role", protect, AddRole, ReadRole);
 router.post("/client", protect, Clients);
 router.post("/feedbackvm", pushClientVisite);
 router.post("/postclient", protect, PostStatus);
+
+router.post("/addoneclient", protect, AddOneClient);
 //History
 router.post("/history", protect, Historique);
 //Initial
