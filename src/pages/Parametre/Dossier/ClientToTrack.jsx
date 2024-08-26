@@ -77,6 +77,7 @@ function ClientToTrack() {
       for (let i = 0; i < inputTrack.length; i++) {
         table.push({
           ...inputTrack[i],
+          updatedAt: new Date(),
           objectVisite: {
             codeAgent: infoV(inputTrack[i].unique_account_id, 'codeAgent'),
             idDemande: infoV(inputTrack[i].unique_account_id, 'idDemande'),

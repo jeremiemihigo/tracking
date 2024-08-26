@@ -1,5 +1,5 @@
 import { Add, Edit } from '@mui/icons-material';
-import { Fab, Grid, Tooltip } from '@mui/material';
+import { Grid, Tooltip } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { AddMembre } from 'Redux/Role';
 import ConfirmDialog from 'components/ConfirmDialog';
@@ -13,7 +13,7 @@ import AjouterMember from './AjouterMember';
 import './style.css';
 
 function Index() {
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const role = useSelector((state) => state.role?.role);
   const [openMembre, setOpenMembre] = React.useState(false);
   const [roleSelect, setRoleSelect] = React.useState();
@@ -40,14 +40,12 @@ function Index() {
     setDataEdit(d);
     setOpenEdit(true);
   };
-  const user = useSelector((state) => state.user.user);
   return (
     <MainCard>
       <>
-        <Fab size="small" onClick={() => setOpen(true)} color="primary" sx={{ marginBottom: '12px' }}>
-          <Add fontSize="small" />
-        </Fab>
-
+        {/* <p style={{ marginBottom: '10px', color: 'blue', cursor: 'pointer' }} onClick={() => setOpen(true)}>
+          Ajoutez un role
+        </p> */}
         <Grid container>
           {role ? (
             role.map((index) => {
@@ -59,12 +57,16 @@ function Index() {
                       <p style={{ padding: '0px', margin: '0px', fontSize: '10px' }}>{index.link && `/${index.link}`}</p>
                     </div>
                     <div className="option">
-                      <Tooltip title="Modifiez" onClick={(e) => editing(e, index)}>
-                        <Edit fontSize="small" />
-                      </Tooltip>
-                      <Tooltip title="Ajoutez un agent" onClick={(e) => functionMembre(e, index)}>
-                        <Add fontSize="small" />
-                      </Tooltip>
+                      <div>
+                        <Tooltip title="Modifiez" onClick={(e) => editing(e, index)}>
+                          <Edit fontSize="small" />
+                        </Tooltip>
+                      </div>
+                      <div>
+                        <Tooltip title="Ajoutez un agent" onClick={(e) => functionMembre(e, index)}>
+                          <Add fontSize="small" />
+                        </Tooltip>
+                      </div>
                     </div>
                   </div>
 
@@ -100,9 +102,9 @@ function Index() {
         <Popup open={openEdit} setOpen={setOpenEdit} title="Edit Role">
           <AddRole edit={dataEdit} />
         </Popup>
-        <Popup open={open} setOpen={setOpen} title="Ajoutez un role">
+        {/* <Popup open={open} setOpen={setOpen} title="Ajoutez un role">
           <AddRole />
-        </Popup>
+        </Popup> */}
         <Popup open={openMembre} setOpen={setOpenMembre} title="Ajoutez un agent">
           <AjouterMember role={roleSelect} />
         </Popup>

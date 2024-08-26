@@ -1,16 +1,14 @@
 // eslint-disable-next-line no-undef
 
 // const serverhost = 'http://localhost:4000';
-// const serverhostvm = 'http://localhost:40002';
 const serverhost = 'https://backendtracker.bboxxvm.com';
-// export const lien_post = `http://${server}:8000/tracker/post`;
 
 export const lien_socket = serverhost;
 export const lien_post = `${serverhost}/tracker/post`;
 export const lien_read = `${serverhost}/tracker/read`;
 export const lien_readclient = `${serverhost}/tracker/readclient`;
 export const lien_update = `${serverhost}/tracker/update`;
-// export const lienVisiteMenage = `${serverhostvm}/bboxx/support`;
+// export const lienVisiteMenage = `http://localhost:40002/bboxx/support`;
 export const lienVisiteMenage = `https://visite.bboxxvm.com/bboxx/support`;
 export const config = {
   headers: {

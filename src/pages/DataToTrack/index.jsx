@@ -1,19 +1,22 @@
-import { Grid, Paper } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { Fab, Grid, Paper, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import ConfirmDialog from 'components/ConfirmDialog';
 import ExcelButton from 'components/Excel';
 import LoaderGif from 'components/LoaderGif';
-import MainCard from 'components/MainCard';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { sla } from 'static/Lien';
+import Popup from 'static/Popup';
+import Addclient from './Addclient';
 import './style.css';
 
-function Index() {
-  const dataTotrack_state = useSelector((state) => state.data_to_track);
+function Index({ clients }) {
+  const dataTotrack = useSelector((state) => state.data_to_track);
+  const [open, setOpen] = React.useState(false);
   const [liste, setListe] = React.useState();
   const now = useSelector((state) => state.today?.today);
-
+  const dataTotrack_state = clients ? { datatotrack: clients } : { datatotrack: dataTotrack?.datatotrack };
   const columns = [
     {
       field: 'unique_account_id',
@@ -22,20 +25,20 @@ function Index() {
       editable: false
     },
     {
-      field: 'customer_name',
+      field: 'name',
       headerName: 'Name',
       width: 150,
       editable: false
     },
 
     {
-      field: 'shop_name',
+      field: 'shop',
       headerName: 'Shop',
       width: 100,
       editable: false
     },
     {
-      field: 'shop_region',
+      field: 'region',
       headerName: 'Region',
       width: 80,
       editable: false
@@ -47,7 +50,7 @@ function Index() {
       editable: false
     },
     {
-      field: 'lastStatusDetail',
+      field: 'laststatus',
       headerName: 'Last status',
       width: 180,
       editable: false
@@ -60,7 +63,7 @@ function Index() {
     },
 
     {
-      field: 'statusTitle',
+      field: 'nextstatus',
       headerName: 'Next Status',
       width: 180,
       editable: false
@@ -69,7 +72,7 @@ function Index() {
     {
       field: 'sla',
       headerName: 'SLA',
-      width: 80,
+      width: 70,
       editable: false,
       renderCell: (params) => {
         return (
@@ -79,7 +82,8 @@ function Index() {
               padding: '3px',
               borderRadius: '5px',
               color: 'white',
-              margin: '0px',
+              width: '100%',
+              textAlign: 'center',
               backgroundColor: `${params.row.sla === 'OUTSLA' ? 'red' : 'green'}`
             }}
           >
@@ -99,67 +103,88 @@ function Index() {
       return row;
     }
   };
-  console.log(dataTotrack_state);
+
   const generatePdf = () => {
-    let table = [];
-    for (let i = 0; i < dataTotrack_state.datatotrack.length; i++) {
-      table.push({
-        ...dataTotrack_state.datatotrack[i],
-        id: i,
-        nomclient: dataTotrack_state.datatotrack[i].customer_name,
-        statusTitle: dataTotrack_state.datatotrack[i].status.title,
-        lastStatusDetail: returnLastStatus(dataTotrack_state.datatotrack[i].result, 'status'),
-        lastAgent: returnLastStatus(dataTotrack_state.datatotrack[i].result, 'codeAgent'),
-        par: dataTotrack_state.datatotrack[i].par_to_date,
-        sla: sla({
-          delaiPrevu: dataTotrack_state.datatotrack[i].status.sla,
-          dateFin: now?.datetime || new Date(),
-          dateDebut: dataTotrack_state.datatotrack[i].updatedAt
-        })
-      });
+    if (dataTotrack_state && dataTotrack.datatotrack.length > 0) {
+      let table = [];
+      for (let i = 0; i < dataTotrack_state.datatotrack.length; i++) {
+        table.push({
+          id: i,
+          unique_account_id: dataTotrack_state.datatotrack[i].unique_account_id,
+          name: dataTotrack_state.datatotrack[i].customer_name,
+          shop: dataTotrack_state.datatotrack[i].shop_name,
+          region: dataTotrack_state.datatotrack[i].shop_region,
+          nextstatus: dataTotrack_state.datatotrack[i].status.title,
+          laststatus: returnLastStatus(dataTotrack_state.datatotrack[i].result, 'status'),
+          lastAgent: returnLastStatus(dataTotrack_state.datatotrack[i].result, 'codeAgent'),
+          par: dataTotrack_state.datatotrack[i].par_to_date,
+          sla: sla({
+            delaiPrevu: dataTotrack_state.datatotrack[i].status.sla,
+            dateFin: now?.datetime || new Date(),
+            dateDebut: dataTotrack_state.datatotrack[i].updatedAt
+          })
+        });
+      }
+      setListe(table);
     }
-    setListe(table);
   };
   React.useEffect(() => {
     if (dataTotrack_state?.datatotrack.length > 0) {
       generatePdf();
     }
   }, [dataTotrack_state]);
+  const user = useSelector((state) => state.user?.user);
 
   return (
     <>
-      <Paper sx={{ padding: '5px', marginBottom: '10px' }}>
-        {liste && liste.length > 0 ? (
-          <ExcelButton data={liste} title="" fileName={`Data to track ${liste[0].month}`} sheetName={liste[0].month} />
-        ) : (
-          <p style={{ padding: '0px', margin: '0px' }}>Loading...</p>
+      <Paper sx={{ padding: '5px', marginBottom: '10px', display: 'flex' }}>
+        <div style={{ marginRight: '10px' }}>
+          {liste && liste.length > 0 ? (
+            <ExcelButton
+              data={liste}
+              title=""
+              fileName={clients ? liste[0].nextstatus : `Data to track ${liste[0].month}`}
+              sheetName={liste[0].month}
+            />
+          ) : (
+            <p style={{ padding: '0px', margin: '0px' }}>Loading...</p>
+          )}
+        </div>
+        {user?.role === 'M5LGJHU8' && (
+          <Tooltip title="Ajoutez un client">
+            <Fab size="small" color="primary" onClick={() => setOpen(true)}>
+              <Add fontSize="small" />
+            </Fab>
+          </Tooltip>
         )}
       </Paper>
-      <MainCard>
-        <Grid container>
-          <Grid item lg={12}>
-            {!liste && <LoaderGif width={200} height={200} />}
-            {dataTotrack_state.readdatatotrack === 'success' && liste && liste.length > 0 && (
-              <div style={{ width: '100%' }}>
-                <DataGrid
-                  rows={liste}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 20
-                      }
+
+      <Grid container>
+        <Grid item lg={12}>
+          {!liste && <LoaderGif width={200} height={200} />}
+          {liste && liste.length > 0 && (
+            <div style={{ width: '100%' }}>
+              <DataGrid
+                rows={liste}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 30
                     }
-                  }}
-                  pageSizeOptions={[20]}
-                  disableRowSelectionOnClick
-                />
-              </div>
-            )}
-          </Grid>
+                  }
+                }}
+                pageSizeOptions={[30]}
+                disableRowSelectionOnClick
+              />
+            </div>
+          )}
         </Grid>
-        <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
-      </MainCard>
+      </Grid>
+      <Popup open={open} setOpen={setOpen} title="Ajoutez un client">
+        <Addclient />
+      </Popup>
+      <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
     </>
   );
 }

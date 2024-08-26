@@ -149,10 +149,10 @@ function TextMobileStepper() {
   };
   const now = useSelector((state) => state.today?.today);
   const returnLastStatus = (row, title) => {
-    if (row.length > 0) {
-      return row[row.length - 1]['' + title];
+    if (row.result.length > 0) {
+      return row.result[row.result.length - 1]['' + title];
     } else {
-      return row;
+      return row?.statusTitle;
     }
   };
   const [dataStructure, setDataStructure] = React.useState();
@@ -162,8 +162,8 @@ function TextMobileStepper() {
       for (let i = 0; i < data.length; i++) {
         tables.push({
           ...data[i],
-          lastStatusDetail: returnLastStatus(data[i].result, 'status'),
-          lastAgent: returnLastStatus(data[i].result, 'codeAgent'),
+          lastStatusDetail: returnLastStatus(data[i], 'status'),
+          lastAgent: returnLastStatus(data[i], 'codeAgent'),
           sla: sla({ delaiPrevu: data[i].status.sla, dateFin: now?.datetime || new Date(), dateDebut: data[i].updatedAt })
         });
       }
@@ -176,24 +176,26 @@ function TextMobileStepper() {
   const [excel, setExcel] = React.useState();
   const ExportToExcel = () => {
     try {
-      const table = [];
-      for (let i = 0; i < dataStructure.length; i++) {
-        table.push({
-          unique_account_id: dataStructure[i].unique_account_id,
-          customer_name: dataStructure[i].customer_name,
-          lastAgent: dataStructure[i].lastAgent,
-          'Last status': dataStructure[i].lastStatusDetail,
-          par_to_date: dataStructure[i].par_to_date,
-          'ID VISITE': dataStructure[i].objectVisite.idDemande,
-          'VISITED BY': dataStructure[i].objectVisite.codeAgent,
-          'FEEDBACK VISIT': dataStructure[i].objectVisite.raison,
-          shop_name: dataStructure[i].shop_name,
-          shop_region: dataStructure[i].shop_region,
-          sla: dataStructure[i].sla,
-          Status: dataStructure[i].statusTitle
-        });
+      if (dataStructure) {
+        const table = [];
+        for (let i = 0; i < dataStructure.length; i++) {
+          table.push({
+            unique_account_id: dataStructure[i].unique_account_id,
+            customer_name: dataStructure[i].customer_name,
+            lastAgent: dataStructure[i].lastAgent,
+            'Last status': dataStructure[i].lastStatusDetail,
+            par_to_date: dataStructure[i].par_to_date,
+            'ID VISITE': dataStructure[i]?.objectVisite?.idDemande,
+            'VISITED BY': dataStructure[i]?.objectVisite?.codeAgent,
+            'FEEDBACK VISIT': dataStructure[i]?.objectVisite?.raison,
+            shop_name: dataStructure[i].shop_name,
+            shop_region: dataStructure[i].shop_region,
+            sla: dataStructure[i].sla,
+            Status: dataStructure[i].statusTitle
+          });
+        }
+        setExcel(table);
       }
-      setExcel(table);
     } catch (error) {
       console.log(error);
     }
@@ -201,7 +203,6 @@ function TextMobileStepper() {
   React.useEffect(() => {
     ExportToExcel();
   }, [dataStructure]);
-
   return (
     <Box>
       {excel && excel.length > 0 && steps[activeStep].id === 1 && <ExcelButton data={excel} fileName="tracking" sheetName="Clients" />}
@@ -231,11 +232,11 @@ function TextMobileStepper() {
                 initialState={{
                   pagination: {
                     paginationModel: {
-                      pageSize: 6
+                      pageSize: 25
                     }
                   }
                 }}
-                pageSizeOptions={[6]}
+                pageSizeOptions={[25]}
                 disableRowSelectionOnClick
               />
             )}

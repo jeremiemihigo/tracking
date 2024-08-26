@@ -53,7 +53,7 @@ function Appel() {
       setAppelSortant(table);
     }
   };
-
+  console.log(appel);
   React.useEffect(() => {
     functionAppelSortant();
     // eslint-disable-next-line react-hooks/exhaustive-deps

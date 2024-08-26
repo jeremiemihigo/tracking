@@ -1,4 +1,4 @@
-import { FileCopy } from '@mui/icons-material';
+// import { FileCopy } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
@@ -48,10 +48,9 @@ function Index() {
 
   const returnField = (month, field) => {
     if (field === 'begin') {
-      console.log(_.filter(data, { month }));
       return _.filter(data, { month })[0].begin.title;
     } else {
-      return _.filter(data, { month })[0]['' + field];
+      return _.filter(data, { month })[0];
     }
   };
   const retournFieldMonth = (month) => {
@@ -81,13 +80,13 @@ function Index() {
     },
     {
       field: 'codeAgent',
-      headerName: 'Name',
+      headerName: 'Agent ',
       width: 100,
       editable: false
     },
     {
       field: 'status',
-      headerName: 'Statut',
+      headerName: 'Status',
       width: 140,
       editable: false
     },
@@ -100,7 +99,7 @@ function Index() {
     {
       field: 'commentaire',
       headerName: 'Comment',
-      width: 250,
+      width: 230,
       editable: false
     },
     {
@@ -158,13 +157,13 @@ function Index() {
               </Button>
             </Tooltip>
           </Grid>
-          <Grid item lg={1} sx={{ display: 'flex', alignItems: 'center' }}>
+          {/* <Grid item lg={1} sx={{ display: 'flex', alignItems: 'center' }}>
             <Tooltip title="Export to excel">
               <Button variant="contained" color="success">
                 <FileCopy fontSize="small" color="inherit" />
               </Button>
             </Tooltip>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Paper>
       {!['loading', 'start'].includes(allmonth) &&
@@ -172,7 +171,7 @@ function Index() {
         allmonth.map((index) => {
           return (
             <Grid container sx={{ marginTop: '10px' }} key={index}>
-              <Grid item lg={2} xs={12} sm={4} md={4}>
+              <Grid item lg={3} xs={12} sm={4} md={4}>
                 <Paper>
                   <Grid sx={{ padding: '5px', backgroundColor: '#002d72', color: '#fff', borderRadius: '5px' }}>
                     <Typography sx={{ fontSize: '12px', fontWeight: 'bolder' }} noWrap>
@@ -184,23 +183,26 @@ function Index() {
                     <Grid container>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">Region</Typography>
-                        <Typography className="values">{returnField(index, 'shop_region')}</Typography>
+                        <Typography className="values">{returnField(index)?.shop_region}</Typography>
                       </Grid>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">Shop</Typography>
-                        <Typography className="values">{returnField(index, 'shop_name')}</Typography>
+                        <Typography className="values">{returnField(index)?.shop_name}</Typography>
                       </Grid>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">par_to_date</Typography>
-                        <Typography className="values">{returnField(index, 'par_to_date')}</Typography>
+                        <Typography className="values">{returnField(index)?.par_to_date}</Typography>
                       </Grid>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
-                        <Typography className="title">expiry_timestamp</Typography>
-                        <Typography className="values">{returnField(index, 'expiry_timestamp')}</Typography>
+                        <Typography className="title">provenance</Typography>
+                        <Typography className="values">{returnField(index)?.provenance?.role}</Typography>
+                      </Grid>
+                      <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
+                        <Typography className="values">Agent {' : ' + returnField(index)?.provenance?.codeAgent}</Typography>
                       </Grid>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">date_timestamp</Typography>
-                        <Typography className="values">{returnField(index, 'date_timestamp')}</Typography>
+                        <Typography className="values">{returnField(index)?.date_timestamp}</Typography>
                       </Grid>
                       <Grid item lg={12} xs={12} sm={12} md={12} className="grid">
                         <Typography className="title">First action</Typography>
@@ -213,7 +215,7 @@ function Index() {
               <Grid
                 sx={{ padding: { md: '0px 10px', sm: '0px 10px' }, marginTop: { xs: '10px', lg: '0px' } }}
                 item
-                lg={10}
+                lg={9}
                 xs={12}
                 sm={8}
                 md={8}
@@ -323,4 +325,4 @@ function Index() {
     </>
   );
 }
-export default Index;
+export default React.memo(Index);

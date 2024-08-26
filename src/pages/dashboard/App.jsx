@@ -57,8 +57,10 @@ function TextMobileStepper() {
     }
   };
   React.useEffect(() => {
-    loadingClient();
-  }, [user]);
+    if (user?.user) {
+      loadingClient();
+    }
+  }, [user?.user]);
 
   const [datasubmit, setDataSubmit] = React.useState();
 
@@ -109,8 +111,8 @@ function TextMobileStepper() {
 
   return (
     <>
-      {chargement && !data && <LoaderGif width={300} height={300} />}
-      {data && data.length === 0 && <NoCustomer texte="No waiting customers on your dashboard" />}
+      {chargement && <LoaderGif width={300} height={300} />}
+      {data && data.length === 0 && !chargement && <NoCustomer texte="No waiting customers on your dashboard" />}
       {data && data.length > 0 && (
         <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
           <Tabs titres={titres} components={component} />

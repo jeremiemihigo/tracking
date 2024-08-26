@@ -5,7 +5,6 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 
 export default function MouseOverPopover({ idStatus }) {
-  console.log(idStatus);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,7 +24,7 @@ export default function MouseOverPopover({ idStatus }) {
       return _.filter(status, { idStatus })[0]?.title;
     }
   };
-  console.log(statutSelect);
+
   return (
     <div>
       <Typography

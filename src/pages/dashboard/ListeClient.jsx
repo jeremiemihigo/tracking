@@ -1,4 +1,3 @@
-import { DataGrid } from '@mui/x-data-grid';
 import { CreateContexteGlobal } from 'GlobalContext';
 import { message } from 'antd';
 import axios from 'axios';
@@ -6,6 +5,7 @@ import SimpleBackdrop from 'components/Backdrop';
 import MainCard from 'components/MainCard';
 import _ from 'lodash';
 import PaperHead from 'pages/Component/PaperHead';
+import AffichageData from 'pages/DataToTrack';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -23,59 +23,59 @@ function ListeClient() {
   const visites = location.state?.visites;
   const action = location.state?.action;
 
-  const columns = [
-    {
-      field: 'unique_account_id',
-      headerName: 'code client',
-      width: 120,
-      editable: false
-    },
-    {
-      field: 'customer_name',
-      headerName: 'NOMS',
-      width: 150,
-      editable: false
-    },
-    {
-      field: 'shop_name',
-      headerName: 'Shop',
-      width: 100,
-      editable: false
-    },
-    {
-      field: 'shop_region',
-      headerName: 'Region',
-      width: 100,
-      editable: false
-    },
-    {
-      field: 'payment_status',
-      headerName: 'Payment status',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'par_to_date',
-      headerName: 'PAR',
-      width: 80,
-      editable: false
-    },
-    {
-      field: 'statusTitle',
-      headerName: 'Statut',
-      width: 180,
-      editable: false
-    },
-    {
-      field: 'In',
-      headerName: 'In charge',
-      width: 80,
-      editable: false,
-      renderCell: (params) => {
-        return params.row.person_in_charge;
-      }
-    }
-  ];
+  // const columns = [
+  //   {
+  //     field: 'unique_account_id',
+  //     headerName: 'code client',
+  //     width: 120,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'customer_name',
+  //     headerName: 'NOMS',
+  //     width: 150,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'shop_name',
+  //     headerName: 'Shop',
+  //     width: 100,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'shop_region',
+  //     headerName: 'Region',
+  //     width: 100,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'payment_status',
+  //     headerName: 'Payment status',
+  //     width: 80,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'par_to_date',
+  //     headerName: 'PAR',
+  //     width: 80,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'statusTitle',
+  //     headerName: 'Statut',
+  //     width: 180,
+  //     editable: false
+  //   },
+  //   {
+  //     field: 'In',
+  //     headerName: 'In charge',
+  //     width: 80,
+  //     editable: false,
+  //     renderCell: (params) => {
+  //       return params.row.person_in_charge;
+  //     }
+  //   }
+  // ];
   const [actions, setActions] = React.useState([]);
   const status = useSelector((state) => state.status?.status);
 
@@ -139,10 +139,12 @@ function ListeClient() {
       <SimpleBackdrop open={operation} title={texteMessage} taille="10rem" />
       <PaperHead
         functionExec={action === 'XZ445X' && sendListe}
-        texte={`list of clients with status ${`<< ${actions.length > 0 && actions[0].title} >>`}`}
+        texte={`list of customers with status ${`<< ${actions.length > 0 ? actions[0].title : action} >>`}`}
       />
       <MainCard>
-        <div style={{ width: '70vw' }}>
+        {visites && <AffichageData clients={visites} />}
+
+        {/* <div style={{ width: '70vw' }}>
           {visites && visites.length > 0 && (
             <DataGrid
               rows={visites}
@@ -150,15 +152,15 @@ function ListeClient() {
               initialState={{
                 pagination: {
                   paginationModel: {
-                    pageSize: 15
+                    pageSize: 30
                   }
                 }
               }}
-              pageSizeOptions={[15]}
+              pageSizeOptions={[30]}
               disableRowSelectionOnClick
             />
           )}
-        </div>
+        </div> */}
       </MainCard>
     </div>
   );

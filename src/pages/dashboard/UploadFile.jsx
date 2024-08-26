@@ -58,7 +58,7 @@ function UploadFile() {
     }
   };
   const returnFeedback = (title) => {
-    if (_.filter(status, { title: title.trim() }).length > 0) {
+    if (title && _.filter(status, { title: title.trim() }).length > 0) {
       return {
         idStatus: _.filter(status, { title: title.trim() })[0].idStatus,
         sla: _.filter(status, { title: title.trim() })[0].sla,
@@ -78,7 +78,7 @@ function UploadFile() {
           ...search(client[i].unique_account_id),
           nextStatusFile: client[i].nextstatus?.trim(),
           commentaire: client[i].commentaire?.trim(),
-          laststatusFile: client[i].laststatus?.trim()
+          laststatusFile: client[i]?.laststatus
         });
       }
     }
@@ -93,6 +93,7 @@ function UploadFile() {
       }
     };
     for (let i = 0; i < table.length; i++) {
+      console.log(table[i]);
       result.push({
         id: i,
         feedbackSelect: returnFeedback(table[i].nextStatusFile).title,

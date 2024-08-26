@@ -10,7 +10,7 @@ import Appel from './Appel';
 import ClientToTrack from './ClientToTrack';
 import Context from './Context';
 
-const steps = ['All addresses', 'All calls', 'Customers to track'];
+const steps = ['All calls', 'All addresses', 'Customers to track'];
 
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -54,10 +54,6 @@ export default function HorizontalLinearStepper() {
     });
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   return (
     <Context>
       <Box sx={{ width: '100%' }}>
@@ -79,14 +75,15 @@ export default function HorizontalLinearStepper() {
         <React.Fragment>
           {activeStep === 0 && (
             <Grid>
-              <AllAdress />
+              <Appel />
             </Grid>
           )}
           {activeStep === 1 && (
             <Grid>
-              <Appel />
+              <AllAdress />
             </Grid>
           )}
+
           {activeStep === 2 && (
             <Grid>
               <ClientToTrack />

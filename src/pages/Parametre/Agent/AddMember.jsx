@@ -41,7 +41,6 @@ function AddMember() {
       <div>
         <SelectLink label="Monitoring" data={donnerMonitoring} value={monitoring} setValue={setMonitoring} />
       </div>
-
       <div style={{ margin: '10px 0px' }}>
         <Input placeholder="Agent" value={value} onChange={(e) => setValue(e.target.value)} />
       </div>

@@ -13,6 +13,7 @@ import Profile from './Profile';
 
 // ==============================|| HEADER - CONTENT ||============================== //
 import FirstLogin from './FirstLogin';
+import OnlyOne from './OnlyOne';
 const HeaderContent = () => {
   const matchesXs = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const user = useSelector((state) => state.user.user);
@@ -30,12 +31,12 @@ const HeaderContent = () => {
       )}
       {user?.first && <FirstLogin />}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {/* {user && (user.operation === 'suivi' || user.role === 'SUPER USER') && <OnlyOne />} */}
-      {user && user.role === 'SUPER USER' && <FolderComponent />}
+      {user && (['Z1FJYLR1', 'NRNYH6IY'].includes(user?.roleAgent?.id) || user.role === 'SUPER USER') && <OnlyOne />}
+      {user && user.roleAgent?.id === 'M5LGJHU8' && <FolderComponent />}
       <Connected />
       <Corbeille />
 
-      {user && user.role === 'SUPER USER' && <Notification />}
+      {user && user.roleAgent?.id === 'M5LGJHU8' && <Notification />}
 
       {!matchesXs && <Profile />}
       {matchesXs && <MobileSection />}

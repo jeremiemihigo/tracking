@@ -1,8 +1,8 @@
-import { Grid, Paper } from '@mui/material';
+import { SearchOutlined } from '@ant-design/icons';
+import { FormControl, Grid, InputAdornment, OutlinedInput, Paper } from '@mui/material';
 import Box from '@mui/material/Box';
 import Images from 'assets/images/icons/attente.png';
 import AnalyticEcommerce from 'components/AnalyticEcommerce';
-import LoaderGif from 'components/LoaderGif';
 import _ from 'lodash';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -44,22 +44,61 @@ function TextMobileStepper() {
     }
     return { today, nombreIn, nombreOut };
   };
+  const [filterFn, setFilterFn] = React.useState({
+    fn: (items) => {
+      return items;
+    }
+  });
+  const handleChanges = (e) => {
+    let target = e.target.value;
 
+    setFilterFn({
+      fn: (items) => {
+        if (target === '') {
+          return items;
+        } else {
+          return items.filter(
+            (x) =>
+              x.visites[0]?.statusTitle.toUpperCase().includes(target.toUpperCase()) ||
+              x.visites[0]?.role[0]?.title.toUpperCase().includes(target.toUpperCase())
+          );
+        }
+      }
+    });
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {!data && <LoaderGif width={300} height={300} />}
+      <div style={{ marginBottom: '10px' }}>
+        <FormControl sx={{ width: '100%' }}>
+          <OutlinedInput
+            size="small"
+            id="header-search"
+            startAdornment={
+              <InputAdornment position="start" sx={{ mr: -0.5 }}>
+                <SearchOutlined />
+              </InputAdornment>
+            }
+            aria-describedby="header-search-text"
+            inputProps={{
+              'aria-label': 'weight'
+            }}
+            onChange={(e) => handleChanges(e)}
+            placeholder="Research status"
+          />
+        </FormControl>
+      </div>
       {data && data.length > 0 && (
         <>
           <Grid container>
             {analyse.length > 0 &&
-              analyse.map((index, key) => {
+              filterFn.fn(analyse).map((index, key) => {
                 return (
-                  <Grid key={key} item lg={4} xs={12} sm={6} md={4}>
+                  <Grid key={key} item lg={3} xs={12} sm={6} md={4}>
                     <div style={{ margin: '3px' }}>
                       <AnalyticEcommerce
                         title={returnAction(index.action)}
                         data={index.action}
-                        count={index.visites.length}
+                        count={index?.visites}
                         bg={couleurAll(index)}
                       />
                       <Paper

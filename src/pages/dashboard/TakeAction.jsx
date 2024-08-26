@@ -6,12 +6,12 @@ import React from 'react';
 function TakeAction({ data, step }) {
   return (
     <Grid container>
-      <Grid item lg={5}>
+      <Grid item lg={5} xs={12} sm={6} md={6}>
         <Paper elevation={2}>
           <Detail clientSelect={data} step={step} />
         </Paper>
       </Grid>
-      <Grid item lg={7} sx={{ paddingLeft: '15px' }}>
+      <Grid item lg={7} xs={12} sm={6} md={6} sx={{ paddingLeft: '15px' }}>
         <Grid className="resultTable">
           {data && data.result.length > 0 ? (
             data.result.reverse().map((index) => {

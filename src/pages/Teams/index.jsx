@@ -1,119 +1,90 @@
-import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { PutAgent } from 'Redux/agent';
-import ConfirmDialog from 'components/ConfirmDialog';
 import MainCard from 'components/MainCard';
-import _ from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './style.css';
 
 function Index() {
-  const role = useSelector((state) => state.role.role);
-  const [confirmDialog, setConfirmDialog] = React.useState({ isOpen: false, title: '', subTitle: '' });
+  const status = useSelector((state) => state.status?.status.filter((x) => ['Z1FJYLR1', 'NRNYH6IY'].includes(x.role)));
+  const agent = useSelector((state) => state.agent?.agent.filter((x) => x.fonction === 'FCBS68AI'));
+  const [agentSelect, setAgent] = React.useState();
+  const [statusSelect, setStatus] = React.useState([]);
 
-  //New
-  const user = useSelector((state) => state.user?.user);
-  const agent = useSelector((state) => state.agent.agent);
-  const status = useSelector((state) => state.status.status);
+  const selectionAgent = (a) => {
+    setStatus(a.mystatus);
+    setAgent(a._id);
+  };
+  const click = (d) => {
+    if (!statusSelect.includes(d)) {
+      setStatus([...statusSelect, d]);
+    } else {
+      let i = statusSelect;
+      setStatus(statusSelect.filter((x) => x !== d));
+    }
+  };
 
-  const [agentSelect, setAgentSelect] = React.useState({ last: '', idRole: '' });
-  const { last, idRole } = agentSelect;
-  const [allstatus, setAllstatus] = React.useState();
-  const returnAgent = (id) => {
-    return _.filter(role, { id: id })[0].agents;
-  };
-  const [statusAgent, setStatusAgent] = React.useState([]);
-  React.useEffect(() => {
-    if (last !== '') {
-      setStatusAgent(_.filter(agent, { codeAgent: last?.codeAgent })[0]?.mystatus || []);
-      setAllstatus(_.filter(status, { role: idRole }));
-    }
-  }, [last]);
-  const handleChange = (item, e) => {
-    if (statusAgent.includes(item)) {
-      setStatusAgent(statusAgent.filter((x) => x !== item));
-    } else {
-      setStatusAgent([...statusAgent, item]);
-    }
-  };
-  const check = (id) => {
-    if (statusAgent.includes(id)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
   const dispatch = useDispatch();
   const sendMyStatus = (e) => {
     e.preventDefault();
     const data = {
-      id: last._id,
-      status: statusAgent
+      id: agentSelect,
+      status: statusSelect
     };
     dispatch(PutAgent(data));
   };
+
   return (
-    <MainCard>
-      <Grid container>
-        <Grid item lg={4} xs={12} sm={12} md={4}>
-          <Grid>
-            {user?.fonctio.map((index) => {
-              return (
-                <div key={index._id} className="firstDiv">
-                  <div className="divTitle">
-                    <p>{index.title}</p>
-                  </div>
-                  <div>
-                    {returnAgent(index.id).map((item) => {
-                      return (
-                        <div key={item._id} className="name" onClick={() => setAgentSelect({ idRole: index.id, last: item, newagent: '' })}>
-                          <p>{item.nom}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </Grid>
-        </Grid>
-        <Grid item lg={8} xs={12} sm={6} md={8}>
-          <div style={{ paddingRight: '10px' }}>
-            <table>
-              <thead>
-                <th>Check</th>
-                <th>Status</th>
-              </thead>
-              <tbody>
-                {allstatus &&
-                  allstatus.length > 0 &&
-                  allstatus.map((index) => {
+    <div>
+      <MainCard>
+        <div className="contained">
+          <div>
+            <Grid container>
+              <Grid item lg={6}>
+                {status &&
+                  status.map((index) => {
                     return (
-                      <tr key={index._id} onClick={(e) => handleChange(index.idStatus, e)} style={{ cursor: 'pointer' }}>
-                        <td>
-                          <FormControl component="fieldset" variant="standard">
-                            <FormGroup>
-                              <FormControlLabel control={<Checkbox name={index._id} checked={check(index.idStatus)} />} />
-                            </FormGroup>
-                          </FormControl>
-                        </td>
-                        <td>{index.title}</td>
-                      </tr>
+                      <div
+                        key={index._id}
+                        className={statusSelect.includes(index.idStatus) ? 'status statusSelect' : 'status'}
+                        onClick={() => click(index.idStatus)}
+                      >
+                        <Typography component="p" noWrap className="statusTitle">
+                          {index.title}
+                        </Typography>
+                        <Typography className="statusRole">{index.roles[0].title}</Typography>
+                      </div>
                     );
                   })}
-              </tbody>
-            </table>
+              </Grid>
+              <Grid lg={6} sx={{ paddingLeft: '10px' }}>
+                {agent &&
+                  agent.map((index) => {
+                    return (
+                      <div key={index._id} onClick={() => selectionAgent(index)}>
+                        <div className={agentSelect === index._id ? 'operator operatorSelect' : 'operator'}>
+                          <Typography className="operatorName" component="p" noWrap>
+                            {index.nom}
+                          </Typography>
+                          <Typography className="operatorStatus" component="p">
+                            {index.mystatus.length === 0 ? 'Aucun status' : index.mystatus.length + ' status'}
+                          </Typography>
+                        </div>
+                        {agentSelect === index._id && (
+                          <button className="btnbutton" onClick={(e) => sendMyStatus(e)}>
+                            Valider
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+              </Grid>
+            </Grid>
           </div>
-          {allstatus && (
-            <Button variant="contained" color="primary" onClick={(e) => sendMyStatus(e)}>
-              Save
-            </Button>
-          )}
-        </Grid>
-      </Grid>
-
-      <ConfirmDialog confirmDialog={confirmDialog} setConfirmDialog={setConfirmDialog} />
-    </MainCard>
+        </div>
+      </MainCard>
+    </div>
   );
 }
+
 export default Index;

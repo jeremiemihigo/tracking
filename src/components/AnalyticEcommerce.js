@@ -2,6 +2,8 @@
 import PropTypes from 'prop-types';
 // material-ui
 import { Grid, Paper, Typography } from '@mui/material';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 // project import
 
 // assets
@@ -9,8 +11,25 @@ import { Grid, Paper, Typography } from '@mui/material';
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
 const AnalyticEcommerce = ({ title, count, bg }) => {
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = (texte, type) => {
+    messageApi.open({
+      type,
+      content: '' + texte,
+      duration: 3
+    });
+  };
+  const navigationManagment = (action) => {
+    if (count.length > 0) {
+      navigate('/liste', { state: { visites: count, action: title } });
+    } else {
+      success('no customers for this status', 'error');
+    }
+  };
   return (
-    <Paper sx={{ padding: '4px', marginBottom: '2px' }}>
+    <Paper onClick={(e) => navigationManagment(e)} sx={{ padding: '4px', cursor: 'pointer', marginBottom: '2px' }}>
+      {contextHolder}
       <div style={{ minWidth: '5rem' }}>
         <Grid container>
           <Grid item lg={10} xs={10} sm={10} md={10}>
@@ -19,8 +38,13 @@ const AnalyticEcommerce = ({ title, count, bg }) => {
             </Typography>
           </Grid>
           <Grid item lg={2} xs={2} sm={2} md={2} sx={{ background: '#002d72', borderRadius: '20px', textAlign: 'center', color: 'white' }}>
-            <Typography component="p">{count}</Typography>
+            <Typography component="p">{count?.length}</Typography>
           </Grid>
+        </Grid>
+        <Grid>
+          <Typography component="p" sx={{ fontSize: '12px' }}>
+            {count[0].role[0].title}
+          </Typography>
         </Grid>
         <Grid container alignItems="center">
           <Grid item lg={4} xs={4} sx={{ padding: '4px' }}>
@@ -60,7 +84,8 @@ const AnalyticEcommerce = ({ title, count, bg }) => {
 };
 AnalyticEcommerce.propTypes = {
   title: PropTypes.string,
-  bg: PropTypes.object
+  bg: PropTypes.object,
+  count: PropTypes.array
 };
 
 export default AnalyticEcommerce;

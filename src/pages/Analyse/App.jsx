@@ -14,7 +14,11 @@ function Index() {
     {
       id: 2,
       title: 'Individually',
-      child: [{ id: 23, title: 'Statut', id: 24, title: 'Monitoring' }]
+      child: [
+        { id: 23, title: 'Statut' },
+        { id: 24, title: 'Monitoring' },
+        { id: 25, title: 'Role' }
+      ]
     }
   ];
   const { title } = React.useContext(CreateContexte);
